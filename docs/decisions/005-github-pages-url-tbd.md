@@ -1,6 +1,6 @@
 # ADR 005: GitHub Pages URL TBD
 
-**Status:** Accepted
+**Status:** Accepted (URL confirmed 2026-06-11)
 
 **Date:** 2026-06-11
 
@@ -19,7 +19,13 @@ When the URL is known:
 3. Update this ADR status to Accepted with the final URL recorded below
 4. Rebuild and verify canonical/hreflang/JSON-LD absolute URLs
 
-**Final URL:** _TBD_
+**Repository:** https://github.com/Collyer-Me/ANZUK-www (private)
+
+**GitHub Pages URL (project site):** https://collyer-me.github.io/ANZUK-www/
+
+**Astro config:**
+- `SITE_URL=https://collyer-me.github.io/ANZUK-www`
+- `BASE_PATH=/ANZUK-www`
 
 ## Consequences
 

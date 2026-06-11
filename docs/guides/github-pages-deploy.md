@@ -14,7 +14,8 @@ GitHub Actions builds the Astro site and deploys `apps/web/dist/` to GitHub Page
 |--------|-------|
 | `STRAPI_URL` | Strapi Cloud project URL |
 | `STRAPI_API_TOKEN` | Read-only API token |
-| `SITE_URL` | Final GitHub Pages URL (see ADR 005) |
+| `SITE_URL` | `https://collyer-me.github.io/ANZUK-www` |
+| `BASE_PATH` | `/ANZUK-www` |
 
 4. If using a **project site** (`org.github.io/repo-name/`), set repository variable or secret for `BASE_PATH` and configure Astro `base` accordingly.
 
