@@ -18,7 +18,7 @@ Coding standards for the marketing hub monorepo. Cursor rules in `.cursor/rules/
 ## Regional routing
 
 - URL segments: `au`, `uk`, `us`, `nz` (lowercase)
-- hreflang / `lang` / `inLanguage`: BCP 47 (`en-AU`, `en-GB`, `en-US`, `en-NZ`)
+- hreflang / `lang` / `inLanguage`: BCP 47 (`en-AU`, `en-GB`, `en-CA`, `en-NZ`); US via Scoot (`en-US`, external)
 - Use `getRelativeLocaleUrl()` / `getAbsoluteLocaleUrl()` — never hardcode `/au/` paths
 - Default region: Australia (`au`)
 

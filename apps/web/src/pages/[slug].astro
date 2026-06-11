@@ -1,0 +1,44 @@
+---
+import InternationalLayout from '../layouts/InternationalLayout.astro';
+import BlockRenderer from '../components/blocks/BlockRenderer.astro';
+import JobListingPlaceholder from '../components/jobs/JobListingPlaceholder.astro';
+import { INTERNATIONAL_MARKET } from '../config/markets';
+import { REGION_PATHS } from '../config/regions';
+import {
+  getAllInternationalPages,
+  getPageByMarketAndSlug,
+} from '../lib/strapi/queries/pages';
+import { getSiteSettings } from '../lib/strapi/queries/site-settings';
+
+export async function getStaticPaths() {
+  const pages = await getAllInternationalPages();
+  const reserved = new Set([...REGION_PATHS, 'brand']);
+
+  return pages
+    .filter((p) => p.slug !== 'home' && !reserved.has(p.slug))
+    .map((p) => ({
+      params: { slug: p.slug },
+      props: { slug: p.slug },
+    }));
+}
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const page = await getPageByMarketAndSlug(INTERNATIONAL_MARKET, slug);
+
+if (!page) {
+  return Astro.redirect('/404');
+}
+
+const settings = await getSiteSettings('en-AU');
+---
+
+<InternationalLayout {page} {settings}>
+  <article>
+    <BlockRenderer blocks={page.body} />
+    {page.pageTemplate === 'job-listing' && <JobListingPlaceholder config={page.jobBoardConfig} />}
+  </article>
+</InternationalLayout>

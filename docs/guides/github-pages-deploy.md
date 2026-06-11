@@ -29,7 +29,7 @@ Triggers: `push` to `main`, `workflow_dispatch`
 
 1. Check Actions tab for successful run
 2. Open the GitHub Pages URL
-3. Confirm `/`, `/au/`, `/uk/`, `/us/`, `/nz/` render
+3. Confirm `/`, `/au/`, `/uk/`, `/ca/`, `/nz/` render
 4. View source: verify canonical, hreflang, and JSON-LD use `SITE_URL`
 
 ## Update ADR 005

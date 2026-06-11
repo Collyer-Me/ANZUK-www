@@ -1,0 +1,27 @@
+---
+import { absoluteInternationalPageUrl } from '../../lib/seo/urls';
+import type { LocalizedPage } from '../../lib/strapi/types';
+
+interface Props {
+  page: LocalizedPage;
+}
+
+const { page } = Astro.props;
+const title = page.seo?.metaTitle ?? page.title;
+const description = page.seo?.metaDescription ?? '';
+const canonical = page.canonicalUrl ?? absoluteInternationalPageUrl(page.slug);
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+{page.noIndex && <meta name="robots" content="noindex, nofollow" />}
+<link rel="icon" href="/favicon.ico" />
+<link rel="canonical" href={canonical} />
+<link rel="alternate" hreflang="x-default" href={canonical} />
+<meta property="og:title" content={title} />
+{description && <meta property="og:description" content={description} />}
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />

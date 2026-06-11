@@ -1,0 +1,23 @@
+---
+import type { JobBoardConfigComponent } from '../../lib/strapi/types';
+
+interface Props {
+  config?: JobBoardConfigComponent | null;
+}
+
+const { config } = Astro.props;
+---
+
+<section class="mx-auto max-w-anzuk-container px-6 py-8 lg:px-[72px]" aria-label="Job listings">
+  <p class="rounded-2xl border border-dashed border-anzuk-light-gray bg-anzuk-extra-light-blue/30 p-6 text-anzuk-content">
+    Job listings are loaded from JobAdder at build time (not stored in Strapi).
+    {
+      config?.jobAdderBoardId && (
+        <span class="mt-2 block text-sm">
+          Board ID: <code>{config.jobAdderBoardId}</code>
+          {config.featuredOnly ? ' (featured only)' : ''}
+        </span>
+      )
+    }
+  </p>
+</section>

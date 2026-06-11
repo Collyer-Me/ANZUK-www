@@ -30,7 +30,7 @@ In **Settings → Internationalization**, add:
 |--------|---------|
 | `en-AU` | Yes |
 | `en-GB` | |
-| `en-US` | |
+| `en-CA` | |
 | `en-NZ` | |
 
 ### 4. API token

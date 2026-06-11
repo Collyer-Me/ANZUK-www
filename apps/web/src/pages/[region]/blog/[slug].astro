@@ -1,0 +1,58 @@
+---
+import RegionalLayout from '../../../layouts/RegionalLayout.astro';
+import { getRegionByPath, isValidRegion, type RegionPath } from '../../../config/regions';
+import { getAllArticles, getArticleByMarketAndSlug } from '../../../lib/strapi/queries/articles';
+import { getSiteSettings } from '../../../lib/strapi/queries/site-settings';
+import type { LocalizedPage } from '../../../lib/strapi/types';
+
+export async function getStaticPaths() {
+  const articles = await getAllArticles();
+
+  return articles.map((a) => ({
+    params: { region: a.market, slug: a.slug },
+    props: { region: a.market, slug: a.slug },
+  }));
+}
+
+interface Props {
+  region: RegionPath;
+  slug: string;
+}
+
+const { region, slug } = Astro.props;
+
+if (!isValidRegion(region)) {
+  return Astro.redirect('/404');
+}
+
+const regionConfig = getRegionByPath(region)!;
+const article = await getArticleByMarketAndSlug(region, slug);
+
+if (!article) {
+  return Astro.redirect('/404');
+}
+
+const pageShell: LocalizedPage = {
+  documentId: article.documentId,
+  title: article.title,
+  slug: article.slug,
+  market: region,
+  pageTemplate: 'blog-article',
+  seo: article.seo,
+};
+
+const settings = await getSiteSettings(regionConfig.strapiLocale);
+---
+
+<RegionalLayout {region} page={pageShell} {settings}>
+  <article class="mx-auto max-w-anzuk-container px-6 py-10 lg:px-[72px]">
+    <p class="text-sm">
+      <a href={`/${region}/blog/`} class="text-anzuk-blue no-underline hover:underline">
+        &larr; Back to blog
+      </a>
+    </p>
+    <h1 class="!mt-4">{article.title}</h1>
+    {article.excerpt && <p class="text-lg text-anzuk-content">{article.excerpt}</p>}
+    {article.body && <div class="prose mt-8 max-w-none" set:html={article.body} />}
+  </article>
+</RegionalLayout>

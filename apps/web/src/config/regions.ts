@@ -1,4 +1,6 @@
-export type RegionPath = 'au' | 'uk' | 'us' | 'nz';
+import type { RegionalMarket } from './markets';
+
+export type RegionPath = RegionalMarket;
 
 export interface Region {
   path: RegionPath;
@@ -27,12 +29,12 @@ export const REGIONS: readonly Region[] = [
     flag: '🇬🇧',
   },
   {
-    path: 'us',
-    hreflang: 'en-US',
-    strapiLocale: 'en-US',
-    htmlLang: 'en-US',
-    label: 'United States',
-    flag: '🇺🇸',
+    path: 'ca',
+    hreflang: 'en-CA',
+    strapiLocale: 'en-CA',
+    htmlLang: 'en-CA',
+    label: 'Canada',
+    flag: '🇨🇦',
   },
   {
     path: 'nz',

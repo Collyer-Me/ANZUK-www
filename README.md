@@ -60,13 +60,16 @@ Outputs static site to `apps/web/dist/`.
 
 ## Regional sites
 
-| Region | URL |
+| Market | URL |
 |--------|-----|
-| Region picker | http://localhost:4321/ |
+| International hub | http://localhost:4321/ |
 | Australia | http://localhost:4321/au/ |
 | United Kingdom | http://localhost:4321/uk/ |
-| United States | http://localhost:4321/us/ |
+| Canada | http://localhost:4321/ca/ |
 | New Zealand | http://localhost:4321/nz/ |
+| United States (Scoot) | https://scoot.education — external link |
+
+See [docs/ia/](docs/ia/README.md) for the as-is production page inventory.
 
 By default, mock CMS data is used (`USE_MOCK_DATA=true` in `apps/web/.env.example`). Set Strapi Cloud credentials to fetch live content.
 

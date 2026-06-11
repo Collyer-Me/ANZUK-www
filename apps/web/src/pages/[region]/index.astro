@@ -2,7 +2,7 @@
 import RegionalLayout from '../../layouts/RegionalLayout.astro';
 import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
 import { REGIONS, getRegionByPath, isValidRegion, type RegionPath } from '../../config/regions';
-import { getPageBySlug } from '../../lib/strapi/queries/pages';
+import { getPageByMarketAndSlug } from '../../lib/strapi/queries/pages';
 import { getSiteSettings } from '../../lib/strapi/queries/site-settings';
 
 export async function getStaticPaths() {
@@ -23,7 +23,7 @@ if (!isValidRegion(region)) {
 }
 
 const regionConfig = getRegionByPath(region)!;
-const page = await getPageBySlug(regionConfig.strapiLocale, 'home');
+const page = await getPageByMarketAndSlug(region, 'home');
 
 if (!page) {
   return Astro.redirect('/404');

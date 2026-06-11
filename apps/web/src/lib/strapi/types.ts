@@ -1,3 +1,5 @@
+import type { Market, PageTemplate, RegionalMarket } from '../../config/markets';
+
 export interface StrapiMedia {
   url: string;
   alternativeText?: string | null;
@@ -9,6 +11,18 @@ export interface SeoComponent {
   metaTitle: string;
   metaDescription?: string | null;
   ogImage?: StrapiMedia | null;
+}
+
+export interface JobBoardConfigComponent {
+  jobAdderBoardId?: string | null;
+  featuredOnly?: boolean;
+  externalApply?: boolean;
+}
+
+export interface AffiliateBrand {
+  name: string;
+  url: string;
+  logo?: StrapiMedia | null;
 }
 
 export interface HeroBlock {
@@ -65,11 +79,26 @@ export interface LocalizedPage {
   documentId: string;
   title: string;
   slug: string;
+  market: Market;
+  pageTemplate: PageTemplate;
   canonicalUrl?: string | null;
   noIndex?: boolean;
   seo?: SeoComponent | null;
+  jobBoardConfig?: JobBoardConfigComponent | null;
   body?: ContentBlock[];
   localizations?: PageLocalization[];
+}
+
+export interface Article {
+  documentId: string;
+  title: string;
+  slug: string;
+  market: RegionalMarket;
+  excerpt?: string | null;
+  body?: string | null;
+  featuredImage?: StrapiMedia | null;
+  seo?: SeoComponent | null;
+  publishedAt?: string | null;
 }
 
 export interface SiteSettings {
@@ -78,6 +107,10 @@ export interface SiteSettings {
   organizationUrl?: string | null;
   contactEmail?: string | null;
   defaultLocale: string;
+  scootUrl?: string | null;
+  executiveUrl?: string | null;
+  geoSuggestEnabled?: boolean;
+  affiliateBrands?: AffiliateBrand[];
 }
 
 export interface StrapiListResponse<T> {

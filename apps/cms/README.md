@@ -6,12 +6,15 @@ Local Strapi 5 instance for schema development. **Strapi Cloud** is the hosted C
 
 | Type | Kind | Notes |
 |------|------|-------|
-| `site-setting` | Single (i18n) | Site name, default locale (`en-AU`), tagline |
-| `localized-page` | Collection (i18n) | Title, slug, SEO, dynamic zone blocks |
+| `site-setting` | Single (i18n) | Site name, tagline, Scoot/Executive URLs, affiliate brands, geo suggest |
+| `localized-page` | Collection (i18n) | Marketing pages: `market`, `pageTemplate`, SEO, optional `jobBoardConfig`, dynamic zone |
+| `article` | Collection (i18n) | Regional blog posts: `market` (`au`, `uk`, `ca`, `nz`), richtext body |
 
-**Components:** `shared.seo`, `blocks.hero`, `blocks.feature-grid`, `blocks.cta`, `blocks.testimonial`
+**Components:** `shared.seo`, `shared.job-board-config`, `shared.affiliate-brand`, `blocks.hero`, `blocks.feature-grid`, `blocks.cta`, `blocks.testimonial`
 
-After pulling schema changes, restart `npm run develop`. Configure locales in admin: `en-AU` (default), `en-GB`, `en-US`, `en-NZ`.
+See [docs/ia/strapi-mapping.md](../../docs/ia/strapi-mapping.md) for the as-is content model.
+
+After pulling schema changes, restart `npm run develop`. Configure locales in admin: `en-AU` (default), `en-GB`, `en-CA`, `en-NZ`.
 
 See [docs/guides/strapi-cloud-setup.md](../../docs/guides/strapi-cloud-setup.md).
 

@@ -18,7 +18,7 @@ export default defineConfig({
   trailingSlash: 'always',
   i18n: {
     defaultLocale: 'au',
-    locales: ['au', 'uk', 'us', 'nz'],
+    locales: ['au', 'uk', 'ca', 'nz'],
     routing: {
       prefixDefaultLocale: true,
       redirectToDefaultLocale: false,
@@ -31,7 +31,7 @@ export default defineConfig({
         locales: {
           au: 'en-AU',
           uk: 'en-GB',
-          us: 'en-US',
+          ca: 'en-CA',
           nz: 'en-NZ',
         },
       },
