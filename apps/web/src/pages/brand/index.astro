@@ -4,6 +4,7 @@ import Logo from '../../components/ui/Logo.astro';
 import Button from '../../components/ui/Button.astro';
 import { brandColorSwatches } from '../../data/brand-colors';
 import { fontFamilies, taglines } from '@anzuk/brand';
+import { withBase } from '../../lib/url';
 ---
 
 <BrandLayout title="Overview" description="ANZUK Education brand overview and design system entry point.">
@@ -26,7 +27,7 @@ import { fontFamilies, taglines } from '@anzuk/brand';
       Warm, confident, people-first — international expertise with local understanding.
     </p>
     <p class="mt-4">
-      <a href="/brand/voice">Voice, personas & language guide</a>
+      <a href={withBase('/brand/voice')}>Voice, personas & language guide</a>
     </p>
   </section>
 
@@ -36,7 +37,7 @@ import { fontFamilies, taglines } from '@anzuk/brand';
       <Logo class="mt-6 h-10 w-auto" />
       <p class="mt-4 text-anzuk-content">
         Wordmark with blue accent on the “i” and underline bar. See
-        <a href="/brand/logos">logo usage</a>.
+        <a href={withBase('/brand/logos')}>logo usage</a>.
       </p>
     </article>
 
@@ -47,7 +48,7 @@ import { fontFamilies, taglines } from '@anzuk/brand';
         Primary: {fontFamilies.primary} · Secondary: {fontFamilies.secondary}
       </p>
       <p class="mt-4">
-        <a href="/brand/typography">View type scale</a>
+        <a href={withBase('/brand/typography')}>View type scale</a>
       </p>
     </article>
   </section>
@@ -68,7 +69,7 @@ import { fontFamilies, taglines } from '@anzuk/brand';
       }
     </div>
     <p class="mt-4">
-      <a href="/brand/colours">View full colour system</a>
+      <a href={withBase('/brand/colours')}>View full colour system</a>
     </p>
   </section>
 
@@ -80,30 +81,30 @@ import { fontFamilies, taglines } from '@anzuk/brand';
       <Button variant="bordered">Search jobs</Button>
     </div>
     <p class="mt-4">
-      <a href="/brand/components">View all components</a>
+      <a href={withBase('/brand/components')}>View all components</a>
     </p>
   </section>
 
   <section class="mt-12">
     <h2 class="!text-2xl">Explore the guide</h2>
     <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <a href="/brand/voice" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+      <a href={withBase('/brand/voice')} class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
         <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Voice</h3>
         <p class="text-sm text-anzuk-content">Taglines, personas, tone, vocabulary</p>
       </a>
-      <a href="/brand/colours" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+      <a href={withBase('/brand/colours')} class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
         <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Colours</h3>
         <p class="text-sm text-anzuk-content">Full palette with hex and Tailwind classes</p>
       </a>
-      <a href="/brand/typography" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+      <a href={withBase('/brand/typography')} class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
         <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Typography</h3>
         <p class="text-sm text-anzuk-content">Poppins scale, body text, links</p>
       </a>
-      <a href="/brand/logos" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+      <a href={withBase('/brand/logos')} class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
         <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Logos</h3>
         <p class="text-sm text-anzuk-content">Wordmark variants and clear space</p>
       </a>
-      <a href="/brand/components" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+      <a href={withBase('/brand/components')} class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
         <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Components</h3>
         <p class="text-sm text-anzuk-content">Buttons, cards, section patterns</p>
       </a>

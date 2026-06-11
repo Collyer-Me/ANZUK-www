@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Logo from '../components/ui/Logo.astro';
+import { routeKey, withBase } from '../lib/url';
 
 interface Props {
   title: string;
@@ -10,15 +11,15 @@ interface Props {
 const { title, description } = Astro.props;
 
 const navItems = [
-  { href: '/brand', label: 'Overview' },
-  { href: '/brand/voice', label: 'Voice' },
-  { href: '/brand/colours', label: 'Colours' },
-  { href: '/brand/typography', label: 'Typography' },
-  { href: '/brand/logos', label: 'Logos' },
-  { href: '/brand/components', label: 'Components' },
+  { path: '/brand', label: 'Overview' },
+  { path: '/brand/voice', label: 'Voice' },
+  { path: '/brand/colours', label: 'Colours' },
+  { path: '/brand/typography', label: 'Typography' },
+  { path: '/brand/logos', label: 'Logos' },
+  { path: '/brand/components', label: 'Components' },
 ];
 
-const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const currentRoute = routeKey(Astro.url.pathname);
 ---
 
 <BaseLayout
@@ -28,7 +29,7 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 >
   <header class="border-b border-anzuk-light-gray bg-anzuk-extra-light-blue">
     <div class="mx-auto flex max-w-anzuk-container flex-wrap items-center justify-between gap-4 px-6 py-5 lg:px-[72px]">
-      <a href="/brand" class="no-underline hover:no-underline">
+      <a href={withBase('/brand')} class="no-underline hover:no-underline">
         <Logo class="h-8 w-auto" />
       </a>
       <nav aria-label="Brand guide sections">
@@ -37,10 +38,10 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
             navItems.map((item) => (
               <li>
                 <a
-                  href={item.href}
+                  href={withBase(item.path)}
                   class:list={[
                     'rounded-anzuk-button px-3 py-2 text-sm font-semibold no-underline transition-colors',
-                    currentPath === item.href.replace(/\/$/, '')
+                    currentRoute === routeKey(item.path)
                       ? 'bg-anzuk-blue text-white'
                       : 'text-anzuk-title hover:bg-white/60',
                   ]}

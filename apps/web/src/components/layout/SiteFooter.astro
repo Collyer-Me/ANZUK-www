@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import type { RegionPath } from '../../config/regions';
 import type { SiteSettings } from '../../lib/strapi/types';
+import { withBase } from '../../lib/url';
 
 interface Props {
   region?: RegionPath;
@@ -39,7 +40,7 @@ const homeHref = region ? getRelativeLocaleUrl(region, '/') : '/';
           )
         }
         <li>
-          <a href="/brand" class="text-anzuk-light-blue no-underline hover:underline" rel="nofollow">
+          <a href={withBase('/brand')} class="text-anzuk-light-blue no-underline hover:underline" rel="nofollow">
             Brand guide
           </a>
         </li>
