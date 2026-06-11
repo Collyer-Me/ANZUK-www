@@ -28,6 +28,7 @@ Central index for architecture decisions, setup guides, and production migration
 
 - [Local development](guides/local-development.md)
 - [Strapi Cloud setup](guides/strapi-cloud-setup.md)
+- [Seed Strapi content](guides/seed-strapi.md)
 - [GitHub Pages deploy](guides/github-pages-deploy.md)
 
 ## Future production

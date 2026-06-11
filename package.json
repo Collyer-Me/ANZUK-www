@@ -10,9 +10,11 @@
     "dev:web": "npm run dev -w @anzuk/web",
     "dev:cms": "npm run dev --prefix apps/cms",
     "build": "npm run build -w @anzuk/web",
-    "build:web": "npm run build -w @anzuk/web"
+    "build:web": "npm run build -w @anzuk/web",
+    "seed:strapi": "tsx scripts/seed-strapi.ts"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "tsx": "^4.19.4"
   }
 }
