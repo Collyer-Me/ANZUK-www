@@ -44,3 +44,35 @@ export async function fetchStrapi<T>(
 
   return response.json() as Promise<T>;
 }
+
+/** Returns null on 404 (e.g. single type with no entry yet). Other errors still throw. */
+export async function fetchStrapiOptional<T>(
+  endpoint: string,
+  params: Record<string, string> = {},
+): Promise<T | null> {
+  if (!isStrapiConfigured()) {
+    return null;
+  }
+
+  const url = new URL(`/api/${endpoint}`, STRAPI_URL);
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, value);
+  }
+
+  const response = await fetch(url.toString(), {
+    headers: {
+      Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok) {
+    throw new Error(`Strapi request failed: ${response.status} ${response.statusText} — ${url}`);
+  }
+
+  return response.json() as Promise<T>;
+}
