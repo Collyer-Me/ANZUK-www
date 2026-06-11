@@ -1,0 +1,138 @@
+---
+import BrandLayout from '../../layouts/BrandLayout.astro';
+import {
+  taglines,
+  personas,
+  tonePrinciples,
+  vocabulary,
+  beGreatValues,
+} from '@anzuk/brand';
+---
+
+<BrandLayout title="Voice & language" description="ANZUK Education taglines, personas, tone, and vocabulary.">
+  <div class="max-w-3xl space-y-4">
+    <h1 class="!mt-0">Voice & language</h1>
+    <p class="text-lg text-anzuk-content">
+      How we speak across the global marketing site — drawn from the live ANZUK Education brand and
+      regional sites.
+    </p>
+  </div>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Key taglines</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-2">
+      <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6">
+        <p class="text-xs font-semibold uppercase tracking-wide text-anzuk-blue">Primary hero</p>
+        <p class="mt-2 text-2xl font-semibold tracking-[-0.02em] text-anzuk-title">{taglines.primary}</p>
+      </article>
+      <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6">
+        <p class="text-xs font-semibold uppercase tracking-wide text-anzuk-blue">Subhead</p>
+        <p class="mt-2 text-xl font-semibold text-anzuk-title">{taglines.secondary}</p>
+      </article>
+      <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6">
+        <p class="text-xs font-semibold uppercase tracking-wide text-anzuk-purple">Regional (UK/AU/NZ/US)</p>
+        <p class="mt-2 text-xl font-semibold text-anzuk-title">{taglines.regional}</p>
+      </article>
+      <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6">
+        <p class="text-xs font-semibold uppercase tracking-wide text-anzuk-green">Schools proposition</p>
+        <p class="mt-2 text-xl font-semibold text-anzuk-title">{taglines.schools}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Audiences & personas</h2>
+    <p class="mt-2 text-anzuk-content">Write for a specific audience. Match CTA and tone to their intent.</p>
+    <div class="mt-6 space-y-6">
+      {
+        personas.map((persona) => (
+          <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+            <h3 class="!mt-0 !text-xl font-semibold text-anzuk-title">{persona.name}</h3>
+            <p class="mt-2 text-anzuk-content">{persona.description}</p>
+            <div class="mt-4 grid gap-4 md:grid-cols-2">
+              <div>
+                <p class="text-sm font-semibold text-anzuk-title">What they need</p>
+                <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-anzuk-content">
+                  {persona.needs.map((need) => (
+                    <li>{need}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-anzuk-title">Typical CTAs</p>
+                <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-anzuk-content">
+                  {persona.ctas.map((cta) => (
+                    <li>{cta}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Tone of voice</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {
+        tonePrinciples.map((principle) => (
+          <article class="rounded-anzuk-card bg-anzuk-extra-light-blue p-6">
+            <h3 class="!mt-0 !text-lg font-semibold">{principle.title}</h3>
+            <p class="mt-2 text-sm text-anzuk-content">{principle.description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mt-12 grid gap-8 lg:grid-cols-2">
+    <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+      <h2 class="!mt-0 !text-xl">Words we use</h2>
+      <ul class="mt-4 flex flex-wrap gap-2">
+        {
+          vocabulary.prefer.map((word) => (
+            <li class="rounded-full bg-anzuk-extra-light-green px-3 py-1 text-sm font-medium text-anzuk-title">
+              {word}
+            </li>
+          ))
+        }
+      </ul>
+    </article>
+    <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+      <h2 class="!mt-0 !text-xl">Words to avoid</h2>
+      <ul class="mt-4 space-y-2 text-sm text-anzuk-content">
+        {
+          vocabulary.avoid.map((word) => (
+            <li class="flex gap-2">
+              <span class="text-anzuk-purple" aria-hidden="true">×</span>
+              {word}
+            </li>
+          ))
+        }
+      </ul>
+    </article>
+  </section>
+
+  <section class="mt-12 rounded-anzuk-card bg-anzuk-extra-light-green p-8">
+    <h2 class="!mt-0 !text-2xl">{taglines.values} values</h2>
+    <p class="text-anzuk-content">
+      People are at the heart of everything we do. Living our seven core values allows us to create
+      value for others.
+    </p>
+    <dl class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        beGreatValues.map((value) => (
+          <div class="rounded-anzuk-card bg-white p-4">
+            <dt class="font-semibold text-anzuk-green">
+              <span class="text-anzuk-purple">{value.letter}</span>
+              {value.word.slice(1)}
+            </dt>
+            <dd class="mt-1 text-sm text-anzuk-content">{value.summary}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+</BrandLayout>

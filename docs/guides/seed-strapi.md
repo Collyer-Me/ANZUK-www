@@ -14,10 +14,10 @@ Add to `apps/web/.env`:
 
 ```env
 STRAPI_URL=https://your-project.strapiapp.com
-STRAPI_SEED_TOKEN=your-full-access-token
+STRAPI_API_CURSOR=your-full-access-token
 ```
 
-Use a **separate** Full access token for seeding. Keep the **Read-only** token as `STRAPI_API_TOKEN` for Astro builds.
+Use a **separate** Full access token for seeding (`STRAPI_API_CURSOR`). Keep the **Read-only** token as `STRAPI_API_TOKEN` for Astro builds.
 
 ## Run
 

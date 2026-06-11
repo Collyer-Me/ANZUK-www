@@ -46,7 +46,7 @@ export class StrapiAdminClient {
       const text = await response.text();
       const hint =
         response.status === 403
-          ? '\nHint: use a Full access API token (STRAPI_SEED_TOKEN in apps/web/.env).'
+          ? '\nHint: use a Full access API token (STRAPI_API_CURSOR in apps/web/.env).'
           : '';
       throw new Error(
         `Strapi ${method} ${path} failed: ${response.status} ${response.statusText}\n${text}${hint}`,
@@ -58,6 +58,19 @@ export class StrapiAdminClient {
     }
 
     return response.json() as Promise<T>;
+  }
+
+  async list(collection: string, params: Record<string, string>): Promise<StrapiDocument[]> {
+    const response = await this.request<StrapiListResponse<StrapiDocument>>('GET', collection, {
+      params,
+    });
+    return response.data;
+  }
+
+  async delete(collection: string, documentId: string, locale: string): Promise<void> {
+    await this.request('DELETE', `${collection}/${documentId}`, {
+      params: { locale },
+    });
   }
 
   async findOne(
@@ -92,21 +105,21 @@ export class StrapiAdminClient {
   ): Promise<StrapiDocument> {
     const existing = await this.findOne(collection, filters, locale);
 
+    const writeParams = { locale, status: 'published' };
+
     if (existing) {
       const updated = await this.request<{ data: StrapiDocument }>(
         'PUT',
         `${collection}/${existing.documentId}`,
-        { params: { locale }, body: { data } },
+        { params: writeParams, body: { data } },
       );
-      await this.publish(collection, existing.documentId, locale);
       return updated.data;
     }
 
     const created = await this.request<{ data: StrapiDocument }>('POST', collection, {
-      params: { locale },
+      params: writeParams,
       body: { data },
     });
-    await this.publish(collection, created.data.documentId, locale);
     return created.data;
   }
 
@@ -132,18 +145,4 @@ export class StrapiAdminClient {
     throw new Error(`Could not upsert single type "${singleType}" for locale ${locale}`);
   }
 
-  async publish(collection: string, documentId: string, locale: string): Promise<void> {
-    try {
-      await this.request(
-        'POST',
-        `${collection}/${documentId}/actions/publish`,
-        { params: { locale } },
-      );
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      // Ignore if already published
-      if (message.includes('already published') || message.includes('422')) return;
-      throw error;
-    }
-  }
 }

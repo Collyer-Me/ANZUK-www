@@ -11,13 +11,14 @@ const { title, description } = Astro.props;
 
 const navItems = [
   { href: '/brand', label: 'Overview' },
+  { href: '/brand/voice', label: 'Voice' },
   { href: '/brand/colours', label: 'Colours' },
   { href: '/brand/typography', label: 'Typography' },
   { href: '/brand/logos', label: 'Logos' },
   { href: '/brand/components', label: 'Components' },
 ];
 
-const currentPath = Astro.url.pathname;
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
 <BaseLayout
@@ -39,7 +40,7 @@ const currentPath = Astro.url.pathname;
                   href={item.href}
                   class:list={[
                     'rounded-anzuk-button px-3 py-2 text-sm font-semibold no-underline transition-colors',
-                    currentPath === item.href
+                    currentPath === item.href.replace(/\/$/, '')
                       ? 'bg-anzuk-blue text-white'
                       : 'text-anzuk-title hover:bg-white/60',
                   ]}

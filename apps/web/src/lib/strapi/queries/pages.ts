@@ -7,6 +7,7 @@ import {
   getMockPagesByMarket,
   MOCK_PAGES,
 } from '../mock-data';
+import { fromStrapiSlug, toStrapiSlug } from '../slugs';
 import type { LocalizedPage, StrapiListResponse } from '../types';
 
 const PAGE_POPULATE = {
@@ -30,11 +31,13 @@ function normalizePage(raw: Record<string, unknown>): LocalizedPage {
       }))
     : [];
 
+  const market = String(raw.market) as LocalizedPage['market'];
+
   return {
     documentId: String(raw.documentId),
     title: String(raw.title),
-    slug: String(raw.slug),
-    market: String(raw.market) as LocalizedPage['market'],
+    slug: fromStrapiSlug(market, String(raw.slug)),
+    market,
     pageTemplate: String(raw.pageTemplate) as LocalizedPage['pageTemplate'],
     canonicalUrl: raw.canonicalUrl ? String(raw.canonicalUrl) : null,
     noIndex: Boolean(raw.noIndex),
@@ -83,7 +86,7 @@ export async function getPageByMarketAndSlug(
     {
       locale,
       'filters[market][$eq]': market,
-      'filters[slug][$eq]': slug,
+      'filters[slug][$eq]': toStrapiSlug(market, slug),
       status: 'published',
       ...PAGE_POPULATE,
     },

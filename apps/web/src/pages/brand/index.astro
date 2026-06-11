@@ -3,7 +3,7 @@ import BrandLayout from '../../layouts/BrandLayout.astro';
 import Logo from '../../components/ui/Logo.astro';
 import Button from '../../components/ui/Button.astro';
 import { brandColorSwatches } from '../../data/brand-colors';
-import { fontFamilies } from '@anzuk/brand';
+import { fontFamilies, taglines } from '@anzuk/brand';
 ---
 
 <BrandLayout title="Overview" description="ANZUK Education brand overview and design system entry point.">
@@ -15,6 +15,20 @@ import { fontFamilies } from '@anzuk/brand';
       building blocks used across regional marketing pages.
     </p>
   </div>
+
+  <section class="mt-12 rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+    <h2 class="!mt-0 !text-2xl">Brand voice at a glance</h2>
+    <blockquote class="mt-4 border-l-4 border-anzuk-blue pl-4">
+      <p class="text-3xl font-semibold tracking-[-0.02em] text-anzuk-title">{taglines.primary}</p>
+      <p class="mt-2 text-lg text-anzuk-content">{taglines.secondary}</p>
+    </blockquote>
+    <p class="mt-4 text-anzuk-content">
+      Warm, confident, people-first — international expertise with local understanding.
+    </p>
+    <p class="mt-4">
+      <a href="/brand/voice">Voice, personas & language guide</a>
+    </p>
+  </section>
 
   <section class="mt-12 grid gap-8 lg:grid-cols-2">
     <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
@@ -70,14 +84,29 @@ import { fontFamilies } from '@anzuk/brand';
     </p>
   </section>
 
-  <section class="mt-12 rounded-anzuk-card bg-anzuk-extra-light-green p-8">
-    <h2 class="!mt-0 !text-2xl">BE GREAT values</h2>
-    <p class="text-anzuk-content">
-      Belief · Equity · Growth · Relationships · Empower · Attitude · Team
-    </p>
-    <p class="mt-2 text-sm text-anzuk-content">
-      Brand voice is warm, confident, and people-first — international expertise with local
-      understanding.
-    </p>
+  <section class="mt-12">
+    <h2 class="!text-2xl">Explore the guide</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <a href="/brand/voice" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+        <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Voice</h3>
+        <p class="text-sm text-anzuk-content">Taglines, personas, tone, vocabulary</p>
+      </a>
+      <a href="/brand/colours" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+        <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Colours</h3>
+        <p class="text-sm text-anzuk-content">Full palette with hex and Tailwind classes</p>
+      </a>
+      <a href="/brand/typography" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+        <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Typography</h3>
+        <p class="text-sm text-anzuk-content">Poppins scale, body text, links</p>
+      </a>
+      <a href="/brand/logos" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+        <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Logos</h3>
+        <p class="text-sm text-anzuk-content">Wordmark variants and clear space</p>
+      </a>
+      <a href="/brand/components" class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 no-underline hover:border-anzuk-blue">
+        <h3 class="!mt-0 !text-lg font-semibold text-anzuk-title">Components</h3>
+        <p class="text-sm text-anzuk-content">Buttons, cards, section patterns</p>
+      </a>
+    </div>
   </section>
 </BrandLayout>

@@ -3,7 +3,7 @@
  *
  * Usage:
  *   1. Create a Full access API token in Strapi admin
- *   2. Add STRAPI_SEED_TOKEN to apps/web/.env (or use STRAPI_API_TOKEN if full access)
+ *   2. Add STRAPI_API_CURSOR (full access) to apps/web/.env
  *   3. npm run seed:strapi
  */
 
@@ -17,6 +17,7 @@ import {
   MOCK_SITE_SETTINGS,
 } from '../apps/web/src/lib/strapi/mock-data';
 import type { Article, ContentBlock, LocalizedPage } from '../apps/web/src/lib/strapi/types';
+import { toStrapiSlug } from '../apps/web/src/lib/strapi/slugs';
 import { StrapiAdminClient } from './lib/strapi-admin';
 
 function loadEnvFile(filePath: string): void {
@@ -68,7 +69,7 @@ function serializeSeo(seo: LocalizedPage['seo'] | Article['seo']) {
 function serializePage(page: LocalizedPage, locale: string) {
   const data: Record<string, unknown> = {
     title: page.title,
-    slug: page.slug,
+    slug: toStrapiSlug(page.market, page.slug),
     market: page.market,
     pageTemplate: page.pageTemplate,
     noIndex: page.noIndex ?? false,
@@ -127,19 +128,22 @@ async function main(): Promise<void> {
   loadEnvFile(resolve(process.cwd(), 'apps/web/.env'));
 
   const baseUrl = process.env.STRAPI_URL;
-  const token = process.env.STRAPI_SEED_TOKEN ?? process.env.STRAPI_API_TOKEN;
+  const token =
+    process.env.STRAPI_API_CURSOR ??
+    process.env.STRAPI_SEED_TOKEN ??
+    process.env.STRAPI_API_TOKEN;
 
   if (!baseUrl || !token) {
     console.error(
-      'Missing STRAPI_URL and STRAPI_SEED_TOKEN (or STRAPI_API_TOKEN with Full access).\n' +
+      'Missing STRAPI_URL and STRAPI_API_CURSOR (full access token).\n' +
         'Add them to apps/web/.env',
     );
     process.exit(1);
   }
 
-  if (!process.env.STRAPI_SEED_TOKEN) {
+  if (!process.env.STRAPI_API_CURSOR && !process.env.STRAPI_SEED_TOKEN) {
     console.warn(
-      'Warning: STRAPI_SEED_TOKEN not set — using STRAPI_API_TOKEN.\n' +
+      'Warning: STRAPI_API_CURSOR not set — using STRAPI_API_TOKEN.\n' +
         'Seeding requires a Full access API token (Read-only will return 403).\n',
     );
   }
@@ -163,7 +167,7 @@ async function main(): Promise<void> {
     await client.upsertCollection(
       'localized-pages',
       locale,
-      { slug: page.slug, market: page.market },
+      { slug: toStrapiSlug(page.market, page.slug), market: page.market },
       data,
     );
     console.log(`  ✓ ${page.market}/${page.slug} (${locale})`);
