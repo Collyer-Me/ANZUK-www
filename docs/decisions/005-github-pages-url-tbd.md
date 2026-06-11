@@ -19,7 +19,7 @@ When the URL is known:
 3. Update this ADR status to Accepted with the final URL recorded below
 4. Rebuild and verify canonical/hreflang/JSON-LD absolute URLs
 
-**Repository:** https://github.com/Collyer-Me/ANZUK-www (private)
+**Repository:** https://github.com/Collyer-Me/ANZUK-www (public)
 
 **GitHub Pages URL (project site):** https://collyer-me.github.io/ANZUK-www/
 

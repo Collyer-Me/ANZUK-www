@@ -2,13 +2,13 @@
   "name": "anzuk-marketing-hub",
   "private": true,
   "workspaces": [
-    "apps/*",
+    "apps/web",
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently -n web,cms -c blue,green \"npm run dev -w @anzuk/web\" \"npm run dev -w @anzuk/cms\"",
+    "dev": "concurrently -n web,cms -c blue,green \"npm run dev -w @anzuk/web\" \"npm run dev --prefix apps/cms\"",
     "dev:web": "npm run dev -w @anzuk/web",
-    "dev:cms": "npm run dev -w @anzuk/cms",
+    "dev:cms": "npm run dev --prefix apps/cms",
     "build": "npm run build -w @anzuk/web",
     "build:web": "npm run build -w @anzuk/web"
   },

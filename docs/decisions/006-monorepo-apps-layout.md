@@ -15,7 +15,7 @@ The original plan assumed Astro at the repository root (`src/`) and Strapi in `c
 | Path | Package | Role |
 |------|---------|------|
 | `apps/web` | `@anzuk/web` | Astro static marketing site |
-| `apps/cms` | `@anzuk/cms` | Strapi headless CMS (schema dev) |
+| `apps/cms` | `@anzuk/cms` | Strapi headless CMS (standalone npm package — not a workspace, for Strapi Cloud) |
 | `packages/brand` | `@anzuk/brand` | Design tokens, fonts, logos |
 
 Do not relocate Astro to the repo root. All frontend paths in docs and rules reference `apps/web/src/`.

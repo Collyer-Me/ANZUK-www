@@ -12,7 +12,19 @@ The prototype uses Strapi Cloud as the hosted CMS. Local `apps/cms/` is for sche
 2. Create a new project (Strapi 5)
 3. Note the project URL (e.g. `https://your-project.strapiapp.com`)
 
-### 2. Replicate content types
+### 2. Connect Git (recommended)
+
+| Setting | Value |
+|---------|--------|
+| Repository | `Collyer-Me/ANZUK-www` |
+| Branch | `main` |
+| **Base directory** | `apps/cms` |
+
+**Important:** `apps/cms` is a **standalone** npm package (not an npm workspace). Strapi Cloud requires `@strapi/strapi` in `apps/cms/node_modules`. If you see *"Strapi was not found in the project dependencies"*, the base directory is wrong or CMS was incorrectly hoisted to the monorepo root.
+
+`apps/cms` has its own `package-lock.json` — do not remove it.
+
+### 3. Replicate content types (if not using Git import)
 
 Content types defined locally in `apps/cms/src/`:
 
@@ -22,7 +34,7 @@ Content types defined locally in `apps/cms/src/`:
 
 Replicate these in Strapi Cloud admin (Content-Type Builder) or use `strapi transfer` when configured.
 
-### 3. Configure locales
+### 4. Configure locales
 
 In **Settings → Internationalization**, add:
 
@@ -33,13 +45,13 @@ In **Settings → Internationalization**, add:
 | `en-CA` | |
 | `en-NZ` | |
 
-### 4. API token
+### 5. API token
 
 1. **Settings → API Tokens → Create new API Token**
 2. Type: **Read-only**
 3. Copy the token — store in `apps/web/.env` and GitHub Actions secrets
 
-### 5. Environment variables
+### 6. Environment variables
 
 ```env
 # apps/web/.env
@@ -48,11 +60,11 @@ STRAPI_API_TOKEN=your-read-only-token
 SITE_URL=http://localhost:4321
 ```
 
-### 6. Public permissions
+### 7. Public permissions
 
 Ensure the **Public** role can `find` and `findOne` on `localized-page` and `site-setting`.
 
-### 7. CORS (if needed)
+### 8. CORS (if needed)
 
 Strapi Cloud typically allows build-time fetches from GitHub Actions. For local dev, localhost is usually permitted. Adjust in Strapi admin if requests fail.
 
