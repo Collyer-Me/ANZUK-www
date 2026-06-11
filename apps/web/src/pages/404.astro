@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/ui/Button.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { DEFAULT_REGION } from '../config/regions';
+---
+
+<BaseLayout title="Page not found — ANZUK Education">
+  <main class="mx-auto flex min-h-screen max-w-anzuk-container flex-col items-center justify-center gap-6 px-6 py-16 text-center">
+    <h1 class="!text-5xl">404</h1>
+    <p class="text-lg text-anzuk-content">Sorry, we couldn&apos;t find that page.</p>
+    <div class="flex gap-4">
+      <Button variant="primary" href="/">Choose region</Button>
+      <Button variant="bordered" href={getRelativeLocaleUrl(DEFAULT_REGION, '/')}>
+        Go to Australia
+      </Button>
+    </div>
+  </main>
+</BaseLayout>

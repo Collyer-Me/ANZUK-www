@@ -1,0 +1,44 @@
+---
+import RegionalLayout from '../../layouts/RegionalLayout.astro';
+import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
+import { getRegionByPath, isValidRegion, type RegionPath } from '../../config/regions';
+import { getAllRegionalPages, getPageBySlug } from '../../lib/strapi/queries/pages';
+import { getSiteSettings } from '../../lib/strapi/queries/site-settings';
+
+export async function getStaticPaths() {
+  const allPages = await getAllRegionalPages();
+
+  return allPages
+    .filter((p) => p.slug !== 'home')
+    .map((p) => ({
+      params: { region: p.region, slug: p.slug },
+      props: { region: p.region, slug: p.slug },
+    }));
+}
+
+interface Props {
+  region: RegionPath;
+  slug: string;
+}
+
+const { region, slug } = Astro.props;
+
+if (!isValidRegion(region)) {
+  return Astro.redirect('/404');
+}
+
+const regionConfig = getRegionByPath(region)!;
+const page = await getPageBySlug(regionConfig.strapiLocale, slug);
+
+if (!page) {
+  return Astro.redirect('/404');
+}
+
+const settings = await getSiteSettings(regionConfig.strapiLocale);
+---
+
+<RegionalLayout {region} {page} {settings}>
+  <article>
+    <BlockRenderer blocks={page.body} />
+  </article>
+</RegionalLayout>

@@ -1,0 +1,79 @@
+/* ANZUK Education brand tokens — sourced from anzuk.education theme */
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/Poppins-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/Poppins-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/Poppins-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../assets/fonts/Poppins-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../assets/fonts/Roboto-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --anzuk-font-primary: 'Poppins', system-ui, sans-serif;
+  --anzuk-font-secondary: 'Roboto', system-ui, sans-serif;
+
+  --anzuk-blue: #00adef;
+  --anzuk-green: #3fac49;
+  --anzuk-yellow: #f6b419;
+  --anzuk-purple: #3c3087;
+  --anzuk-light-blue: #6dcff6;
+  --anzuk-light-green: #aad69b;
+  --anzuk-light-yellow: #fbd58f;
+  --anzuk-light-purple: #b7b0ea;
+  --anzuk-extra-light-blue: #c9edfc;
+  --anzuk-extra-light-green: #ecf7ed;
+  --anzuk-extra-light-purple: #dedcf0;
+  --anzuk-dark-purple: #312e48;
+  --anzuk-executive-bg: #312f41;
+  --anzuk-title: #323132;
+  --anzuk-content: #323132;
+  --anzuk-gray: #eee;
+  --anzuk-light-gray: #e0dfe5;
+  --anzuk-page-bg: #f0fafe;
+  --anzuk-white: #ffffff;
+  --anzuk-black: #000000;
+  --anzuk-icon-neutral: #333132;
+  --anzuk-icon-muted: #9e9995;
+
+  --anzuk-section-space: 112px;
+  --anzuk-content-space: 64px;
+  --anzuk-banner-space: 108px;
+  --anzuk-container-max: 1376px;
+  --anzuk-container-padding: 72px;
+  --anzuk-button-min-width: 158px;
+  --anzuk-button-height: 60px;
+  --anzuk-button-radius: 8px;
+  --anzuk-card-radius: 16px;
+}

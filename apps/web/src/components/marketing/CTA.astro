@@ -1,0 +1,35 @@
+---
+import Button from '../ui/Button.astro';
+import type { CtaBlock } from '../../lib/strapi/types';
+
+interface Props {
+  block: CtaBlock;
+}
+
+const { block } = Astro.props;
+const isDark = block.variant === 'dark';
+---
+
+<section
+  class:list={[
+    'px-6 py-16 lg:px-[72px]',
+    isDark ? 'bg-anzuk-dark-purple' : 'bg-anzuk-extra-light-blue',
+  ]}
+  aria-labelledby={`cta-${block.id}`}
+>
+  <div class="mx-auto max-w-anzuk-container text-center">
+    <h2 id={`cta-${block.id}`} class:list={[isDark && '!text-white']}>
+      {block.heading}
+    </h2>
+    {block.body && (
+      <p class:list={['mx-auto mt-4 max-w-xl text-lg', isDark ? 'text-anzuk-light-gray' : 'text-anzuk-content']}>
+        {block.body}
+      </p>
+    )}
+    <div class="mt-8">
+      <Button variant={isDark ? 'light' : 'primary'} href={block.buttonUrl}>
+        {block.buttonLabel}
+      </Button>
+    </div>
+  </div>
+</section>

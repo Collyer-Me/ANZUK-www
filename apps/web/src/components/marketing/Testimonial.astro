@@ -1,0 +1,27 @@
+---
+import type { TestimonialBlock } from '../../lib/strapi/types';
+
+interface Props {
+  block: TestimonialBlock;
+}
+
+const { block } = Astro.props;
+---
+
+<section class="px-6 py-20 lg:px-[72px]" aria-labelledby={`testimonial-${block.id}`}>
+  <figure class="mx-auto max-w-3xl text-center">
+    <blockquote>
+      <p id={`testimonial-${block.id}`} class="text-2xl font-medium leading-relaxed text-anzuk-title">
+        &ldquo;{block.quote}&rdquo;
+      </p>
+    </blockquote>
+    <figcaption class="mt-6">
+      <cite class="not-italic">
+        <span class="font-semibold text-anzuk-title">{block.authorName}</span>
+        {block.authorRole && (
+          <span class="text-anzuk-content"> — {block.authorRole}</span>
+        )}
+      </cite>
+    </figcaption>
+  </figure>
+</section>

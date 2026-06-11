@@ -1,0 +1,29 @@
+---
+description: ANZUK brand token and design system conventions
+globs: apps/web/**/*.{astro,ts,css},packages/brand/**/*
+alwaysApply: false
+---
+
+# Brand conventions
+
+## Single source of truth
+
+- All colours, typography, and spacing come from `@anzuk/brand` (`packages/brand`).
+- Never hardcode hex values in Astro components or pages.
+- Use Tailwind utilities: `bg-anzuk-blue`, `text-anzuk-title`, `rounded-anzuk-button`, etc.
+- Or CSS variables: `var(--anzuk-blue)`.
+
+## Components
+
+- Use `src/components/ui/Logo.astro` and `Button.astro` for brand-consistent UI.
+- Brand preview pages live under `src/pages/brand/` and must use the same primitives as marketing pages.
+
+## Tokens vs CMS
+
+- **Static brand** (colours, fonts, logos): `packages/brand` in code
+- **Marketing content** (copy, pages): Strapi `apps/cms`
+
+## Brand guide
+
+- Internal reference at `/brand` — always `noindex, nofollow` via `BrandLayout.astro`
+- When adding new UI patterns, add a demo to `/brand/components`

@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_shared_job_board_configs",
+  "info": {
+    "displayName": "Job Board Config",
+    "description": "JobAdder integration settings for job listing pages"
+  },
+  "options": {},
+  "attributes": {
+    "jobAdderBoardId": {
+      "type": "string"
+    },
+    "featuredOnly": {
+      "type": "boolean",
+      "default": false
+    },
+    "externalApply": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+}

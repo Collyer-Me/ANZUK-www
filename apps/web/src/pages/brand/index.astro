@@ -1,0 +1,83 @@
+---
+import BrandLayout from '../../layouts/BrandLayout.astro';
+import Logo from '../../components/ui/Logo.astro';
+import Button from '../../components/ui/Button.astro';
+import { brandColorSwatches } from '../../data/brand-colors';
+import { fontFamilies } from '@anzuk/brand';
+---
+
+<BrandLayout title="Overview" description="ANZUK Education brand overview and design system entry point.">
+  <div class="max-w-3xl space-y-6">
+    <p class="text-sm font-semibold uppercase tracking-wide text-anzuk-blue">Brand guide</p>
+    <h1 class="!mt-0">ANZUK Education</h1>
+    <p class="text-lg text-anzuk-content">
+      Living style guide for the global marketing platform. Tokens and components here are the same
+      building blocks used across regional marketing pages.
+    </p>
+  </div>
+
+  <section class="mt-12 grid gap-8 lg:grid-cols-2">
+    <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+      <h2 class="!mt-0 !text-2xl">Logo</h2>
+      <Logo class="mt-6 h-10 w-auto" />
+      <p class="mt-4 text-anzuk-content">
+        Wordmark with blue accent on the “i” and underline bar. See
+        <a href="/brand/logos">logo usage</a>.
+      </p>
+    </article>
+
+    <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+      <h2 class="!mt-0 !text-2xl">Typography</h2>
+      <p class="mt-4 font-sans text-3xl font-semibold">Experience exceptional</p>
+      <p class="mt-2 text-sm text-anzuk-content">
+        Primary: {fontFamilies.primary} · Secondary: {fontFamilies.secondary}
+      </p>
+      <p class="mt-4">
+        <a href="/brand/typography">View type scale</a>
+      </p>
+    </article>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-3xl">Core palette</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        brandColorSwatches.slice(0, 4).map((swatch) => (
+          <div class="rounded-anzuk-card overflow-hidden border border-anzuk-light-gray bg-white">
+            <div class="h-16" style={`background-color: ${swatch.hex}`} />
+            <div class="p-3 text-sm">
+              <p class="font-semibold">{swatch.name}</p>
+              <p class="font-mono text-xs">{swatch.hex}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <p class="mt-4">
+      <a href="/brand/colours">View full colour system</a>
+    </p>
+  </section>
+
+  <section class="mt-12 rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+    <h2 class="!mt-0 !text-2xl">Components</h2>
+    <div class="mt-6 flex flex-wrap gap-4">
+      <Button variant="primary">Schools enquiry</Button>
+      <Button variant="secondary">Leadership search</Button>
+      <Button variant="bordered">Search jobs</Button>
+    </div>
+    <p class="mt-4">
+      <a href="/brand/components">View all components</a>
+    </p>
+  </section>
+
+  <section class="mt-12 rounded-anzuk-card bg-anzuk-extra-light-green p-8">
+    <h2 class="!mt-0 !text-2xl">BE GREAT values</h2>
+    <p class="text-anzuk-content">
+      Belief · Equity · Growth · Relationships · Empower · Attitude · Team
+    </p>
+    <p class="mt-2 text-sm text-anzuk-content">
+      Brand voice is warm, confident, and people-first — international expertise with local
+      understanding.
+    </p>
+  </section>
+</BrandLayout>

@@ -1,0 +1,36 @@
+---
+import Logo from '../ui/Logo.astro';
+---
+
+<section class="space-y-8">
+  <article class="rounded-anzuk-card border border-anzuk-light-gray bg-anzuk-extra-light-blue p-8">
+    <h3 class="!mt-0 !text-lg font-semibold">Default logo</h3>
+    <p class="text-sm text-anzuk-content">Black wordmark with blue accents on light backgrounds.</p>
+    <div class="mt-6 flex flex-wrap items-end gap-8">
+      <Logo class="h-6 w-auto" />
+      <Logo class="h-8 w-auto" />
+      <Logo class="h-10 w-auto" />
+    </div>
+  </article>
+
+  <article class="rounded-anzuk-card border border-anzuk-dark-purple bg-anzuk-dark-purple p-8">
+    <h3 class="!mt-0 !text-lg font-semibold text-white">Reversed logo</h3>
+    <p class="text-sm text-white/80">White wordmark for dark purple or photographic backgrounds.</p>
+    <div class="mt-6 flex flex-wrap items-end gap-8">
+      <Logo variant="white" class="h-6 w-auto" />
+      <Logo variant="white" class="h-8 w-auto" />
+      <Logo variant="white" class="h-10 w-auto" />
+    </div>
+  </article>
+
+  <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+    <h3 class="!mt-0 !text-lg font-semibold">Clear space</h3>
+    <p class="text-sm text-anzuk-content">
+      Maintain padding equal to the height of the blue underline bar around the logo. Do not
+      distort, recolour accents, or place on low-contrast backgrounds.
+    </p>
+    <div class="mt-6 inline-block border-2 border-dashed border-anzuk-light-green p-8">
+      <Logo class="h-10 w-auto" />
+    </div>
+  </article>
+</section>

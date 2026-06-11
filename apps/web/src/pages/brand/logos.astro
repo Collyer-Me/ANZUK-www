@@ -1,0 +1,18 @@
+---
+import BrandLayout from '../../layouts/BrandLayout.astro';
+import LogoShowcase from '../../components/brand/LogoShowcase.astro';
+---
+
+<BrandLayout title="Logos" description="ANZUK Education logo usage and variants.">
+  <div class="max-w-3xl space-y-4">
+    <h1 class="!mt-0">Logos</h1>
+    <p class="text-lg text-anzuk-content">
+      SVG wordmarks live in <code class="rounded bg-white px-1.5 py-0.5 text-sm">packages/brand/assets/logos/</code>.
+      Use the <code class="rounded bg-white px-1.5 py-0.5 text-sm">Logo</code> component in Astro pages.
+    </p>
+  </div>
+
+  <div class="mt-10">
+    <LogoShowcase />
+  </div>
+</BrandLayout>

@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_blocks_heroes",
+  "info": {
+    "displayName": "Hero",
+    "description": "Page hero section"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "subheading": {
+      "type": "text"
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "ctaUrl": {
+      "type": "string"
+    },
+    "variant": {
+      "type": "enumeration",
+      "enum": ["default", "dark"],
+      "default": "default"
+    }
+  }
+}

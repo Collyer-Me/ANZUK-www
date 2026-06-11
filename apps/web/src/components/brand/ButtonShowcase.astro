@@ -1,0 +1,30 @@
+---
+import Button from '../ui/Button.astro';
+---
+
+<section class="space-y-8">
+  <div>
+    <h3 class="!mt-0 !text-lg font-semibold">Filled buttons</h3>
+    <div class="mt-4 flex flex-wrap gap-4">
+      <Button variant="primary">Schools enquiry</Button>
+      <Button variant="secondary">Leadership search</Button>
+      <Button variant="green">Expression of interest</Button>
+      <Button variant="dark">Search jobs</Button>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="!mt-0 !text-lg font-semibold">Outlined buttons</h3>
+    <div class="mt-4 flex flex-wrap gap-4">
+      <Button variant="bordered">Search jobs</Button>
+    </div>
+  </div>
+
+  <div class="rounded-anzuk-card bg-anzuk-blue p-8">
+    <h3 class="!mt-0 !text-lg font-semibold text-white">On blue background</h3>
+    <div class="mt-4 flex flex-wrap gap-4">
+      <Button variant="light">Light button</Button>
+      <Button variant="bordered" class="!border-white !text-white">Bordered</Button>
+    </div>
+  </div>
+</section>

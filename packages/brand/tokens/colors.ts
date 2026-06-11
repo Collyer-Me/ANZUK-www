@@ -1,0 +1,26 @@
+export const colors = {
+  blue: '#00ADEF',
+  green: '#3FAC49',
+  yellow: '#F6B419',
+  purple: '#3C3087',
+  lightBlue: '#6DCFF6',
+  lightGreen: '#AAD69B',
+  lightYellow: '#FBD58F',
+  lightPurple: '#B7B0EA',
+  extraLightBlue: '#c9edfc',
+  extraLightGreen: '#ecf7ed',
+  extraLightPurple: '#DEDCF0',
+  darkPurple: '#312E48',
+  executiveBg: '#312F41',
+  title: '#323132',
+  content: '#323132',
+  gray: '#eee',
+  lightGray: '#E0DFE5',
+  pageBg: '#f0fafe',
+  white: '#ffffff',
+  black: '#000000',
+  iconNeutral: '#333132',
+  iconMuted: '#9E9995',
+} as const;
+
+export type BrandColor = keyof typeof colors;

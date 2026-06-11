@@ -1,0 +1,64 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Logo from '../components/ui/Logo.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const navItems = [
+  { href: '/brand', label: 'Overview' },
+  { href: '/brand/colours', label: 'Colours' },
+  { href: '/brand/typography', label: 'Typography' },
+  { href: '/brand/logos', label: 'Logos' },
+  { href: '/brand/components', label: 'Components' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout
+  title={`${title} — ANZUK Brand`}
+  description={description ?? 'Internal brand guide for ANZUK Education.'}
+  noindex={true}
+>
+  <header class="border-b border-anzuk-light-gray bg-anzuk-extra-light-blue">
+    <div class="mx-auto flex max-w-anzuk-container flex-wrap items-center justify-between gap-4 px-6 py-5 lg:px-[72px]">
+      <a href="/brand" class="no-underline hover:no-underline">
+        <Logo class="h-8 w-auto" />
+      </a>
+      <nav aria-label="Brand guide sections">
+        <ul class="flex flex-wrap gap-2">
+          {
+            navItems.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={[
+                    'rounded-anzuk-button px-3 py-2 text-sm font-semibold no-underline transition-colors',
+                    currentPath === item.href
+                      ? 'bg-anzuk-blue text-white'
+                      : 'text-anzuk-title hover:bg-white/60',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-anzuk-container px-6 py-12 lg:px-[72px]">
+    <slot />
+  </main>
+
+  <footer class="border-t border-anzuk-light-gray bg-white py-8 text-center text-sm text-anzuk-content">
+    <p>Internal brand guide — not indexed by search engines.</p>
+  </footer>
+</BaseLayout>

@@ -1,0 +1,17 @@
+---
+description: Regional SEO — canonical, hreflang, URL conventions
+globs: apps/web/**/*.{astro,ts}
+alwaysApply: false
+---
+
+# Regional SEO
+
+Check `docs/decisions/` before changing routing or SEO behaviour.
+
+- URL segments: `au`, `uk`, `us`, `nz` (not BCP 47 in paths)
+- hreflang values: `en-AU`, `en-GB`, `en-US`, `en-NZ`
+- Default region: Australia (`au`)
+- Use `getRelativeLocaleUrl()` / `getAbsoluteLocaleUrl()` — never hardcode `/au/`
+- Trailing slashes: always (`trailingSlash: 'always'`)
+- Every regional page: canonical + self-referencing hreflang + all four alternates + `x-default` → `/`
+- `x-default` points to root region picker unless ADR says otherwise

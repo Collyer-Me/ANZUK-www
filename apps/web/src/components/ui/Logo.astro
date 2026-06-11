@@ -1,0 +1,20 @@
+---
+import logoSrc from '@anzuk/brand/assets/logos/anzuk-education.svg';
+import logoWhiteSrc from '@anzuk/brand/assets/logos/anzuk-education-white.svg';
+
+interface Props {
+  variant?: 'default' | 'white';
+  class?: string;
+  alt?: string;
+}
+
+const {
+  variant = 'default',
+  class: className = '',
+  alt = 'ANZUK Education',
+} = Astro.props;
+
+const src = variant === 'white' ? logoWhiteSrc : logoSrc;
+---
+
+<img src={src.src} width={src.width} height={src.height} alt={alt} class={className} />

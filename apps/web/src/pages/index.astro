@@ -1,0 +1,51 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/ui/Logo.astro';
+import Button from '../components/ui/Button.astro';
+import { REGIONS, DEFAULT_REGION } from '../config/regions';
+import { siteConfig } from '../config/site';
+---
+
+<BaseLayout
+  title={`${siteConfig.name} — Choose your region`}
+  description="Select your region to view ANZUK Education content tailored to your market."
+>
+  <main class="mx-auto flex min-h-screen max-w-anzuk-container flex-col items-center justify-center gap-10 px-6 py-16 text-center lg:px-[72px]">
+    <Logo class="h-10 w-auto" />
+    <div class="max-w-2xl space-y-4">
+      <h1 class="!mt-0 !text-5xl">Choose your region</h1>
+      <p class="text-lg text-anzuk-content">
+        {siteConfig.tagline}
+      </p>
+    </div>
+    <nav aria-label="Regional sites">
+      <ul class="grid w-full max-w-lg gap-4 sm:grid-cols-2" role="list">
+        {
+          REGIONS.map((region) => (
+            <li>
+              <a
+                href={getRelativeLocaleUrl(region.path, '/')}
+                class="flex items-center gap-3 rounded-2xl border-2 border-anzuk-light-gray bg-white p-5 text-left no-underline transition-shadow hover:shadow-md"
+                hreflang={region.hreflang}
+                lang={region.htmlLang}
+              >
+                <span class="text-3xl" aria-hidden="true">{region.flag}</span>
+                <span>
+                  <span class="block font-semibold text-anzuk-title">{region.label}</span>
+                  <span class="text-sm text-anzuk-content">{region.hreflang}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <div class="flex flex-wrap justify-center gap-4">
+      <Button variant="primary" href={getRelativeLocaleUrl(DEFAULT_REGION, '/')}>
+        Continue to Australia
+      </Button>
+      <Button variant="bordered" href="/brand">Brand guide</Button>
+    </div>
+  </main>
+</BaseLayout>

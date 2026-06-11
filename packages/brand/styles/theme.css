@@ -1,0 +1,31 @@
+/* Tailwind v4 theme extension — import after tailwindcss in app global.css */
+@theme {
+  --font-sans: var(--anzuk-font-primary);
+  --font-secondary: var(--anzuk-font-secondary);
+
+  --color-anzuk-blue: var(--anzuk-blue);
+  --color-anzuk-green: var(--anzuk-green);
+  --color-anzuk-yellow: var(--anzuk-yellow);
+  --color-anzuk-purple: var(--anzuk-purple);
+  --color-anzuk-light-blue: var(--anzuk-light-blue);
+  --color-anzuk-light-green: var(--anzuk-light-green);
+  --color-anzuk-light-yellow: var(--anzuk-light-yellow);
+  --color-anzuk-light-purple: var(--anzuk-light-purple);
+  --color-anzuk-extra-light-blue: var(--anzuk-extra-light-blue);
+  --color-anzuk-extra-light-green: var(--anzuk-extra-light-green);
+  --color-anzuk-extra-light-purple: var(--anzuk-extra-light-purple);
+  --color-anzuk-dark-purple: var(--anzuk-dark-purple);
+  --color-anzuk-executive-bg: var(--anzuk-executive-bg);
+  --color-anzuk-title: var(--anzuk-title);
+  --color-anzuk-content: var(--anzuk-content);
+  --color-anzuk-gray: var(--anzuk-gray);
+  --color-anzuk-light-gray: var(--anzuk-light-gray);
+  --color-anzuk-page-bg: var(--anzuk-page-bg);
+  --color-anzuk-icon-neutral: var(--anzuk-icon-neutral);
+  --color-anzuk-icon-muted: var(--anzuk-icon-muted);
+
+  --radius-anzuk-button: var(--anzuk-button-radius);
+  --radius-anzuk-card: var(--anzuk-card-radius);
+
+  --max-width-anzuk-container: 1376px;
+}

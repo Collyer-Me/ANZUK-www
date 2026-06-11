@@ -1,0 +1,37 @@
+---
+import Button from '../ui/Button.astro';
+import type { HeroBlock } from '../../lib/strapi/types';
+
+interface Props {
+  block: HeroBlock;
+}
+
+const { block } = Astro.props;
+const isDark = block.variant === 'dark';
+---
+
+<section
+  class:list={[
+    'px-6 py-20 lg:px-[72px]',
+    isDark ? 'bg-anzuk-dark-purple text-white' : 'bg-anzuk-page-bg',
+  ]}
+  aria-labelledby={`hero-${block.id}`}
+>
+  <div class="mx-auto max-w-anzuk-container text-center">
+    <h1 id={`hero-${block.id}`} class:list={[isDark && '!text-white']}>
+      {block.heading}
+    </h1>
+    {block.subheading && (
+      <p class:list={['mx-auto mt-6 max-w-2xl text-lg', isDark ? 'text-anzuk-light-gray' : 'text-anzuk-content']}>
+        {block.subheading}
+      </p>
+    )}
+    {block.ctaLabel && block.ctaUrl && (
+      <div class="mt-10">
+        <Button variant={isDark ? 'light' : 'primary'} href={block.ctaUrl}>
+          {block.ctaLabel}
+        </Button>
+      </div>
+    )}
+  </div>
+</section>

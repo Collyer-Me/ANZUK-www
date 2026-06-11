@@ -1,0 +1,47 @@
+---
+type Variant = 'primary' | 'secondary' | 'green' | 'dark' | 'light' | 'bordered';
+
+interface Props {
+  variant?: Variant;
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+  target?: string;
+  rel?: string;
+}
+
+const {
+  variant = 'primary',
+  href,
+  type = 'button',
+  class: className = '',
+  target,
+  rel,
+} = Astro.props;
+
+const baseClasses =
+  'inline-flex min-h-[60px] min-w-[158px] items-center justify-center rounded-anzuk-button border-2 px-5 text-base font-semibold leading-normal no-underline transition-opacity hover:opacity-90';
+
+const variantClasses: Record<Variant, string> = {
+  primary: 'border-anzuk-blue bg-anzuk-blue text-white hover:no-underline',
+  secondary: 'border-anzuk-yellow bg-anzuk-yellow text-anzuk-title hover:no-underline',
+  green: 'border-anzuk-light-green bg-anzuk-light-green text-anzuk-title hover:no-underline',
+  dark: 'border-anzuk-title bg-anzuk-title text-white hover:no-underline',
+  light: 'border-white bg-white text-anzuk-blue hover:no-underline',
+  bordered: 'border-anzuk-blue bg-transparent text-anzuk-blue hover:no-underline',
+};
+
+const classes = [baseClasses, variantClasses[variant], className];
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes} target={target} rel={rel}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class:list={classes}>
+      <slot />
+    </button>
+  )
+}

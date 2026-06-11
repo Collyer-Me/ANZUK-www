@@ -1,0 +1,14 @@
+---
+description: JSON-LD structured data conventions
+globs: apps/web/src/components/seo/**/*
+alwaysApply: false
+---
+
+# JSON-LD
+
+- Use `@graph` with stable `@id` anchors in `RegionalLayout`
+- One `Organization` site-wide; regional `WebPage` with `inLanguage` per page
+- `url` and `@id` must match canonical URL
+- `inLanguage` from `regions.ts` hreflang (e.g. `en-AU`)
+- Do not duplicate `Organization` blocks per region
+- Use `JsonLd.astro` component for rendering

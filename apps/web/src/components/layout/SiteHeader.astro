@@ -1,0 +1,43 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Logo from '../ui/Logo.astro';
+import { REGIONS, type RegionPath } from '../../config/regions';
+
+interface Props {
+  region: RegionPath;
+}
+
+const { region } = Astro.props;
+const current = REGIONS.find((r) => r.path === region)!;
+---
+
+<header class="border-b border-anzuk-light-gray bg-white">
+  <div class="mx-auto flex max-w-anzuk-container items-center justify-between gap-4 px-6 py-4 lg:px-[72px]">
+    <a href={getRelativeLocaleUrl(region, '/')} aria-label="ANZUK Education home">
+      <Logo class="h-8 w-auto" />
+    </a>
+    <nav aria-label="Regional sites">
+      <ul class="flex flex-wrap items-center gap-2 text-sm">
+        {
+          REGIONS.map((r) => (
+            <li>
+              <a
+                href={getRelativeLocaleUrl(r.path, '/')}
+                class:list={[
+                  'rounded-full px-3 py-1 no-underline transition-colors',
+                  r.path === region
+                    ? 'bg-anzuk-blue font-semibold text-white'
+                    : 'text-anzuk-content hover:bg-anzuk-extra-light-blue',
+                ]}
+                hreflang={r.hreflang}
+                lang={r.htmlLang}
+              >
+                <span aria-hidden="true">{r.flag}</span> {r.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

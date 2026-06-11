@@ -1,0 +1,54 @@
+---
+import BrandLayout from '../../layouts/BrandLayout.astro';
+import ButtonShowcase from '../../components/brand/ButtonShowcase.astro';
+import heroImage from '@anzuk/brand/assets/images/hero-home.png';
+import flagAus from '@anzuk/brand/assets/images/flag-aus.png';
+---
+
+<BrandLayout title="Components" description="ANZUK Education UI components and patterns.">
+  <div class="max-w-3xl space-y-4">
+    <h1 class="!mt-0">Components</h1>
+    <p class="text-lg text-anzuk-content">
+      Reusable marketing primitives built on brand tokens. These are the same components used on
+      live pages.
+    </p>
+  </div>
+
+  <section class="mt-10">
+    <h2 class="!text-2xl">Buttons</h2>
+    <div class="mt-6">
+      <ButtonShowcase />
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Country card</h2>
+    <p class="text-anzuk-content">Regional selector pattern from the international homepage.</p>
+    <article class="mt-6 max-w-xs overflow-hidden rounded-anzuk-card bg-white shadow-[0_4px_6px_-2px_rgba(0,0,0,0.02),0_12px_16px_-4px_rgba(0,0,0,0.04)]">
+      <img src={flagAus.src} alt="Australia" class="h-40 w-full object-cover" width={flagAus.width} height={flagAus.height} />
+      <div class="p-4">
+        <h3 class="!mt-0 !text-lg font-semibold">Australia</h3>
+        <p class="text-sm text-anzuk-content">Local recruitment team</p>
+      </div>
+    </article>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Hero image</h2>
+    <p class="text-anzuk-content">Photography masked in organic shapes on the live site.</p>
+    <div class="mt-6 max-w-md overflow-hidden rounded-anzuk-card border border-anzuk-light-gray bg-white p-4">
+      <img src={heroImage.src} alt="ANZUK educators" class="w-full rounded-lg" width={heroImage.width} height={heroImage.height} />
+    </div>
+  </section>
+
+  <section class="mt-12 grid gap-4 md:grid-cols-2">
+    <article class="rounded-anzuk-card bg-anzuk-extra-light-blue p-8">
+      <h3 class="!mt-0 !text-lg font-semibold">Section — light blue</h3>
+      <p class="text-sm text-anzuk-content">Used for header and soft content sections.</p>
+    </article>
+    <article class="rounded-anzuk-card bg-anzuk-extra-light-green p-8">
+      <h3 class="!mt-0 !text-lg font-semibold">Section — light green</h3>
+      <p class="text-sm text-anzuk-content">Used for values and supportive content blocks.</p>
+    </article>
+  </section>
+</BrandLayout>

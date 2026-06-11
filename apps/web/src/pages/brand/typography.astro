@@ -1,0 +1,68 @@
+---
+import BrandLayout from '../../layouts/BrandLayout.astro';
+import TypeSpecimen from '../../components/brand/TypeSpecimen.astro';
+import { fontFamilies, fontSizes } from '@anzuk/brand';
+---
+
+<BrandLayout title="Typography" description="ANZUK Education type scale and font families.">
+  <div class="max-w-3xl space-y-4">
+    <h1 class="!mt-0">Typography</h1>
+    <p class="text-lg text-anzuk-content">
+      Poppins is the primary typeface for marketing UI. Roboto is available as a secondary family.
+    </p>
+  </div>
+
+  <section class="mt-10 grid gap-4 md:grid-cols-2">
+    <TypeSpecimen
+      label="Primary font"
+      sample="Poppins — Experience exceptional"
+      meta={fontFamilies.primary}
+      class="text-2xl font-semibold"
+    />
+    <TypeSpecimen
+      label="Secondary font"
+      sample="Roboto — Supporting body copy"
+      meta={fontFamilies.secondary}
+      class="font-secondary text-2xl"
+    />
+  </section>
+
+  <section class="mt-12 space-y-4">
+    <h2 class="!text-2xl">Heading scale</h2>
+    <TypeSpecimen label="H1" sample="Experience exceptional" meta={`${fontSizes.h1.size} / ${fontSizes.h1.lineHeight} / weight 600`} class="text-[80px] leading-[1.25] font-semibold tracking-[-0.02em]" />
+    <TypeSpecimen label="H2" sample="Local recruitment teams" meta={`${fontSizes.h2.size} / ${fontSizes.h2.lineHeight}`} class="text-[61px] leading-[1.25] font-semibold tracking-[-0.02em]" />
+    <TypeSpecimen label="H3" sample="Exceptional educators" meta={`${fontSizes.h3.size} / ${fontSizes.h3.lineHeight}`} class="text-[47px] leading-[1.25] font-semibold tracking-[-0.02em]" />
+    <TypeSpecimen label="H4" sample="Supporting international educators" meta={`${fontSizes.h4.size} / ${fontSizes.h4.lineHeight}`} class="text-4xl leading-[1.25] font-semibold tracking-[-0.02em]" />
+    <TypeSpecimen label="H5" sample="International expertise in education." meta={`${fontSizes.h5.size} / ${fontSizes.h5.lineHeight}`} class="text-[27px] leading-[1.4] font-semibold tracking-[-0.02em]" />
+    <TypeSpecimen label="H6" sample="Our BE GREAT values" meta={`${fontSizes.h6.size} / ${fontSizes.h6.lineHeight}`} class="text-[21px] leading-[1.4] font-semibold tracking-[-0.02em]" />
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Body & links</h2>
+    <article class="mt-6 rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+      <p>
+        At ANZUK Education, we help international schools experience exceptional by connecting them
+        with passionate, high-quality educators. <a href="#">Learn more about our approach</a>.
+      </p>
+      <p class="mt-4 text-sm text-anzuk-icon-muted">
+        Body: 18px / 1.5 line-height · Links use brand blue with underline on hover
+      </p>
+    </article>
+  </section>
+
+  <section class="mt-12 rounded-anzuk-card bg-anzuk-extra-light-purple p-8">
+    <h2 class="!mt-0 !text-xl">Hero highlight treatment</h2>
+    <p class="text-anzuk-content">
+      Marketing heroes use rotated green and purple blocks behind key words (e.g. “exceptional”).
+      Animation specs will be added when hero components are built.
+    </p>
+    <p class="mt-6 text-4xl font-semibold tracking-[-0.02em]">
+      Experience<br />
+      <span class="relative inline-block px-4 text-white">
+        <span class="absolute inset-0 -rotate-[2.6deg] bg-anzuk-green"></span>
+        <span class="absolute inset-x-3 inset-y-0 rotate-[2.6deg] bg-anzuk-purple -z-10"></span>
+        <span class="relative">exceptional</span>
+      </span>
+    </p>
+  </section>
+</BrandLayout>

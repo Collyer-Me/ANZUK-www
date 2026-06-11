@@ -1,0 +1,58 @@
+---
+import BrandLayout from '../../layouts/BrandLayout.astro';
+import ColorSwatch from '../../components/brand/ColorSwatch.astro';
+import { brandColorSwatches } from '../../data/brand-colors';
+---
+
+<BrandLayout title="Colours" description="ANZUK Education colour palette and design tokens.">
+  <div class="max-w-3xl space-y-4">
+    <h1 class="!mt-0">Colours</h1>
+    <p class="text-lg text-anzuk-content">
+      All colours are defined in <code class="rounded bg-white px-1.5 py-0.5 text-sm">@anzuk/brand</code>
+      and exposed as CSS variables and Tailwind utilities. Never hardcode hex values in components.
+    </p>
+  </div>
+
+  <section class="mt-10">
+    <h2 class="!text-2xl">Primary palette</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        brandColorSwatches.slice(0, 4).map((swatch) => (
+          <ColorSwatch
+            name={swatch.name}
+            hex={swatch.hex}
+            cssVar={swatch.cssVar}
+            tailwindClass={swatch.tailwindClass}
+            description={swatch.description}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Supporting colours</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        brandColorSwatches.slice(4).map((swatch) => (
+          <ColorSwatch
+            name={swatch.name}
+            hex={swatch.hex}
+            cssVar={swatch.cssVar}
+            tailwindClass={swatch.tailwindClass}
+            description={swatch.description}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mt-12 rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+    <h2 class="!mt-0 !text-xl">Section backgrounds</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      <div class="rounded-anzuk-card bg-white p-6 text-center text-sm">White section</div>
+      <div class="rounded-anzuk-card bg-anzuk-extra-light-blue p-6 text-center text-sm">Extra light blue</div>
+      <div class="rounded-anzuk-card bg-anzuk-dark-purple p-6 text-center text-sm text-white">Dark purple</div>
+    </div>
+  </section>
+</BrandLayout>

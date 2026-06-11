@@ -1,0 +1,23 @@
+---
+import JsonLd from './JsonLd.astro';
+import { getSiteUrl, siteConfig } from '../../config/site';
+import type { SiteSettings } from '../../lib/strapi/types';
+
+interface Props {
+  settings: SiteSettings;
+}
+
+const { settings } = Astro.props;
+const siteUrl = getSiteUrl();
+
+const schema = {
+  '@type': 'Organization',
+  '@id': `${siteUrl}/${siteConfig.organizationId}`,
+  name: settings.siteName,
+  url: siteUrl,
+  ...(settings.organizationUrl && { url: settings.organizationUrl }),
+  ...(settings.contactEmail && { email: settings.contactEmail }),
+};
+---
+
+<JsonLd schema={schema} />

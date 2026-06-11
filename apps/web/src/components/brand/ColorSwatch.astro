@@ -1,0 +1,22 @@
+---
+interface Props {
+  name: string;
+  hex: string;
+  cssVar: string;
+  tailwindClass: string;
+  description?: string;
+}
+
+const { name, hex, cssVar, tailwindClass, description } = Astro.props;
+---
+
+<article class="overflow-hidden rounded-anzuk-card border border-anzuk-light-gray bg-white shadow-sm">
+  <div class="h-24 w-full" style={`background-color: var(${cssVar})`}></div>
+  <div class="space-y-1 p-4 text-sm">
+    <h3 class="!mt-0 !text-base font-semibold text-anzuk-title">{name}</h3>
+    <p class="font-mono text-anzuk-content">{hex}</p>
+    <p class="font-mono text-xs text-anzuk-icon-muted">{cssVar}</p>
+    <p class="font-mono text-xs text-anzuk-icon-muted">{tailwindClass}</p>
+    {description && <p class="text-anzuk-content">{description}</p>}
+  </div>
+</article>

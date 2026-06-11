@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@import "@anzuk/brand/styles/tokens.css";
+@import "@anzuk/brand/styles/theme.css";
+
+@layer base {
+  body {
+    font-family: var(--anzuk-font-primary);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--anzuk-content);
+    background-color: var(--anzuk-page-bg);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--anzuk-title);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: 80px;
+    line-height: 1.25;
+  }
+
+  h2 {
+    font-size: 61px;
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-size: 47px;
+    line-height: 1.25;
+  }
+
+  h4 {
+    font-size: 36px;
+    line-height: 1.25;
+  }
+
+  h5 {
+    font-size: 27px;
+    line-height: 1.4;
+  }
+
+  h6 {
+    font-size: 21px;
+    line-height: 1.4;
+  }
+
+  a {
+    color: var(--anzuk-blue);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}

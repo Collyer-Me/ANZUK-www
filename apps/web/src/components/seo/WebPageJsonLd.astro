@@ -1,0 +1,29 @@
+---
+import JsonLd from './JsonLd.astro';
+import { getSiteUrl, siteConfig } from '../../config/site';
+import { getRegionByPath, type RegionPath } from '../../config/regions';
+import { buildCanonicalUrl } from '../../lib/seo/urls';
+import type { LocalizedPage } from '../../lib/strapi/types';
+
+interface Props {
+  region: RegionPath;
+  page: LocalizedPage;
+}
+
+const { region, page } = Astro.props;
+const regionConfig = getRegionByPath(region)!;
+const siteUrl = getSiteUrl();
+const pageUrl = buildCanonicalUrl(region, page.slug, page.canonicalUrl);
+
+const schema = {
+  '@type': 'WebPage',
+  '@id': `${pageUrl}#webpage`,
+  url: pageUrl,
+  name: page.seo?.metaTitle ?? page.title,
+  description: page.seo?.metaDescription ?? undefined,
+  inLanguage: regionConfig.hreflang,
+  isPartOf: { '@id': `${siteUrl}/${siteConfig.websiteId}` },
+};
+---
+
+<JsonLd schema={schema} />

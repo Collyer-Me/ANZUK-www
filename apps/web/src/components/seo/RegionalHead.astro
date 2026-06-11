@@ -1,0 +1,41 @@
+---
+import { getRegionByPath, type RegionPath } from '../../config/regions';
+import { absolutePageUrl, buildCanonicalUrl, xDefaultUrl } from '../../lib/seo/urls';
+import type { LocalizedPage } from '../../lib/strapi/types';
+import { buildAlternates } from '../../lib/strapi/queries/pages';
+
+interface Props {
+  region: RegionPath;
+  page: LocalizedPage;
+}
+
+const { region, page } = Astro.props;
+const regionConfig = getRegionByPath(region)!;
+const alternates = buildAlternates(page, region);
+const title = page.seo?.metaTitle ?? page.title;
+const description = page.seo?.metaDescription ?? '';
+const canonical = buildCanonicalUrl(region, page.slug, page.canonicalUrl);
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+{description && <meta name="description" content={description} />}
+{page.noIndex && <meta name="robots" content="noindex, nofollow" />}
+<link rel="icon" href="/favicon.ico" />
+<link rel="canonical" href={canonical} />
+{
+  alternates.map((alt) => (
+    <link
+      rel="alternate"
+      hreflang={alt.hreflang}
+      href={absolutePageUrl(alt.path, alt.slug)}
+    />
+  ))
+}
+<link rel="alternate" hreflang="x-default" href={xDefaultUrl()} />
+<meta property="og:title" content={title} />
+{description && <meta property="og:description" content={description} />}
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={regionConfig.hreflang.replace('-', '_')} />
+<meta property="og:type" content="website" />

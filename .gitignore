@@ -1,0 +1,20 @@
+node_modules/
+dist/
+apps/web/dist/
+.astro/
+.env
+.env.*
+!.env.example
+apps/cms/.env
+apps/web/.env
+
+# Strapi
+apps/cms/.tmp/
+apps/cms/.cache/
+apps/cms/build/
+apps/cms/public/uploads/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+*.log

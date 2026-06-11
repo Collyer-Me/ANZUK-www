@@ -1,0 +1,30 @@
+---
+import Hero from '../marketing/Hero.astro';
+import FeatureGrid from '../marketing/FeatureGrid.astro';
+import CTA from '../marketing/CTA.astro';
+import Testimonial from '../marketing/Testimonial.astro';
+import type { ContentBlock } from '../../lib/strapi/types';
+
+interface Props {
+  blocks?: ContentBlock[];
+}
+
+const { blocks = [] } = Astro.props;
+---
+
+{
+  blocks.map((block) => {
+    switch (block.__component) {
+      case 'blocks.hero':
+        return <Hero block={block} />;
+      case 'blocks.feature-grid':
+        return <FeatureGrid block={block} />;
+      case 'blocks.cta':
+        return <CTA block={block} />;
+      case 'blocks.testimonial':
+        return <Testimonial block={block} />;
+      default:
+        return null;
+    }
+  })
+}

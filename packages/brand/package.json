@@ -1,0 +1,21 @@
+{
+  "name": "@anzuk/brand",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./tokens/index.ts",
+    "./tokens": "./tokens/index.ts",
+    "./tokens/*": "./tokens/*",
+    "./styles/tokens.css": "./styles/tokens.css",
+    "./styles/theme.css": "./styles/theme.css",
+    "./tailwind/preset": "./tailwind/preset.ts",
+    "./assets/*": "./assets/*"
+  },
+  "files": [
+    "tokens",
+    "styles",
+    "tailwind",
+    "assets"
+  ]
+}

@@ -1,0 +1,15 @@
+---
+description: Semantic HTML and heading hierarchy for marketing pages
+globs: apps/web/**/*.{astro,tsx,jsx}
+alwaysApply: false
+---
+
+# Semantic HTML
+
+- Use `<main>`, `<article>`, `<section>`, `<nav>`, `<header>`, `<footer>`
+- One `<h1>` per page (typically in Hero block)
+- Do not skip heading levels (h1 → h2 → h3)
+- Images require meaningful `alt` text
+- Use `aria-labelledby` on sections when heading provides the label
+
+Brand guide at `/brand` uses `noindex` — still follow semantic structure.

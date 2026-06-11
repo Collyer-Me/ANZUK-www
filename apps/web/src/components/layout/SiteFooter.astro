@@ -1,0 +1,35 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import type { RegionPath } from '../../config/regions';
+import type { SiteSettings } from '../../lib/strapi/types';
+
+interface Props {
+  region: RegionPath;
+  settings: SiteSettings;
+}
+
+const { region, settings } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-anzuk-light-gray bg-anzuk-dark-purple px-6 py-10 text-anzuk-light-gray lg:px-[72px]">
+  <div class="mx-auto flex max-w-anzuk-container flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm">
+      &copy; {year} {settings.siteName}. All rights reserved.
+    </p>
+    <nav aria-label="Footer">
+      <ul class="flex gap-4 text-sm">
+        <li>
+          <a href={getRelativeLocaleUrl(region, '/')} class="text-anzuk-light-blue no-underline hover:underline">
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/brand" class="text-anzuk-light-blue no-underline hover:underline" rel="nofollow">
+            Brand guide
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</footer>

@@ -1,0 +1,129 @@
+{
+  "kind": "collectionType",
+  "collectionName": "localized_pages",
+  "info": {
+    "singularName": "localized-page",
+    "pluralName": "localized-pages",
+    "displayName": "Localized Page",
+    "description": "Marketing page scoped by market with dynamic content blocks"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "market": {
+      "type": "enumeration",
+      "enum": ["international", "au", "uk", "ca", "nz"],
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "pageTemplate": {
+      "type": "enumeration",
+      "enum": [
+        "home-international",
+        "home-regional",
+        "service-educators",
+        "service-schools",
+        "service-leadership",
+        "sector",
+        "job-listing",
+        "blog-listing",
+        "about",
+        "team-listing",
+        "contact",
+        "faq",
+        "form-landing",
+        "policy",
+        "product",
+        "process",
+        "cross-market",
+        "generic"
+      ],
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "canonicalUrl": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "noIndex": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "jobBoardConfig": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.job-board-config",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "body": {
+      "type": "dynamiczone",
+      "components": [
+        "blocks.hero",
+        "blocks.feature-grid",
+        "blocks.cta",
+        "blocks.testimonial"
+      ],
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+---
+description: Astro patterns for the marketing hub
+globs: apps/web/**/*
+alwaysApply: false
+---
+
+# Astro patterns
+
+- `output: 'static'` — all Strapi fetches at build time in frontmatter / `getStaticPaths`
+- Strapi content via `src/lib/strapi/` — always pass `locale` explicitly
+- Mock data when `USE_MOCK_DATA=true` or Strapi not configured
+- React islands only when interactivity is required (not yet used)
+- Monorepo layout: frontend in `apps/web`, CMS in `apps/cms`, brand in `packages/brand`
+- See `docs/decisions/006-monorepo-apps-layout.md`
