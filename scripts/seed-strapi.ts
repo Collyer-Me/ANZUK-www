@@ -5,6 +5,9 @@
  *   1. Create a Full access API token in Strapi admin
  *   2. Add STRAPI_API_CURSOR (full access) to apps/web/.env
  *   3. npm run seed:strapi
+ *
+ * Preflight checks skip sections that are not deployed or broken on Strapi Cloud.
+ * Pages and articles seed even when site-setting / market-navigation are unavailable.
  */
 
 import { readFileSync } from 'node:fs';
@@ -160,6 +163,11 @@ function serializeSiteSettings(locale: string) {
   };
 }
 
+function shortError(error: unknown): string {
+  if (!(error instanceof Error)) return String(error);
+  return error.message.split('\n')[0];
+}
+
 async function main(): Promise<void> {
   loadEnvFile(resolve(process.cwd(), 'apps/web/.env'));
 
@@ -189,68 +197,140 @@ async function main(): Promise<void> {
 
   console.log(`Seeding Strapi at ${baseUrl}\n`);
 
-  console.log('→ Site Settings');
-  console.log(`  (shared fields written once on ${DEFAULT_LOCALE} only)`);
-  let siteSettingsFailed = false;
-  for (const locale of locales) {
-    try {
-      const { data } = serializeSiteSettings(locale);
-      await client.upsertSingleType('site-setting', locale, data);
-      console.log(`  ✓ site-setting (${locale})`);
-    } catch (error) {
-      siteSettingsFailed = true;
-      console.warn(`  ✗ site-setting (${locale}) — ${error instanceof Error ? error.message : error}`);
+  console.log('Preflight');
+  const siteSettingProbe = await client.probeEndpoint('site-setting', { locale: 'en-AU' });
+  const marketNavProbe = await client.probeEndpoint('market-navigations', {
+    'pagination[pageSize]': '1',
+  });
+  const pagesProbe = await client.probeEndpoint('localized-pages', {
+    locale: 'en-AU',
+    'pagination[pageSize]': '1',
+  });
+  const articlesProbe = await client.probeEndpoint('articles', {
+    locale: 'en-AU',
+    'pagination[pageSize]': '1',
+  });
+
+  console.log(`  site-setting: ${siteSettingProbe.httpStatus} (${siteSettingProbe.status})`);
+  console.log(`  market-navigations: ${marketNavProbe.httpStatus} (${marketNavProbe.status})`);
+  console.log(`  localized-pages: ${pagesProbe.httpStatus} (${pagesProbe.status})`);
+  console.log(`  articles: ${articlesProbe.httpStatus} (${articlesProbe.status})`);
+
+  const canSeedSiteSettings = siteSettingProbe.status === 'ok';
+  const canSeedMarketNav = marketNavProbe.status === 'ok';
+  const canSeedPages = pagesProbe.status === 'ok';
+  const canSeedArticles = articlesProbe.status === 'ok';
+
+  if (!canSeedSiteSettings) {
+    console.warn(
+      '\n  Skipping Site Settings — endpoint unavailable. Common causes:\n' +
+        '  • Strapi Cloud has not finished deploying apps/cms from main\n' +
+        '  • site-setting is broken (500) from the old marketNavigations field — redeploy latest schema\n' +
+        '  The Astro site will use mock site settings until this is fixed.\n',
+    );
+  }
+
+  if (!canSeedMarketNav) {
+    console.warn(
+      '\n  Skipping Market Navigations — content type not found (404).\n' +
+        '  Deploy apps/cms on Strapi Cloud, then grant API token access to market-navigation.\n' +
+        '  The Astro site will use mock navigation until entries exist.\n',
+    );
+  }
+
+  let failures = 0;
+
+  if (canSeedSiteSettings) {
+    console.log('\n→ Site Settings');
+    console.log(`  (shared fields written once on ${DEFAULT_LOCALE} only)`);
+    for (const locale of locales) {
+      try {
+        const { data } = serializeSiteSettings(locale);
+        await client.upsertSingleType('site-setting', locale, data);
+        console.log(`  ✓ site-setting (${locale})`);
+      } catch (error) {
+        failures += 1;
+        console.warn(`  ✗ site-setting (${locale}) — ${shortError(error)}`);
+      }
     }
   }
-  if (siteSettingsFailed) {
-    console.warn(
-      '\n  Site Settings failed. If you see 500 errors, redeploy apps/cms on Strapi Cloud\n' +
-        '  (removes the broken marketNavigations field from site-setting), then re-run seed.\n',
-    );
+
+  if (canSeedMarketNav) {
+    console.log('\n→ Market Navigations');
+    for (const nav of MOCK_MARKET_NAVIGATIONS) {
+      try {
+        await client.upsertCollection(
+          'market-navigations',
+          undefined,
+          { market: nav.market },
+          {
+            market: nav.market,
+            items: nav.items?.map(serializeNavItem),
+          },
+        );
+        console.log(`  ✓ navigation/${nav.market}`);
+      } catch (error) {
+        failures += 1;
+        console.warn(`  ✗ navigation/${nav.market} — ${shortError(error)}`);
+      }
+    }
   }
 
-  console.log('\n→ Market Navigations');
-  for (const nav of MOCK_MARKET_NAVIGATIONS) {
-    await client.upsertCollection(
-      'market-navigations',
-      undefined,
-      { market: nav.market },
-      {
-        market: nav.market,
-        items: nav.items?.map(serializeNavItem),
-      },
-    );
-    console.log(`  ✓ navigation/${nav.market}`);
+  if (canSeedPages) {
+    console.log('\n→ Localized Pages');
+    for (const page of MOCK_PAGES) {
+      const locale = localeForMarket(page.market);
+      try {
+        const { data } = serializePage(page, locale);
+        await client.upsertCollection(
+          'localized-pages',
+          locale,
+          { slug: toStrapiSlug(page.market, page.slug), market: page.market },
+          data,
+        );
+        console.log(`  ✓ ${page.market}/${page.slug} (${locale})`);
+      } catch (error) {
+        failures += 1;
+        console.warn(`  ✗ ${page.market}/${page.slug} — ${shortError(error)}`);
+      }
+    }
+  } else {
+    console.warn('\n  Skipping Localized Pages — endpoint unavailable.');
+    failures += 1;
   }
 
-  console.log('\n→ Localized Pages');
-  for (const page of MOCK_PAGES) {
-    const locale = localeForMarket(page.market);
-    const { data } = serializePage(page, locale);
-    await client.upsertCollection(
-      'localized-pages',
-      locale,
-      { slug: toStrapiSlug(page.market, page.slug), market: page.market },
-      data,
-    );
-    console.log(`  ✓ ${page.market}/${page.slug} (${locale})`);
-  }
-
-  console.log('\n→ Articles');
-  for (const article of MOCK_ARTICLES) {
-    const locale = localeForMarket(article.market);
-    const { data } = serializeArticle(article, locale);
-    await client.upsertCollection(
-      'articles',
-      locale,
-      { slug: article.slug, market: article.market },
-      data,
-    );
-    console.log(`  ✓ ${article.market}/blog/${article.slug} (${locale})`);
+  if (canSeedArticles) {
+    console.log('\n→ Articles');
+    for (const article of MOCK_ARTICLES) {
+      const locale = localeForMarket(article.market);
+      try {
+        const { data } = serializeArticle(article, locale);
+        await client.upsertCollection(
+          'articles',
+          locale,
+          { slug: article.slug, market: article.market },
+          data,
+        );
+        console.log(`  ✓ ${article.market}/blog/${article.slug} (${locale})`);
+      } catch (error) {
+        failures += 1;
+        console.warn(`  ✗ ${article.market}/blog/${article.slug} — ${shortError(error)}`);
+      }
+    }
+  } else {
+    console.warn('\n  Skipping Articles — endpoint unavailable.');
+    failures += 1;
   }
 
   console.log('\nDone.');
-  console.log('Set USE_MOCK_DATA=false in apps/web/.env and run: npm run build -w @anzuk/web');
+  if (failures > 0 || !canSeedSiteSettings || !canSeedMarketNav) {
+    console.log(
+      'Some content was skipped or failed. Run `npm run probe:strapi` to check endpoint health.',
+    );
+    console.log('See docs/guides/seed-strapi.md for Strapi Cloud deployment steps.');
+  } else {
+    console.log('Set USE_MOCK_DATA=false in apps/web/.env and run: npm run build -w @anzuk/web');
+  }
 }
 
 main().catch((error) => {

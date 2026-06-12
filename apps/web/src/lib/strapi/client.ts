@@ -45,7 +45,10 @@ export async function fetchStrapi<T>(
   return response.json() as Promise<T>;
 }
 
-/** Returns null on 404 (e.g. single type with no entry yet). Other errors still throw. */
+/**
+ * Returns null when Strapi is unavailable, missing (404), or broken (5xx).
+ * Callers should fall back to mock defaults.
+ */
 export async function fetchStrapiOptional<T>(
   endpoint: string,
   params: Record<string, string> = {},
@@ -66,7 +69,13 @@ export async function fetchStrapiOptional<T>(
     },
   });
 
-  if (response.status === 404) {
+  if (response.status === 404 || response.status >= 500) {
+    if (response.status >= 500) {
+      console.warn(
+        `[strapi] ${endpoint} returned ${response.status} — using fallback data. ` +
+          'Check Strapi Cloud deployment and Content Manager.',
+      );
+    }
     return null;
   }
 

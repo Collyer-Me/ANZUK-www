@@ -23,8 +23,11 @@ Use a **separate** Full access token for seeding (`STRAPI_API_CURSOR`). Keep the
 
 ```bash
 npm install
+npm run probe:strapi   # optional — check which endpoints are healthy
 npm run seed:strapi
 ```
+
+The script runs a **preflight check** and skips sections that are not deployed or broken (e.g. site-setting 500, market-navigations 404). Pages and articles still seed when those are available.
 
 The script is **idempotent** — re-running updates existing entries matched by `market` + `slug` (pages/articles) or upserts Site Settings per locale.
 
@@ -53,5 +56,7 @@ Data source: [`apps/web/src/lib/strapi/mock-data.ts`](../../apps/web/src/lib/str
 | 403 Forbidden | Token lacks create/update permissions |
 | 404 on content type | Schema not deployed — check Strapi Cloud build from `apps/cms` |
 | 400 Bad Request on populate | New block components not in Cloud yet — deploy `apps/cms` schema, then re-seed |
-| 500 on site-setting | Broken schema from earlier `marketNavigations` field — deploy latest `apps/cms`, then re-run seed |
+| 500 on site-setting | Broken from earlier `marketNavigations` on site-setting — in [Strapi Cloud](https://cloud.strapi.io), confirm `apps/cms` deployed from latest `main`, then re-run seed. If still 500, open Site Settings in admin and save a fresh entry, or contact Strapi support. |
+| 404 on market-navigations | `market-navigation` content type not deployed — wait for Strapi Cloud build, then grant API token permissions for Market Navigation |
+| Preflight skips sections | Expected until Cloud deploy completes — pages/articles can still seed; site uses mock settings/nav as fallback |
 | Locale not found | Add missing locale in Strapi Internationalization settings |

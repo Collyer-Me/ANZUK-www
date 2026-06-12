@@ -1,5 +1,5 @@
 import type { Market } from '../../config/markets';
-import { fetchStrapi, shouldUseMockData } from '../client';
+import { fetchStrapiOptional, shouldUseMockData } from '../client';
 import { MOCK_MARKET_NAVIGATIONS } from '../mock-navigation';
 import type { MarketNavigation, NavItem, NavLink, StrapiListResponse } from '../types';
 
@@ -43,13 +43,18 @@ export async function getMarketNavigations(): Promise<MarketNavigation[]> {
     return MOCK_MARKET_NAVIGATIONS;
   }
 
-  const response = await fetchStrapi<StrapiListResponse<Record<string, unknown>>>(
+  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>(
     'market-navigations',
     {
       'pagination[pageSize]': '10',
       'populate[items][populate][children]': '*',
     },
   );
+
+  if (!response?.data?.length) {
+    console.warn('[strapi] No Market Navigation entries — using mock navigation.');
+    return MOCK_MARKET_NAVIGATIONS;
+  }
 
   return response.data.map(normalizeMarketNavigation);
 }

@@ -12,11 +12,35 @@ export interface StrapiDocument {
   [key: string]: unknown;
 }
 
+export type EndpointStatus = 'ok' | 'not_found' | 'error';
+
 export class StrapiAdminClient {
   constructor(
     private readonly baseUrl: string,
     private readonly token: string,
   ) {}
+
+  async probeEndpoint(
+    path: string,
+    params: Record<string, string> = {},
+  ): Promise<{ status: EndpointStatus; httpStatus: number; body: string }> {
+    const url = new URL(`/api/${path}`, this.baseUrl.replace(/\/$/, ''));
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
+
+    const response = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const body = await response.text();
+    if (response.ok) return { status: 'ok', httpStatus: response.status, body };
+    if (response.status === 404) return { status: 'not_found', httpStatus: 404, body };
+    return { status: 'error', httpStatus: response.status, body };
+  }
 
   private async request<T>(
     method: string,
@@ -83,14 +107,27 @@ export class StrapiAdminClient {
     );
 
     for (const status of ['published', 'draft'] as const) {
-      const response = await this.request<StrapiListResponse<StrapiDocument>>('GET', collection, {
-        params: {
-          ...(locale ? { locale } : {}),
-          status,
-          'pagination[pageSize]': '1',
-          ...filterParams,
-        },
+      const probe = await this.probeEndpoint(collection, {
+        ...(locale ? { locale } : {}),
+        status,
+        'pagination[pageSize]': '1',
+        ...filterParams,
       });
+
+      if (probe.status === 'not_found') {
+        throw new Error(
+          `Strapi GET ${collection} failed: 404 Not Found\n${probe.body}\n` +
+            'Hint: content type not deployed on Strapi Cloud yet — check apps/cms deployment.',
+        );
+      }
+
+      if (probe.status === 'error') {
+        throw new Error(
+          `Strapi GET ${collection} failed: ${probe.httpStatus}\n${probe.body}`,
+        );
+      }
+
+      const response = JSON.parse(probe.body) as StrapiListResponse<StrapiDocument>;
       if (response.data[0]) return response.data[0];
     }
 
