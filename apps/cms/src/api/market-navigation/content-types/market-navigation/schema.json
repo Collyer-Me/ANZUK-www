@@ -1,15 +1,21 @@
 {
-  "collectionName": "components_shared_market_navigations",
+  "kind": "collectionType",
+  "collectionName": "market_navigations",
   "info": {
+    "singularName": "market-navigation",
+    "pluralName": "market-navigations",
     "displayName": "Market Navigation",
     "description": "Main navigation menu for a market site"
   },
-  "options": {},
+  "options": {
+    "draftAndPublish": false
+  },
   "attributes": {
     "market": {
       "type": "enumeration",
       "enum": ["international", "au", "uk", "ca", "nz"],
-      "required": true
+      "required": true,
+      "unique": true
     },
     "items": {
       "type": "component",

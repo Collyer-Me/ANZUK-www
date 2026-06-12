@@ -19,11 +19,9 @@ Store the complete URL path (excluding market prefix) in the `slug` field:
 
 The field type is `string` (not `uid`) to allow `/` segments. Strapi UIDs remain market-prefixed internally via `toStrapiSlug()` (e.g. `au-who-we-are/meet-the-team`).
 
-### Navigation — CMS-managed per market (Option A)
+### Navigation — CMS-managed per market (Option A, revised)
 
-Navigation lives in **Site Settings** as repeatable `shared.market-navigation` components, each scoped to a `market` enum with nested `shared.nav-item` entries (label, URL, optional children).
-
-Marketing editors update nav in Strapi admin without code changes. Astro resolves relative URLs using `pageUrl()` and market prefix.
+Navigation lives in the **`market-navigation` collection** — one entry per market with nested `shared.nav-item` / `shared.nav-link` components. This is separate from `site-setting` to avoid Strapi i18n issues with non-localized components on localized single types.
 
 ### Page metadata — derived nav fallback
 

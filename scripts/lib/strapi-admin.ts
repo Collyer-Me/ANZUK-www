@@ -76,7 +76,7 @@ export class StrapiAdminClient {
   async findOne(
     collection: string,
     filters: Record<string, string>,
-    locale: string,
+    locale?: string,
   ): Promise<StrapiDocument | null> {
     const filterParams = Object.fromEntries(
       Object.entries(filters).map(([key, value]) => [`filters[${key}][$eq]`, value]),
@@ -85,7 +85,7 @@ export class StrapiAdminClient {
     for (const status of ['published', 'draft'] as const) {
       const response = await this.request<StrapiListResponse<StrapiDocument>>('GET', collection, {
         params: {
-          locale,
+          ...(locale ? { locale } : {}),
           status,
           'pagination[pageSize]': '1',
           ...filterParams,
@@ -99,13 +99,15 @@ export class StrapiAdminClient {
 
   async upsertCollection(
     collection: string,
-    locale: string,
+    locale: string | undefined,
     filters: Record<string, string>,
     data: Record<string, unknown>,
   ): Promise<StrapiDocument> {
     const existing = await this.findOne(collection, filters, locale);
 
-    const writeParams = { locale, status: 'published' };
+    const writeParams: Record<string, string> = locale
+      ? { locale, status: 'published' }
+      : { status: 'published' };
 
     if (existing) {
       const updated = await this.request<{ data: StrapiDocument }>(

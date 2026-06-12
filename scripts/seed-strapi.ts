@@ -16,9 +16,12 @@ import {
   MOCK_PAGES,
   MOCK_SITE_SETTINGS,
 } from '../apps/web/src/lib/strapi/mock-data';
-import type { Article, ContentBlock, LocalizedPage, NavItem } from '../apps/web/src/lib/strapi/types';
+import { MOCK_MARKET_NAVIGATIONS } from '../apps/web/src/lib/strapi/mock-navigation';
+import type { Article, ContentBlock, LocalizedPage, NavItem, NavLink } from '../apps/web/src/lib/strapi/types';
 import { toStrapiSlug } from '../apps/web/src/lib/strapi/slugs';
 import { StrapiAdminClient } from './lib/strapi-admin';
+
+const DEFAULT_LOCALE = 'en-AU';
 
 function loadEnvFile(filePath: string): void {
   try {
@@ -110,23 +113,39 @@ function serializeArticle(article: Article, locale: string) {
   };
 }
 
+function serializeNavLink(item: NavLink): Record<string, unknown> {
+  return {
+    label: item.label,
+    url: item.url,
+    openInNewTab: item.openInNewTab ?? false,
+  };
+}
+
 function serializeNavItem(item: NavItem): Record<string, unknown> {
   return {
     label: item.label,
     url: item.url,
     openInNewTab: item.openInNewTab ?? false,
     ...(item.children?.length
-      ? { children: item.children.map(serializeNavItem) }
+      ? { children: item.children.map(serializeNavLink) }
       : {}),
   };
 }
 
 function serializeSiteSettings(locale: string) {
+  const localized: Record<string, unknown> = {
+    siteName: MOCK_SITE_SETTINGS.siteName,
+    tagline: MOCK_SITE_SETTINGS.tagline,
+  };
+
+  if (locale !== DEFAULT_LOCALE) {
+    return { locale, data: localized };
+  }
+
   return {
     locale,
     data: {
-      siteName: MOCK_SITE_SETTINGS.siteName,
-      tagline: MOCK_SITE_SETTINGS.tagline,
+      ...localized,
       defaultLocale: MOCK_SITE_SETTINGS.defaultLocale,
       organizationUrl: MOCK_SITE_SETTINGS.organizationUrl,
       contactEmail: MOCK_SITE_SETTINGS.contactEmail,
@@ -136,10 +155,6 @@ function serializeSiteSettings(locale: string) {
       affiliateBrands: MOCK_SITE_SETTINGS.affiliateBrands?.map((b) => ({
         name: b.name,
         url: b.url,
-      })),
-      marketNavigations: MOCK_SITE_SETTINGS.marketNavigations?.map((nav) => ({
-        market: nav.market,
-        items: nav.items?.map(serializeNavItem),
       })),
     },
   };
@@ -175,10 +190,37 @@ async function main(): Promise<void> {
   console.log(`Seeding Strapi at ${baseUrl}\n`);
 
   console.log('→ Site Settings');
+  console.log(`  (shared fields written once on ${DEFAULT_LOCALE} only)`);
+  let siteSettingsFailed = false;
   for (const locale of locales) {
-    const { data } = serializeSiteSettings(locale);
-    await client.upsertSingleType('site-setting', locale, data);
-    console.log(`  ✓ site-setting (${locale})`);
+    try {
+      const { data } = serializeSiteSettings(locale);
+      await client.upsertSingleType('site-setting', locale, data);
+      console.log(`  ✓ site-setting (${locale})`);
+    } catch (error) {
+      siteSettingsFailed = true;
+      console.warn(`  ✗ site-setting (${locale}) — ${error instanceof Error ? error.message : error}`);
+    }
+  }
+  if (siteSettingsFailed) {
+    console.warn(
+      '\n  Site Settings failed. If you see 500 errors, redeploy apps/cms on Strapi Cloud\n' +
+        '  (removes the broken marketNavigations field from site-setting), then re-run seed.\n',
+    );
+  }
+
+  console.log('\n→ Market Navigations');
+  for (const nav of MOCK_MARKET_NAVIGATIONS) {
+    await client.upsertCollection(
+      'market-navigations',
+      undefined,
+      { market: nav.market },
+      {
+        market: nav.market,
+        items: nav.items?.map(serializeNavItem),
+      },
+    );
+    console.log(`  ✓ navigation/${nav.market}`);
   }
 
   console.log('\n→ Localized Pages');

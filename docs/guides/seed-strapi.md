@@ -35,7 +35,7 @@ The script is **idempotent** — re-running updates existing entries matched by 
 | Site Settings | 4 locales |
 | Localized Pages | 21 pages (international + regional prototype set, incl. nested slugs) |
 | Articles | 8 blog posts |
-| Market navigations | 5 markets in Site Settings |
+| Market navigations | 5 entries (`market-navigation` collection) |
 
 Data source: [`apps/web/src/lib/strapi/mock-data.ts`](../../apps/web/src/lib/strapi/mock-data.ts)
 
@@ -53,4 +53,5 @@ Data source: [`apps/web/src/lib/strapi/mock-data.ts`](../../apps/web/src/lib/str
 | 403 Forbidden | Token lacks create/update permissions |
 | 404 on content type | Schema not deployed — check Strapi Cloud build from `apps/cms` |
 | 400 Bad Request on populate | New block components not in Cloud yet — deploy `apps/cms` schema, then re-seed |
+| 500 on site-setting | Broken schema from earlier `marketNavigations` field — deploy latest `apps/cms`, then re-run seed |
 | Locale not found | Add missing locale in Strapi Internationalization settings |

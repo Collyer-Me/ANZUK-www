@@ -1,13 +1,17 @@
 import type { Market } from '../../config/markets';
-import type { MarketNavigation, NavItem } from './types';
+import type { MarketNavigation, NavItem, NavLink } from './types';
 
-function navItem(id: number, label: string, url: string, children?: NavItem[]): NavItem {
+function navLink(id: number, label: string, url: string): NavLink {
+  return { id, label, url, openInNewTab: false };
+}
+
+function navItem(id: number, label: string, url: string, children?: NavLink[]): NavItem {
   return { id, label, url, openInNewTab: false, children };
 }
 
 export const MOCK_MARKET_NAVIGATIONS: MarketNavigation[] = [
   {
-    id: 1,
+    documentId: 'mock-nav-international',
     market: 'international',
     items: [
       navItem(1, 'About international teaching', 'international-teaching-jobs'),
@@ -17,21 +21,21 @@ export const MOCK_MARKET_NAVIGATIONS: MarketNavigation[] = [
     ],
   },
   {
-    id: 2,
+    documentId: 'mock-nav-au',
     market: 'au',
     items: [
       navItem(10, 'Who we are', 'who-we-are', [
-        navItem(11, 'Meet the team', 'who-we-are/meet-the-team'),
+        navLink(11, 'Meet the team', 'who-we-are/meet-the-team'),
       ]),
       navItem(12, 'For educators', 'casual-opportunities', [
-        navItem(13, 'Browse jobs', 'browse-jobs'),
+        navLink(13, 'Browse jobs', 'browse-jobs'),
       ]),
       navItem(14, 'Browse jobs', 'browse-jobs'),
       navItem(15, 'Contact', 'contact-us'),
     ],
   },
   {
-    id: 3,
+    documentId: 'mock-nav-uk',
     market: 'uk',
     items: [
       navItem(20, 'Who we are', 'who-we-are'),
@@ -41,7 +45,7 @@ export const MOCK_MARKET_NAVIGATIONS: MarketNavigation[] = [
     ],
   },
   {
-    id: 4,
+    documentId: 'mock-nav-ca',
     market: 'ca',
     items: [
       navItem(30, 'Who we are', 'who-we-are'),
@@ -51,7 +55,7 @@ export const MOCK_MARKET_NAVIGATIONS: MarketNavigation[] = [
     ],
   },
   {
-    id: 5,
+    documentId: 'mock-nav-nz',
     market: 'nz',
     items: [
       navItem(40, 'Who we are', 'who-we-are'),

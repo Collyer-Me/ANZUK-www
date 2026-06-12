@@ -2,18 +2,16 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import Logo from '../ui/Logo.astro';
 import MainNav from './MainNav.astro';
-import { getMarketNavigation } from '../../lib/nav';
+import { getNavigationForMarket } from '../../lib/strapi/queries/market-navigations';
 import { REGIONS, type RegionPath } from '../../config/regions';
 import { SCOOT_US } from '../../config/markets';
-import type { SiteSettings } from '../../lib/strapi/types';
 
 interface Props {
   region: RegionPath;
-  settings: SiteSettings;
 }
 
-const { region, settings } = Astro.props;
-const navItems = getMarketNavigation(settings, region);
+const { region } = Astro.props;
+const navItems = await getNavigationForMarket(region);
 ---
 
 <header class="border-b border-anzuk-light-gray bg-white">

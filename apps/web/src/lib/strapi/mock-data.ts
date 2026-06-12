@@ -3,7 +3,6 @@ import type { Market, PageTemplate, RegionalMarket } from '../../config/markets'
 import { REGIONS } from '../../config/regions';
 import { beGreatValues } from '@anzuk/brand';
 import type { Article, ContentBlock, LocalizedPage, SiteSettings } from './types';
-import { MOCK_MARKET_NAVIGATIONS } from './mock-navigation';
 
 function seo(title: string, description: string) {
   return { metaTitle: title, metaDescription: description, ogImage: null };
@@ -405,7 +404,6 @@ export const MOCK_SITE_SETTINGS: SiteSettings = {
     { name: 'Scoot Education', url: 'https://scoot.education', logo: null },
     { name: 'ANZUK Executive', url: 'https://www.anzukexecutive.com', logo: null },
   ],
-  marketNavigations: MOCK_MARKET_NAVIGATIONS,
 };
 
 export function getMockPagesByMarket(market: Market): LocalizedPage[] {

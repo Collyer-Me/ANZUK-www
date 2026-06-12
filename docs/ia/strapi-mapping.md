@@ -8,7 +8,8 @@ Summary matrix for the CMS schema in `apps/cms`. Architecture decisions: [ADR 00
 |-------------|------|---------|---------|
 | `localized-page` | Collection | `international`, `au`, `uk`, `ca`, `nz` | All marketing pages |
 | `article` | Collection | `au`, `uk`, `ca`, `nz` | Regional blog posts |
-| `site-setting` | Single | Global (i18n) | Site name, affiliate URLs, geo settings, navigation |
+| `site-setting` | Single | Global (i18n) | Site name, affiliate URLs, geo settings |
+| `market-navigation` | Collection | Global | Main navigation menu per market |
 
 ## `localized-page` fields
 
@@ -53,7 +54,13 @@ Summary matrix for the CMS schema in `apps/cms`. Architecture decisions: [ADR 00
 | `executiveUrl` | string | ANZUK Executive |
 | `geoSuggestEnabled` | boolean | Geo-redirect banner |
 | `affiliateBrands` | repeatable component | `shared.affiliate-brand` |
-| `marketNavigations` | repeatable component | `shared.market-navigation` per market |
+
+## `market-navigation` fields
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `market` | enum | `international`, `au`, `uk`, `ca`, `nz` — one entry per market |
+| `items` | repeatable component | `shared.nav-item` |
 
 ## Components
 
@@ -62,8 +69,8 @@ Summary matrix for the CMS schema in `apps/cms`. Architecture decisions: [ADR 00
 | `shared.seo` | `localized-page`, `article` |
 | `shared.affiliate-brand` | `site-setting` |
 | `shared.job-board-config` | `localized-page` |
-| `shared.nav-item` | `shared.market-navigation` (recursive children) |
-| `shared.market-navigation` | `site-setting` |
+| `shared.nav-item` | `market-navigation` (top-level links) |
+| `shared.nav-link` | `shared.nav-item` (dropdown children) |
 | `blocks.hero` | `localized-page.body` |
 | `blocks.feature-grid` | `localized-page.body` |
 | `blocks.cta` | `localized-page.body` |

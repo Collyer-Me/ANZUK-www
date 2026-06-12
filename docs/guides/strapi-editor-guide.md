@@ -72,13 +72,12 @@ For register, refer, and partner pages, add a **Form Embed** block with the JotF
 
 ## Navigation
 
-Main site navigation is edited in **Site Settings → Market Navigations**:
+Main site navigation is edited in **Content Manager → Market Navigation** (one entry per market):
 
-1. Open **Site Settings** (single entry).
-2. Add or edit a **Market Navigation** for each market (`au`, `uk`, etc.).
-3. Add **Nav Items** with label and URL (relative slug, e.g. `browse-jobs`).
-4. Add **Children** for dropdown items (e.g. Meet the team under Who we are).
-5. Save Site Settings.
+1. Create or open the entry for your market (`au`, `uk`, etc.).
+2. Add **Items** with label and URL (relative slug, e.g. `browse-jobs`).
+3. Add **Children** on an item for dropdown links (uses Nav Link, not nested groups).
+4. Save.
 
 Navigation URLs are relative slugs or full external URLs (`https://...`).
 

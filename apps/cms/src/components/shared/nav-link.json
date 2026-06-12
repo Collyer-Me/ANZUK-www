@@ -1,8 +1,8 @@
 {
-  "collectionName": "components_shared_nav_items",
+  "collectionName": "components_shared_nav_links",
   "info": {
-    "displayName": "Nav Item",
-    "description": "Navigation link with optional dropdown children"
+    "displayName": "Nav Link",
+    "description": "Child navigation link (dropdown item)"
   },
   "options": {},
   "attributes": {
@@ -17,11 +17,6 @@
     "openInNewTab": {
       "type": "boolean",
       "default": false
-    },
-    "children": {
-      "type": "component",
-      "repeatable": true,
-      "component": "shared.nav-link"
     }
   }
 }

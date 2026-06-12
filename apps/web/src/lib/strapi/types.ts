@@ -137,16 +137,23 @@ export type ContentBlock =
   | RichTextBlock
   | StatsRowBlock;
 
+export interface NavLink {
+  id: number;
+  label: string;
+  url: string;
+  openInNewTab?: boolean;
+}
+
 export interface NavItem {
   id: number;
   label: string;
   url: string;
   openInNewTab?: boolean;
-  children?: NavItem[];
+  children?: NavLink[];
 }
 
 export interface MarketNavigation {
-  id: number;
+  documentId: string;
   market: Market;
   items?: NavItem[];
 }
@@ -196,7 +203,6 @@ export interface SiteSettings {
   executiveUrl?: string | null;
   geoSuggestEnabled?: boolean;
   affiliateBrands?: AffiliateBrand[];
-  marketNavigations?: MarketNavigation[];
 }
 
 export interface StrapiListResponse<T> {
