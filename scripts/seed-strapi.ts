@@ -16,7 +16,7 @@ import {
   MOCK_PAGES,
   MOCK_SITE_SETTINGS,
 } from '../apps/web/src/lib/strapi/mock-data';
-import type { Article, ContentBlock, LocalizedPage } from '../apps/web/src/lib/strapi/types';
+import type { Article, ContentBlock, LocalizedPage, NavItem } from '../apps/web/src/lib/strapi/types';
 import { toStrapiSlug } from '../apps/web/src/lib/strapi/slugs';
 import { StrapiAdminClient } from './lib/strapi-admin';
 
@@ -42,15 +42,21 @@ function localeForMarket(market: Market): string {
   return REGIONS.find((r) => r.path === market)?.strapiLocale ?? 'en-AU';
 }
 
-function stripComponentIds<T extends Record<string, unknown>>(obj: T): T {
+function stripComponentIds(obj: Record<string, unknown>): Record<string, unknown> {
   const { id: _id, ...rest } = obj;
-  if (Array.isArray(rest.features)) {
-    rest.features = rest.features.map((f: Record<string, unknown>) => {
-      const { id: _fid, ...feature } = f;
-      return feature;
-    });
+  const result: Record<string, unknown> = { ...rest };
+
+  for (const [key, value] of Object.entries(result)) {
+    if (Array.isArray(value)) {
+      result[key] = value.map((item) =>
+        typeof item === 'object' && item !== null
+          ? stripComponentIds(item as Record<string, unknown>)
+          : item,
+      );
+    }
   }
-  return rest as T;
+
+  return result;
 }
 
 function serializeBlocks(blocks: ContentBlock[] | undefined): Record<string, unknown>[] {
@@ -104,6 +110,17 @@ function serializeArticle(article: Article, locale: string) {
   };
 }
 
+function serializeNavItem(item: NavItem): Record<string, unknown> {
+  return {
+    label: item.label,
+    url: item.url,
+    openInNewTab: item.openInNewTab ?? false,
+    ...(item.children?.length
+      ? { children: item.children.map(serializeNavItem) }
+      : {}),
+  };
+}
+
 function serializeSiteSettings(locale: string) {
   return {
     locale,
@@ -119,6 +136,10 @@ function serializeSiteSettings(locale: string) {
       affiliateBrands: MOCK_SITE_SETTINGS.affiliateBrands?.map((b) => ({
         name: b.name,
         url: b.url,
+      })),
+      marketNavigations: MOCK_SITE_SETTINGS.marketNavigations?.map((nav) => ({
+        market: nav.market,
+        items: nav.items?.map(serializeNavItem),
       })),
     },
   };

@@ -1,11 +1,18 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import Logo from '../ui/Logo.astro';
+import MainNav from './MainNav.astro';
+import { getMarketNavigation } from '../../lib/nav';
+import { INTERNATIONAL_MARKET, SCOOT_US } from '../../config/markets';
 import { REGIONS } from '../../config/regions';
-import { SCOOT_US } from '../../config/markets';
-import { getAllInternationalPages } from '../../lib/strapi/queries/pages';
+import type { SiteSettings } from '../../lib/strapi/types';
 
-const intlPages = (await getAllInternationalPages()).filter((p) => p.slug !== 'home');
+interface Props {
+  settings: SiteSettings;
+}
+
+const { settings } = Astro.props;
+const navItems = getMarketNavigation(settings, INTERNATIONAL_MARKET);
 ---
 
 <header class="border-b border-anzuk-light-gray bg-white">
@@ -13,18 +20,9 @@ const intlPages = (await getAllInternationalPages()).filter((p) => p.slug !== 'h
     <a href="/" aria-label="ANZUK Education home">
       <Logo class="h-8 w-auto" />
     </a>
-    <nav aria-label="International" class="flex flex-wrap gap-2 text-sm">
-      {
-        intlPages.map((p) => (
-          <a
-            href={`/${p.slug}/`}
-            class="rounded-full px-3 py-1 text-anzuk-content no-underline hover:bg-anzuk-extra-light-blue"
-          >
-            {p.title}
-          </a>
-        ))
-      }
-    </nav>
+    {navItems.length > 0 && (
+      <MainNav market={INTERNATIONAL_MARKET} items={navItems} ariaLabel="International navigation" />
+    )}
     <nav aria-label="Regional sites">
       <ul class="flex flex-wrap items-center gap-2 text-sm">
         {

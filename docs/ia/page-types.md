@@ -52,18 +52,23 @@ Canonical enumeration used across all markets. Regions use different subsets —
 | `cross-market` | | ✓ | ✓ | ✓ | ✓ |
 | `generic` | | ✓ | ✓ | | | |
 
-## Future block components (not in prototype)
-
-Production sections that will need Strapi blocks later:
+## Block components (implemented)
 
 | Block | Seen on |
 |-------|---------|
 | `blocks.region-grid` | International home |
 | `blocks.values-grid` | International home, who-we-are |
+| `blocks.form-embed` | Register, partner, refer pages |
+| `blocks.rich-text` | About, process pages |
+| `blocks.stats-row` | Regional homes |
+
+## Future block components
+
+| Block | Seen on |
+|-------|---------|
 | `blocks.logo-carousel` | International home |
 | `blocks.video-accordion` | International home, service pages |
-| `blocks.form-embed` | Register, partner, refer pages |
 | `blocks.featured-jobs` | Home, job-listing pages |
-| `blocks.testimonials` | Regional homes |
+| `blocks.testimonials` | Regional homes (plural carousel) |
 
-Prototype uses existing blocks (`hero`, `feature-grid`, `cta`, `testimonial`) as placeholders.
+Prototype uses `hero`, `feature-grid`, `cta`, and `testimonial` alongside the blocks above.

@@ -1,21 +1,31 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import Logo from '../ui/Logo.astro';
-import { SCOOT_US } from '../../config/markets';
+import MainNav from './MainNav.astro';
+import { getMarketNavigation } from '../../lib/nav';
 import { REGIONS, type RegionPath } from '../../config/regions';
+import { SCOOT_US } from '../../config/markets';
+import type { SiteSettings } from '../../lib/strapi/types';
 
 interface Props {
   region: RegionPath;
+  settings: SiteSettings;
 }
 
-const { region } = Astro.props;
+const { region, settings } = Astro.props;
+const navItems = getMarketNavigation(settings, region);
 ---
 
 <header class="border-b border-anzuk-light-gray bg-white">
-  <div class="mx-auto flex max-w-anzuk-container items-center justify-between gap-4 px-6 py-4 lg:px-[72px]">
-    <a href={getRelativeLocaleUrl(region, '/')} aria-label="ANZUK Education home">
-      <Logo class="h-8 w-auto" />
-    </a>
+  <div class="mx-auto flex max-w-anzuk-container flex-col gap-4 px-6 py-4 lg:px-[72px]">
+    <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <a href={getRelativeLocaleUrl(region, '/')} aria-label="ANZUK Education home">
+        <Logo class="h-8 w-auto" />
+      </a>
+      {navItems.length > 0 && (
+        <MainNav market={region} items={navItems} ariaLabel="Main navigation" />
+      )}
+    </div>
     <nav aria-label="Regional sites">
       <ul class="flex flex-wrap items-center gap-2 text-sm">
         <li>

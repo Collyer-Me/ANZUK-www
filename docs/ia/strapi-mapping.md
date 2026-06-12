@@ -1,6 +1,6 @@
 # Strapi content mapping
 
-Summary matrix for the prototype CMS schema in `apps/cms`.
+Summary matrix for the CMS schema in `apps/cms`. Architecture decisions: [ADR 008](../decisions/008-strapi-url-nav-model.md).
 
 ## Content types
 
@@ -8,20 +8,23 @@ Summary matrix for the prototype CMS schema in `apps/cms`.
 |-------------|------|---------|---------|
 | `localized-page` | Collection | `international`, `au`, `uk`, `ca`, `nz` | All marketing pages |
 | `article` | Collection | `au`, `uk`, `ca`, `nz` | Regional blog posts |
-| `site-setting` | Single | Global (i18n) | Site name, affiliate URLs, geo settings |
+| `site-setting` | Single | Global (i18n) | Site name, affiliate URLs, geo settings, navigation |
 
 ## `localized-page` fields
 
 | Field | Type | Notes |
 |-------|------|-------|
 | `title` | string | Page title |
-| `slug` | uid | URL segment (e.g. `who-we-are`, `home`) |
+| `slug` | string | Full URL path without market prefix (supports `/` for nested pages) |
 | `market` | enum | `international`, `au`, `uk`, `ca`, `nz` |
 | `pageTemplate` | enum | See [page-types.md](page-types.md) |
+| `showInNav` | boolean | Optional; for future derived navigation |
+| `navLabel` | string | Optional nav label override |
+| `navOrder` | integer | Optional nav sort order |
 | `seo` | component | `shared.seo` |
 | `canonicalUrl` | string | Optional override |
 | `noIndex` | boolean | Default false |
-| `body` | dynamic zone | `blocks.hero`, `blocks.feature-grid`, `blocks.cta`, `blocks.testimonial` |
+| `body` | dynamic zone | See block components below |
 | `jobBoardConfig` | component | Optional; when `pageTemplate` is `job-listing` |
 
 ## `article` fields
@@ -50,6 +53,7 @@ Summary matrix for the prototype CMS schema in `apps/cms`.
 | `executiveUrl` | string | ANZUK Executive |
 | `geoSuggestEnabled` | boolean | Geo-redirect banner |
 | `affiliateBrands` | repeatable component | `shared.affiliate-brand` |
+| `marketNavigations` | repeatable component | `shared.market-navigation` per market |
 
 ## Components
 
@@ -58,10 +62,17 @@ Summary matrix for the prototype CMS schema in `apps/cms`.
 | `shared.seo` | `localized-page`, `article` |
 | `shared.affiliate-brand` | `site-setting` |
 | `shared.job-board-config` | `localized-page` |
+| `shared.nav-item` | `shared.market-navigation` (recursive children) |
+| `shared.market-navigation` | `site-setting` |
 | `blocks.hero` | `localized-page.body` |
 | `blocks.feature-grid` | `localized-page.body` |
 | `blocks.cta` | `localized-page.body` |
 | `blocks.testimonial` | `localized-page.body` |
+| `blocks.region-grid` | `localized-page.body` |
+| `blocks.values-grid` | `localized-page.body` |
+| `blocks.form-embed` | `localized-page.body` |
+| `blocks.rich-text` | `localized-page.body` |
+| `blocks.stats-row` | `localized-page.body` |
 
 ## URL resolution
 
@@ -71,14 +82,14 @@ Summary matrix for the prototype CMS schema in `apps/cms`.
 | `international` | `{slug}` | `/{slug}/` |
 | `au` | `home` | `/au/` |
 | `au` | `{slug}` | `/au/{slug}/` |
+| `au` | `parent/child` | `/au/parent/child/` |
 | `uk` | `home` | `/uk/` |
-| `uk` | `{slug}` | `/uk/{slug}/` |
 | `ca` | `home` | `/ca/` |
-| `ca` | `{slug}` | `/ca/{slug}/` |
 | `nz` | `home` | `/nz/` |
-| `nz` | `{slug}` | `/nz/{slug}/` |
 
 Articles: `/{market}/blog/{slug}/`
+
+Strapi stores market-prefixed slugs internally (e.g. `au-who-we-are/meet-the-team`).
 
 ## Explicitly not in Strapi
 
@@ -91,14 +102,10 @@ Articles: `/{market}/blog/{slug}/`
 | Scoot site content | External domain |
 | Form submissions | JotForm |
 
-## Market → page count (as-is, approximate)
+## Prototype content
 
-| Market | Marketing pages | Blog articles |
-|--------|-------------------|---------------|
-| International | 5 | — |
-| Australia | ~30 (incl. children) | Many |
-| United Kingdom | ~25 | Many |
-| Canada | ~15 | Few |
-| New Zealand | ~25 | Many |
+See [`docs/guides/strapi-prototype-spec.md`](../guides/strapi-prototype-spec.md) for the ~16-page prototype shortlist and navigation trees.
 
-Prototype seeds a representative subset — not full migration.
+## Editor documentation
+
+Marketing editors: [`docs/guides/strapi-editor-guide.md`](../guides/strapi-editor-guide.md)

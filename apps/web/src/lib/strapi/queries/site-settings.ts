@@ -1,6 +1,38 @@
 import { fetchStrapiOptional, shouldUseMockData } from '../client';
 import { MOCK_SITE_SETTINGS } from '../mock-data';
-import type { AffiliateBrand, SiteSettings, StrapiSingleResponse } from '../types';
+import type {
+  AffiliateBrand,
+  MarketNavigation,
+  NavItem,
+  SiteSettings,
+  StrapiSingleResponse,
+} from '../types';
+
+function normalizeNavItem(raw: Record<string, unknown>): NavItem {
+  const children = Array.isArray(raw.children)
+    ? raw.children.map((child: Record<string, unknown>) => normalizeNavItem(child))
+    : undefined;
+
+  return {
+    id: Number(raw.id ?? 0),
+    label: String(raw.label),
+    url: String(raw.url),
+    openInNewTab: raw.openInNewTab === true,
+    children,
+  };
+}
+
+function normalizeMarketNavigation(raw: Record<string, unknown>): MarketNavigation {
+  const items = Array.isArray(raw.items)
+    ? raw.items.map((item: Record<string, unknown>) => normalizeNavItem(item))
+    : undefined;
+
+  return {
+    id: Number(raw.id ?? 0),
+    market: String(raw.market) as MarketNavigation['market'],
+    items,
+  };
+}
 
 function normalizeAffiliateBrand(raw: Record<string, unknown>): AffiliateBrand {
   return {
@@ -15,6 +47,10 @@ function normalizeSiteSettings(raw: Record<string, unknown>): SiteSettings {
     ? raw.affiliateBrands.map((b: Record<string, unknown>) => normalizeAffiliateBrand(b))
     : undefined;
 
+  const marketNavigations = Array.isArray(raw.marketNavigations)
+    ? raw.marketNavigations.map((nav: Record<string, unknown>) => normalizeMarketNavigation(nav))
+    : undefined;
+
   return {
     siteName: String(raw.siteName),
     tagline: raw.tagline ? String(raw.tagline) : null,
@@ -25,6 +61,7 @@ function normalizeSiteSettings(raw: Record<string, unknown>): SiteSettings {
     executiveUrl: raw.executiveUrl ? String(raw.executiveUrl) : null,
     geoSuggestEnabled: raw.geoSuggestEnabled !== false,
     affiliateBrands,
+    marketNavigations,
   };
 }
 
@@ -34,9 +71,9 @@ async function fetchSiteSettingsFromApi(
   const params = {
     locale: strapiLocale,
     'populate[affiliateBrands][populate]': 'logo',
+    'populate[marketNavigations][populate][items][populate][children]': '*',
   };
 
-  // Strapi single-type UID is site-setting; try plural alias if needed
   for (const endpoint of ['site-setting', 'site-settings'] as const) {
     const response = await fetchStrapiOptional<StrapiSingleResponse<Record<string, unknown>>>(
       endpoint,
@@ -60,7 +97,6 @@ export async function getSiteSettings(strapiLocale: string): Promise<SiteSetting
     return fromApi;
   }
 
-  // Single types return 404 until the first entry is saved in Content Manager
   console.warn(
     `[strapi] No Site Settings for locale "${strapiLocale}" — using defaults. ` +
       'Create and save Site Settings in Strapi Content Manager.',

@@ -63,6 +63,16 @@
       "type": "component",
       "repeatable": true,
       "component": "shared.affiliate-brand"
+    },
+    "marketNavigations": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.market-navigation",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
     }
   }
 }

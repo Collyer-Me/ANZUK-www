@@ -3,6 +3,11 @@ import Hero from '../marketing/Hero.astro';
 import FeatureGrid from '../marketing/FeatureGrid.astro';
 import CTA from '../marketing/CTA.astro';
 import Testimonial from '../marketing/Testimonial.astro';
+import RegionGrid from '../marketing/RegionGrid.astro';
+import ValuesGrid from '../marketing/ValuesGrid.astro';
+import FormEmbed from '../marketing/FormEmbed.astro';
+import RichText from '../marketing/RichText.astro';
+import StatsRow from '../marketing/StatsRow.astro';
 import type { ContentBlock } from '../../lib/strapi/types';
 
 interface Props {
@@ -23,6 +28,16 @@ const { blocks = [] } = Astro.props;
         return <CTA block={block} />;
       case 'blocks.testimonial':
         return <Testimonial block={block} />;
+      case 'blocks.region-grid':
+        return <RegionGrid block={block} />;
+      case 'blocks.values-grid':
+        return <ValuesGrid block={block} />;
+      case 'blocks.form-embed':
+        return <FormEmbed block={block} />;
+      case 'blocks.rich-text':
+        return <RichText block={block} />;
+      case 'blocks.stats-row':
+        return <StatsRow block={block} />;
       default:
         return null;
     }

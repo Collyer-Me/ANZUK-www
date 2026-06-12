@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_shared_market_navigations",
+  "info": {
+    "displayName": "Market Navigation",
+    "description": "Main navigation menu for a market site"
+  },
+  "options": {},
+  "attributes": {
+    "market": {
+      "type": "enumeration",
+      "enum": ["international", "au", "uk", "ca", "nz"],
+      "required": true
+    },
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.nav-item"
+    }
+  }
+}

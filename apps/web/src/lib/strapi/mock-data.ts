@@ -1,7 +1,9 @@
 import { INTERNATIONAL_MARKET } from '../../config/markets';
 import type { Market, PageTemplate, RegionalMarket } from '../../config/markets';
 import { REGIONS } from '../../config/regions';
+import { beGreatValues } from '@anzuk/brand';
 import type { Article, ContentBlock, LocalizedPage, SiteSettings } from './types';
+import { MOCK_MARKET_NAVIGATIONS } from './mock-navigation';
 
 function seo(title: string, description: string) {
   return { metaTitle: title, metaDescription: description, ogImage: null };
@@ -34,7 +36,7 @@ function page(
   extras?: Partial<LocalizedPage>,
 ): LocalizedPage {
   return {
-    documentId: `mock-${market}-${slug}`,
+    documentId: `mock-${market}-${slug.replace(/\//g, '-')}`,
     title,
     slug,
     market,
@@ -47,6 +49,65 @@ function page(
   };
 }
 
+const internationalRegionGrid: ContentBlock = {
+  __component: 'blocks.region-grid',
+  id: 2,
+  heading: 'Local teams, global reach',
+  subheading: 'International expertise in education. Local understanding.',
+  regions: [
+    { id: 1, name: 'Australia', description: 'Full-service education recruitment.', url: '/au/', flagKey: 'aus', external: false },
+    { id: 2, name: 'United Kingdom', description: 'Supply, permanent, and SEN specialists.', url: '/uk/', flagKey: 'uk', external: false },
+    { id: 3, name: 'Canada', description: 'Cross-market teaching opportunities.', url: '/ca/', flagKey: 'can', external: false },
+    { id: 4, name: 'United States', description: 'Scoot Education — US recruitment.', url: 'https://scoot.education', flagKey: 'usa', external: true },
+    { id: 5, name: 'New Zealand', description: 'Local and international educator support.', url: '/nz/', flagKey: 'nz', external: false },
+  ],
+};
+
+const internationalValuesGrid: ContentBlock = {
+  __component: 'blocks.values-grid',
+  id: 4,
+  heading: 'We live BE GREAT',
+  description: 'Seven values guide every conversation, shortlist, and placement we make.',
+  values: beGreatValues.map((value, index) => ({
+    id: index + 1,
+    letter: value.letter,
+    word: value.word,
+    summary: value.summary,
+  })),
+};
+
+const internationalHomeBlocks: ContentBlock[] = [
+  hero(
+    1,
+    'Experience exceptional',
+    'International expertise in education. Local understanding.',
+    'Search jobs',
+    'browse-jobs',
+  ),
+  internationalRegionGrid,
+  {
+    __component: 'blocks.cta',
+    id: 3,
+    heading: 'Exceptional educators for global classrooms',
+    body: 'We help international schools connect with passionate, high-quality educators.',
+    buttonLabel: 'School enquiries',
+    buttonUrl: 'teacher-recruitment-for-school',
+    variant: 'primary',
+  },
+  internationalValuesGrid,
+];
+
+const regionalStatsRow: ContentBlock = {
+  __component: 'blocks.stats-row',
+  id: 10,
+  stats: [
+    { id: 1, value: '20+', label: 'Years in education' },
+    { id: 2, value: '5', label: 'Markets worldwide' },
+    { id: 3, value: '1000s', label: 'Educators placed' },
+    { id: 4, value: '24/7', label: 'Consultant support' },
+  ],
+};
+
 const homeBlocks = (regionLabel: string): ContentBlock[] => [
   hero(
     1,
@@ -55,6 +116,7 @@ const homeBlocks = (regionLabel: string): ContentBlock[] => [
     'Browse jobs',
     'browse-jobs',
   ),
+  regionalStatsRow,
   {
     __component: 'blocks.feature-grid',
     id: 2,
@@ -91,36 +153,6 @@ const homeBlocks = (regionLabel: string): ContentBlock[] => [
   },
 ];
 
-const internationalHomeBlocks: ContentBlock[] = [
-  hero(
-    1,
-    'Experience exceptional',
-    'International expertise in education. Local understanding.',
-    'Search jobs',
-    'browse-jobs',
-  ),
-  {
-    __component: 'blocks.feature-grid',
-    id: 2,
-    heading: 'Local recruitment teams, distributed globally',
-    features: [
-      { id: 1, title: 'Australia', description: 'Full-service education recruitment.', icon: 'global' },
-      { id: 2, title: 'United Kingdom', description: 'Supply, permanent, and SEN specialists.', icon: 'global' },
-      { id: 3, title: 'Canada', description: 'Cross-market teaching opportunities.', icon: 'global' },
-      { id: 4, title: 'New Zealand', description: 'Local and international educator support.', icon: 'global' },
-    ],
-  },
-  {
-    __component: 'blocks.cta',
-    id: 3,
-    heading: 'Exceptional educators for global classrooms',
-    body: 'We help international schools connect with passionate, high-quality educators.',
-    buttonLabel: 'School enquiries',
-    buttonUrl: 'teacher-recruitment-for-school',
-    variant: 'primary',
-  },
-];
-
 function innerPageBlocks(heading: string, body: string): ContentBlock[] {
   return [
     hero(1, heading, body),
@@ -130,6 +162,28 @@ function innerPageBlocks(heading: string, body: string): ContentBlock[] {
       quote: 'Prototype placeholder content mapped from production as-is IA.',
       authorName: 'ANZUK Education',
       authorRole: 'Marketing',
+    },
+  ];
+}
+
+function richTextPageBlocks(heading: string, subheading: string, html: string): ContentBlock[] {
+  return [hero(1, heading, subheading), { __component: 'blocks.rich-text', id: 2, content: html }];
+}
+
+function formPageBlocks(
+  heading: string,
+  subheading: string,
+  jotformId: string,
+): ContentBlock[] {
+  return [
+    hero(1, heading, subheading),
+    {
+      __component: 'blocks.form-embed',
+      id: 2,
+      heading: 'Complete the form',
+      description: 'Our team will be in touch shortly.',
+      jotformId,
+      height: 600,
     },
   ];
 }
@@ -182,9 +236,30 @@ function buildMockPages(): LocalizedPage[] {
     pageTemplate: PageTemplate;
     heading: string;
     subheading: string;
+    blocks?: ContentBlock[];
   }> = [
     { market: 'au', slug: 'home', title: 'ANZUK Education — Australia', pageTemplate: 'home-regional', heading: '', subheading: '' },
-    { market: 'au', slug: 'who-we-are', title: 'Who we are', pageTemplate: 'about', heading: 'Making a global impact since 2004', subheading: 'The ANZUK story.' },
+    {
+      market: 'au',
+      slug: 'who-we-are',
+      title: 'Who we are',
+      pageTemplate: 'about',
+      heading: 'Making a global impact since 2004',
+      subheading: 'The ANZUK story.',
+      blocks: richTextPageBlocks(
+        'Making a global impact since 2004',
+        'The ANZUK story.',
+        '<p>ANZUK Education connects passionate educators with schools across Australia and around the world. Since 2004, we have built lasting relationships with educators and school leaders.</p><p>Our consultants understand local education markets and provide support from first enquiry through placement and beyond.</p>',
+      ),
+    },
+    {
+      market: 'au',
+      slug: 'who-we-are/meet-the-team',
+      title: 'Meet the Team',
+      pageTemplate: 'team-listing',
+      heading: 'Meet the team',
+      subheading: 'The people behind ANZUK Australia.',
+    },
     { market: 'au', slug: 'browse-jobs', title: 'Browse Jobs', pageTemplate: 'job-listing', heading: 'Browse education jobs', subheading: 'Roles sourced from JobAdder.' },
     { market: 'au', slug: 'casual-opportunities', title: 'Casual Educator Jobs', pageTemplate: 'service-educators', heading: 'Teach your way', subheading: 'Casual relief teaching opportunities.' },
     { market: 'uk', slug: 'home', title: 'ANZUK Education — United Kingdom', pageTemplate: 'home-regional', heading: '', subheading: '' },
@@ -194,16 +269,45 @@ function buildMockPages(): LocalizedPage[] {
     { market: 'ca', slug: 'teach-in-australia', title: 'Teach in Australia', pageTemplate: 'cross-market', heading: 'Teach in Australia', subheading: 'Plan your move from Canada to Australia.' },
     { market: 'ca', slug: 'browse-jobs', title: 'Browse Jobs', pageTemplate: 'job-listing', heading: 'Browse jobs', subheading: 'Canadian job board via JobAdder.' },
     { market: 'nz', slug: 'home', title: 'ANZUK Education — New Zealand', pageTemplate: 'home-regional', heading: '', subheading: '' },
-    { market: 'nz', slug: 'four-step-process', title: 'Four Agency Process', pageTemplate: 'process', heading: 'Four-step process', subheading: 'Your path to teaching in New Zealand.' },
-    { market: 'nz', slug: 'refer-earn', title: 'Refer & Earn', pageTemplate: 'form-landing', heading: 'Refer & Earn', subheading: 'Refer educators and earn rewards.' },
-    { market: 'nz', slug: 'partner-with-us', title: 'Partner with ANZUK Education', pageTemplate: 'form-landing', heading: 'Partner with us', subheading: 'School recruitment enquiries.' },
+    {
+      market: 'nz',
+      slug: 'four-step-process',
+      title: 'Four Agency Process',
+      pageTemplate: 'process',
+      heading: 'Four-step process',
+      subheading: 'Your path to teaching in New Zealand.',
+      blocks: richTextPageBlocks(
+        'Four-step process',
+        'Your path to teaching in New Zealand.',
+        '<ol><li><strong>Register</strong> — Tell us about your experience and goals.</li><li><strong>Consult</strong> — Meet your dedicated consultant.</li><li><strong>Match</strong> — We shortlist roles suited to you.</li><li><strong>Place</strong> — Start teaching with ongoing support.</li></ol>',
+      ),
+    },
+    {
+      market: 'nz',
+      slug: 'refer-earn',
+      title: 'Refer & Earn',
+      pageTemplate: 'form-landing',
+      heading: 'Refer & Earn',
+      subheading: 'Refer educators and earn rewards.',
+      blocks: formPageBlocks('Refer & Earn', 'Refer educators and earn rewards.', '251698770470871'),
+    },
+    {
+      market: 'nz',
+      slug: 'partner-with-us',
+      title: 'Partner with ANZUK Education',
+      pageTemplate: 'form-landing',
+      heading: 'Partner with us',
+      subheading: 'School recruitment enquiries.',
+      blocks: formPageBlocks('Partner with us', 'School recruitment enquiries.', '251698159691877'),
+    },
   ];
 
   for (const sample of regionalSamples) {
     const blocks =
-      sample.slug === 'home'
+      sample.blocks ??
+      (sample.slug === 'home'
         ? homeBlocks(REGIONS.find((r) => r.path === sample.market)!.label)
-        : innerPageBlocks(sample.heading, sample.subheading);
+        : innerPageBlocks(sample.heading, sample.subheading));
 
     const extras: Partial<LocalizedPage> = {};
     if (sample.pageTemplate === 'job-listing') {
@@ -301,6 +405,7 @@ export const MOCK_SITE_SETTINGS: SiteSettings = {
     { name: 'Scoot Education', url: 'https://scoot.education', logo: null },
     { name: 'ANZUK Executive', url: 'https://www.anzukexecutive.com', logo: null },
   ],
+  marketNavigations: MOCK_MARKET_NAVIGATIONS,
 };
 
 export function getMockPagesByMarket(market: Market): LocalizedPage[] {

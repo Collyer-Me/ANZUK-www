@@ -28,11 +28,12 @@ The prototype uses Strapi Cloud as the hosted CMS. Local `apps/cms/` is for sche
 
 Content types defined locally in `apps/cms/src/`:
 
-- `site-setting` (single type)
+- `site-setting` (single type) — includes `marketNavigations`
 - `localized-page` (collection, i18n enabled)
-- Components: `shared.seo`, `blocks.hero`, `blocks.feature-grid`, `blocks.cta`, `blocks.testimonial`
+- `article` (collection, i18n enabled)
+- Components: `shared.seo`, `shared.nav-item`, `shared.market-navigation`, `blocks.hero`, `blocks.feature-grid`, `blocks.cta`, `blocks.testimonial`, `blocks.region-grid`, `blocks.values-grid`, `blocks.form-embed`, `blocks.rich-text`, `blocks.stats-row`
 
-Replicate these in Strapi Cloud admin (Content-Type Builder) or use `strapi transfer` when configured.
+Replicate these in Strapi Cloud admin (Content-Type Builder) or deploy via Git sync from `apps/cms` on `main`.
 
 ### 4. Configure locales
 

@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_blocks_values_grids",
+  "info": {
+    "displayName": "Values Grid",
+    "description": "BE GREAT values section with tabbed or listed values"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "values": {
+      "type": "component",
+      "repeatable": true,
+      "component": "blocks.value-item"
+    }
+  }
+}

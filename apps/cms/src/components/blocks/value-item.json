@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_blocks_value_items",
+  "info": {
+    "displayName": "Value Item",
+    "description": "Single BE GREAT value entry"
+  },
+  "options": {},
+  "attributes": {
+    "letter": {
+      "type": "string",
+      "required": true
+    },
+    "word": {
+      "type": "string",
+      "required": true
+    },
+    "summary": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

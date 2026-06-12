@@ -15,6 +15,8 @@ Descriptive inventory of [anzuk.education](https://anzuk.education/) as it exist
 | [page-types.md](page-types.md) | Canonical page type enum |
 | [external-integrations.md](external-integrations.md) | Systems outside Strapi |
 | [strapi-mapping.md](strapi-mapping.md) | Content type → market matrix |
+| [../guides/strapi-editor-guide.md](../guides/strapi-editor-guide.md) | Marketing editor guide |
+| [../guides/strapi-prototype-spec.md](../guides/strapi-prototype-spec.md) | Prototype page shortlist and nav |
 
 ## Methodology
 

@@ -22,7 +22,8 @@ interface Props {
   slug: string;
 }
 
-const { region, slug } = Astro.props;
+const { region, slug: slugParam } = Astro.props;
+const slug = Array.isArray(slugParam) ? slugParam.join('/') : slugParam;
 
 if (!isValidRegion(region)) {
   return Astro.redirect('/404');

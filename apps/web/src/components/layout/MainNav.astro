@@ -1,0 +1,62 @@
+---
+import type { Market } from '../../config/markets';
+import { resolveNavHref } from '../../lib/nav';
+import type { NavItem } from '../../lib/strapi/types';
+
+interface Props {
+  market: Market;
+  items: NavItem[];
+  ariaLabel: string;
+}
+
+const { market, items, ariaLabel } = Astro.props;
+---
+
+<nav aria-label={ariaLabel} class="flex flex-wrap gap-2 text-sm">
+  {
+    items.map((item) => {
+      const href = resolveNavHref(market, item.url);
+      const hasChildren = item.children && item.children.length > 0;
+
+      if (hasChildren) {
+        return (
+          <details class="group relative">
+            <summary class="cursor-pointer list-none rounded-full px-3 py-1 text-anzuk-content hover:bg-anzuk-extra-light-blue [&::-webkit-details-marker]:hidden">
+              {item.label}
+            </summary>
+            <ul
+              class="absolute left-0 top-full z-20 mt-1 min-w-[12rem] rounded-lg border border-anzuk-light-gray bg-white py-2 shadow-lg"
+              role="list"
+            >
+              {
+                item.children!.map((child) => (
+                  <li>
+                    <a
+                      href={resolveNavHref(market, child.url)}
+                      class="block px-4 py-2 text-anzuk-content no-underline hover:bg-anzuk-extra-light-blue"
+                      target={child.openInNewTab ? '_blank' : undefined}
+                      rel={child.openInNewTab ? 'noopener noreferrer' : undefined}
+                    >
+                      {child.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </details>
+        );
+      }
+
+      return (
+        <a
+          href={href}
+          class="rounded-full px-3 py-1 text-anzuk-content no-underline hover:bg-anzuk-extra-light-blue"
+          target={item.openInNewTab ? '_blank' : undefined}
+          rel={item.openInNewTab ? 'noopener noreferrer' : undefined}
+        >
+          {item.label}
+        </a>
+      );
+    })
+  }
+</nav>

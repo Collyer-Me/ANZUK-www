@@ -1,0 +1,59 @@
+---
+import valuesPhoto from '@anzuk/brand/assets/images/values.jpg';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import type { ValuesGridBlock } from '../../lib/strapi/types';
+
+interface Props {
+  block: ValuesGridBlock;
+}
+
+const { block } = Astro.props;
+const values = block.values ?? [];
+---
+
+<Section variant="lightGreen" aria-labelledby={`values-${block.id}`}>
+  <Container>
+    <div class="grid items-start gap-12 lg:grid-cols-[1fr_1.15fr]">
+      <div>
+        <img
+          src={valuesPhoto.src}
+          width={valuesPhoto.width}
+          height={valuesPhoto.height}
+          alt="The ANZUK team"
+          class="w-full rounded-anzuk-card object-cover"
+          loading="lazy"
+        />
+      </div>
+      <div>
+        {
+          (block.heading || block.description) && (
+            <SectionHeading
+              id={`values-${block.id}`}
+              align="left"
+              eyebrow="Our values"
+              title={block.heading ?? 'We live BE GREAT'}
+              description={block.description}
+              level="h2"
+            />
+          )
+        }
+        <ul class="mt-8 space-y-4" role="list">
+          {
+            values.map((value) => (
+              <li class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-4">
+                <p class="text-sm font-semibold uppercase tracking-wide text-anzuk-green">
+                  <span aria-hidden="true">{value.letter}</span>
+                  <span class="sr-only"> — </span>
+                  {value.word}
+                </p>
+                <p class="mt-2 text-anzuk-content">{value.summary}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </Container>
+</Section>

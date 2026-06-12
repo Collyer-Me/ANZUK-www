@@ -5,7 +5,7 @@
     "singularName": "localized-page",
     "pluralName": "localized-pages",
     "displayName": "Localized Page",
-    "description": "Marketing page scoped by market with dynamic content blocks"
+    "description": "Marketing page scoped by market. Slug is the URL path without market prefix (e.g. who-we-are/meet-the-team)."
   },
   "options": {
     "draftAndPublish": true
@@ -26,8 +26,7 @@
       }
     },
     "slug": {
-      "type": "uid",
-      "targetField": "title",
+      "type": "string",
       "required": true,
       "pluginOptions": {
         "i18n": {
@@ -68,6 +67,32 @@
         "generic"
       ],
       "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "showInNav": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "navLabel": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "navOrder": {
+      "type": "integer",
+      "default": 0,
       "pluginOptions": {
         "i18n": {
           "localized": false
@@ -117,7 +142,12 @@
         "blocks.hero",
         "blocks.feature-grid",
         "blocks.cta",
-        "blocks.testimonial"
+        "blocks.testimonial",
+        "blocks.region-grid",
+        "blocks.values-grid",
+        "blocks.form-embed",
+        "blocks.rich-text",
+        "blocks.stats-row"
       ],
       "pluginOptions": {
         "i18n": {
