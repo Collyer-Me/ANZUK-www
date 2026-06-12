@@ -1,0 +1,32 @@
+---
+export interface PartnerLogo {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+}
+
+interface Props {
+  logos: PartnerLogo[];
+  class?: string;
+}
+
+const { logos, class: className = '' } = Astro.props;
+---
+
+<ul class:list={['flex flex-wrap items-center justify-center gap-8', className]} role="list">
+  {
+    logos.map((logo) => (
+      <li>
+        <img
+          src={logo.src}
+          alt={logo.alt}
+          class="h-12 w-auto max-w-[140px] object-contain opacity-80 grayscale transition hover:opacity-100 hover:grayscale-0"
+          width={logo.width}
+          height={logo.height}
+          loading="lazy"
+        />
+      </li>
+    ))
+  }
+</ul>

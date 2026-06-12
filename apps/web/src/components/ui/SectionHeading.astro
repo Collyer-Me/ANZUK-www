@@ -1,0 +1,45 @@
+---
+type Level = 'h1' | 'h2' | 'h3' | 'h4';
+
+interface Props {
+  title: string;
+  eyebrow?: string;
+  description?: string;
+  align?: 'left' | 'center';
+  level?: Level;
+  id?: string;
+  dark?: boolean;
+  class?: string;
+}
+
+const {
+  title,
+  eyebrow,
+  description,
+  align = 'center',
+  level = 'h2',
+  id,
+  dark = false,
+  class: className = '',
+} = Astro.props;
+
+const Tag = level;
+const alignClass = align === 'center' ? 'text-center mx-auto' : 'text-left';
+const descriptionClass = align === 'center' ? 'mx-auto max-w-2xl' : 'max-w-2xl';
+---
+
+<header class:list={[alignClass, className]}>
+  {eyebrow && (
+    <p class:list={['text-sm font-semibold uppercase tracking-wide', dark ? 'text-anzuk-light-blue' : 'text-anzuk-blue']}>
+      {eyebrow}
+    </p>
+  )}
+  <Tag id={id} class:list={['!mt-0', eyebrow && 'mt-3', dark && '!text-white']}>
+    {title}
+  </Tag>
+  {description && (
+    <p class:list={['mt-4 text-lg', descriptionClass, dark ? 'text-anzuk-light-gray' : 'text-anzuk-content']}>
+      {description}
+    </p>
+  )}
+</header>

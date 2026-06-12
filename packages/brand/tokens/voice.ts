@@ -73,6 +73,62 @@ export const vocabulary = {
   ],
 } as const;
 
+/** Capitalisation rules from the live anzuk.education site */
+export const capitalization = {
+  summary:
+    'Marketing copy uses sentence case for headings and UI. Reserve ALL CAPS for the ANZUK wordmark, BE GREAT acronym, and value keywords in the values accordion.',
+  rules: [
+    {
+      context: 'Brand name',
+      style: 'ANZUK Education',
+      example: 'ANZUK Education',
+      note: 'ANZUK is always uppercase. Education is title case. Include ® on first prominent mention where appropriate.',
+    },
+    {
+      context: 'Primary hero & taglines',
+      style: 'Sentence case',
+      example: 'Experience exceptional',
+      note: 'Only capitalise the first word unless a proper noun. The highlighted hero word stays lowercase: exceptional.',
+    },
+    {
+      context: 'Section headings (H2–H4)',
+      style: 'Sentence case',
+      example: 'Local recruitment teams, distributed globally.',
+      note: 'Do not title-case every word. Match the live site — natural sentence rhythm.',
+    },
+    {
+      context: 'Eyebrows & subtitles',
+      style: 'Sentence case',
+      example: 'Teacher recruitment for international schools',
+      note: 'Small labels above headings use sentence case, not ALL CAPS (unless a design token explicitly sets uppercase styling).',
+    },
+    {
+      context: 'Buttons & CTAs',
+      style: 'Sentence case',
+      example: 'Schools enquiry · Search jobs · Expression of interest',
+      note: 'Action labels read like short phrases, not shouty labels.',
+    },
+    {
+      context: 'BE GREAT values',
+      style: 'Acronym in ALL CAPS',
+      example: 'BE GREAT',
+      note: 'The framework name is always BE GREAT. Individual value names are title case in prose (Belief, Equity) but display in ALL CAPS in the accordion UI (BELIEF, EQUITY).',
+    },
+    {
+      context: 'Body copy',
+      style: 'Standard sentence case',
+      example: 'At ANZUK Education, we help international schools experience exceptional…',
+      note: 'Proper nouns, curricula (IB, UK), and country names follow normal English rules.',
+    },
+  ],
+  avoid: [
+    'Title Case Every Word In Headings',
+    'ALL CAPS body paragraphs or long headings',
+    'anzuk education or Anzuk Education for the brand name',
+    'Be Great or Be great for the values framework',
+  ],
+} as const;
+
 export const beGreatValues = [
   { letter: 'B', word: 'Belief', summary: 'Unwavering belief in what we do, the people we serve, and education.' },
   { letter: 'E', word: 'Equity', summary: 'Equity across all streams of education.' },

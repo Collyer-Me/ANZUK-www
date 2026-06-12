@@ -1,0 +1,33 @@
+---
+import { getBrandAssetUrl } from '../../lib/brand-assets';
+import type { BrandAsset } from '@anzuk/brand';
+
+interface Props {
+  asset: BrandAsset;
+}
+
+const { asset } = Astro.props;
+const src = getBrandAssetUrl(asset.path);
+const isSvg = asset.path.endsWith('.svg');
+---
+
+<article class="overflow-hidden rounded-anzuk-card border border-anzuk-light-gray bg-white">
+  <div class="flex h-32 items-center justify-center bg-anzuk-extra-light-blue p-4">
+    {
+      src ? (
+        isSvg ? (
+          <img src={src} alt="" class="max-h-20 max-w-full object-contain" loading="lazy" />
+        ) : (
+          <img src={src} alt={asset.name} class="max-h-24 max-w-full object-contain" loading="lazy" />
+        )
+      ) : (
+        <span class="text-sm text-anzuk-icon-muted">Preview unavailable</span>
+      )
+    }
+  </div>
+  <div class="space-y-1 p-4 text-sm">
+    <h3 class="!mt-0 !text-base font-semibold text-anzuk-title">{asset.name}</h3>
+    <p class="font-mono text-xs text-anzuk-icon-muted">assets/{asset.path}</p>
+    <p class="text-anzuk-content">{asset.description}</p>
+  </div>
+</article>

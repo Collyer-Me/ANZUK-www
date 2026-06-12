@@ -1,54 +1,241 @@
 ---
 import BrandLayout from '../../layouts/BrandLayout.astro';
+import ComponentDemo from '../../components/brand/ComponentDemo.astro';
 import ButtonShowcase from '../../components/brand/ButtonShowcase.astro';
+import Badge from '../../components/ui/Badge.astro';
+import Button from '../../components/ui/Button.astro';
+import Card from '../../components/ui/Card.astro';
+import Container from '../../components/ui/Container.astro';
+import CountryCard from '../../components/ui/CountryCard.astro';
+import FeatureCard from '../../components/ui/FeatureCard.astro';
+import HeroHighlight from '../../components/ui/HeroHighlight.astro';
+import PartnerLogoGrid from '../../components/ui/PartnerLogoGrid.astro';
+import Section from '../../components/ui/Section.astro';
+import SectionHeading from '../../components/ui/SectionHeading.astro';
+import ValuePanel from '../../components/ui/ValuePanel.astro';
 import heroImage from '@anzuk/brand/assets/images/hero-home.png';
 import flagAus from '@anzuk/brand/assets/images/flag-aus.png';
+import flagUk from '@anzuk/brand/assets/images/flag-uk.png';
+import heroBlob from '@anzuk/brand/assets/illustrations/hero-blob-light-blue.svg';
+import beliefIcon from '@anzuk/brand/assets/icons/values/belief.svg';
+import equityIcon from '@anzuk/brand/assets/icons/values/equity.svg';
+import inspiredLogo from '@anzuk/brand/assets/logos/partners/inspired-education.png';
+import cognitaLogo from '@anzuk/brand/assets/logos/partners/cognita-logo.webp';
+import aisLogo from '@anzuk/brand/assets/logos/partners/ais-logo.png';
+
+const partnerLogos = [
+  { src: inspiredLogo.src, alt: 'Inspired Education', width: inspiredLogo.width, height: inspiredLogo.height },
+  { src: cognitaLogo.src, alt: 'Cognita', width: cognitaLogo.width, height: cognitaLogo.height },
+  { src: aisLogo.src, alt: 'Australian International School', width: aisLogo.width, height: aisLogo.height },
+];
 ---
 
-<BrandLayout title="Components" description="ANZUK Education UI components and patterns.">
+<BrandLayout title="Components" description="ANZUK Education UI component library.">
   <div class="max-w-3xl space-y-4">
-    <h1 class="!mt-0">Components</h1>
+    <h1 class="!mt-0">Component library</h1>
     <p class="text-lg text-anzuk-content">
-      Reusable marketing primitives built on brand tokens. These are the same components used on
-      live pages.
+      Reusable primitives in <code class="rounded bg-white px-1.5 py-0.5 text-sm">src/components/ui/</code>.
+      Import these on marketing pages and Strapi blocks — the demos below use the same components.
     </p>
   </div>
 
   <section class="mt-10">
-    <h2 class="!text-2xl">Buttons</h2>
-    <div class="mt-6">
+    <h2 class="!text-2xl">Layout</h2>
+    <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <ComponentDemo
+        name="Section"
+        description="Page section with brand background variants."
+        props="variant: page | white | lightBlue | lightGreen | lightPurple | darkPurple"
+      >
+        <div class="space-y-2">
+          {(['lightBlue', 'lightGreen', 'lightPurple'] as const).map((v) => (
+            <Section variant={v} padding="compact" class="!py-4 rounded-lg overflow-hidden">
+              <Container>
+                <p class="text-sm font-semibold capitalize">{v}</p>
+              </Container>
+            </Section>
+          ))}
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="Container"
+        description="Centred content wrapper with standard horizontal padding."
+        props="narrow?: boolean"
+      >
+        <div class="rounded border border-dashed border-anzuk-light-gray bg-anzuk-page-bg">
+          <Container class="bg-anzuk-extra-light-blue py-4 text-center text-sm">
+            max-w-anzuk-container
+          </Container>
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="SectionHeading"
+        description="Consistent section titles with optional eyebrow and description."
+        props="title, eyebrow?, description?, align?, level?, dark?"
+        class="lg:col-span-2"
+      >
+        <SectionHeading
+          eyebrow="International expertise"
+          title="Local recruitment teams, distributed globally."
+          description="Used above country grids, feature sections, and partner carousels."
+          align="center"
+          level="h2"
+        />
+      </ComponentDemo>
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Actions</h2>
+    <ComponentDemo name="Button" description="Primary call-to-action styles from the live site." class="mt-6">
       <ButtonShowcase />
-    </div>
-  </section>
+    </ComponentDemo>
 
-  <section class="mt-12">
-    <h2 class="!text-2xl">Country card</h2>
-    <p class="text-anzuk-content">Regional selector pattern from the international homepage.</p>
-    <article class="mt-6 max-w-xs overflow-hidden rounded-anzuk-card bg-white shadow-[0_4px_6px_-2px_rgba(0,0,0,0.02),0_12px_16px_-4px_rgba(0,0,0,0.04)]">
-      <img src={flagAus.src} alt="Australia" class="h-40 w-full object-cover" width={flagAus.width} height={flagAus.height} />
-      <div class="p-4">
-        <h3 class="!mt-0 !text-lg font-semibold">Australia</h3>
-        <p class="text-sm text-anzuk-content">Local recruitment team</p>
+    <ComponentDemo
+      name="Badge"
+      description="Pill labels for navigation and tags."
+      props="href?, active?"
+      class="mt-6"
+    >
+      <div class="flex flex-wrap gap-2">
+        <Badge href="#">Australia</Badge>
+        <Badge href="#">United Kingdom</Badge>
+        <Badge active>Canada</Badge>
+        <Badge>New Zealand</Badge>
       </div>
-    </article>
+    </ComponentDemo>
   </section>
 
   <section class="mt-12">
-    <h2 class="!text-2xl">Hero image</h2>
-    <p class="text-anzuk-content">Photography masked in organic shapes on the live site.</p>
-    <div class="mt-6 max-w-md overflow-hidden rounded-anzuk-card border border-anzuk-light-gray bg-white p-4">
-      <img src={heroImage.src} alt="ANZUK educators" class="w-full rounded-lg" width={heroImage.width} height={heroImage.height} />
+    <h2 class="!text-2xl">Cards & panels</h2>
+    <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <ComponentDemo name="Card" description="Generic content container." props="variant: default | elevated | outlined">
+        <div class="grid gap-4 sm:grid-cols-3">
+          <Card class="p-4 text-sm">Default</Card>
+          <Card variant="elevated" class="p-4 text-sm">Elevated</Card>
+          <Card variant="outlined" class="p-4 text-sm">Outlined</Card>
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="CountryCard"
+        description="Regional selector card from the international homepage."
+        props="title, image, imageAlt, description?, href?"
+      >
+        <CountryCard
+          title="Australia"
+          image={flagAus}
+          imageAlt="Australia"
+          description="Local recruitment team"
+          href="#"
+        />
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="FeatureCard"
+        description="Icon + title + body for feature grids."
+        props="title, description?, icon?, iconEmoji?"
+      >
+        <FeatureCard
+          title="International school recruitment"
+          description="Curriculum-aligned placements across IB, British, American, and bilingual programs."
+          icon={beliefIcon}
+        />
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="ValuePanel"
+        description="BE GREAT values accordion panel."
+        props="title, description, icon, active?"
+      >
+        <div class="space-y-3">
+          <ValuePanel
+            title="Belief"
+            description="We have an unwavering belief in what we do and the people we serve."
+            icon={beliefIcon}
+            active
+          />
+          <ValuePanel
+            title="Equity"
+            description="We support equity across all streams of education."
+            icon={equityIcon}
+          />
+        </div>
+      </ComponentDemo>
     </div>
   </section>
 
-  <section class="mt-12 grid gap-4 md:grid-cols-2">
-    <article class="rounded-anzuk-card bg-anzuk-extra-light-blue p-8">
-      <h3 class="!mt-0 !text-lg font-semibold">Section — light blue</h3>
-      <p class="text-sm text-anzuk-content">Used for header and soft content sections.</p>
-    </article>
-    <article class="rounded-anzuk-card bg-anzuk-extra-light-green p-8">
-      <h3 class="!mt-0 !text-lg font-semibold">Section — light green</h3>
-      <p class="text-sm text-anzuk-content">Used for values and supportive content blocks.</p>
-    </article>
+  <section class="mt-12">
+    <h2 class="!text-2xl">Marketing patterns</h2>
+    <div class="mt-6 grid gap-6">
+      <ComponentDemo
+        name="HeroHighlight"
+        description="Rotated green/purple highlight behind hero keywords."
+      >
+        <p class="text-4xl font-semibold tracking-[-0.02em] text-anzuk-title">
+          Experience <HeroHighlight>exceptional</HeroHighlight>
+        </p>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="PartnerLogoGrid"
+        description="School partner logo row from the homepage carousel."
+        props="logos: { src, alt }[]"
+      >
+        <PartnerLogoGrid logos={partnerLogos} />
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="Hero composition"
+        description="Blob illustration + masked photography (composed from brand assets)."
+      >
+        <div class="relative max-w-md overflow-hidden rounded-anzuk-card border border-anzuk-light-gray bg-anzuk-page-bg p-4">
+          <img src={heroBlob.src} alt="" class="absolute -left-4 top-0 h-32 w-auto opacity-70" aria-hidden="true" />
+          <img
+            src={heroImage.src}
+            alt="ANZUK educators"
+            class="relative z-10 w-full rounded-lg"
+            width={heroImage.width}
+            height={heroImage.height}
+          />
+        </div>
+      </ComponentDemo>
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Composed example</h2>
+    <p class="text-anzuk-content">How primitives compose into a homepage section.</p>
+    <div class="mt-6 overflow-hidden rounded-anzuk-card border border-anzuk-light-gray">
+      <Section variant="white" padding="compact">
+        <Container>
+          <SectionHeading
+            title="Local recruitment teams, distributed globally."
+            align="center"
+            level="h3"
+            class="!text-3xl"
+          />
+          <div class="mt-10 flex flex-wrap justify-center gap-6">
+            <CountryCard title="Australia" image={flagAus} imageAlt="Australia" href="#" />
+            <CountryCard title="United Kingdom" image={flagUk} imageAlt="United Kingdom" href="#" />
+          </div>
+        </Container>
+      </Section>
+    </div>
+  </section>
+
+  <section class="mt-12 rounded-anzuk-card bg-anzuk-extra-light-purple p-8">
+    <h2 class="!mt-0 !text-xl">Usage</h2>
+    <pre class="mt-4 overflow-x-auto rounded-lg bg-white p-4 text-sm text-anzuk-content"><code>{`import Section from '../ui/Section.astro';
+import Container from '../ui/Container.astro';
+import CountryCard from '../ui/CountryCard.astro';
+
+<Section variant="white">
+  <Container>
+    <CountryCard title="Australia" image={flagAus} imageAlt="Australia" href="/au/" />
+  </Container>
+</Section>`}</code></pre>
   </section>
 </BrandLayout>

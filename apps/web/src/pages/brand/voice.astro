@@ -6,7 +6,9 @@ import {
   tonePrinciples,
   vocabulary,
   beGreatValues,
+  capitalization,
 } from '@anzuk/brand';
+import { withBase } from '../../lib/url';
 ---
 
 <BrandLayout title="Voice & language" description="ANZUK Education taglines, personas, tone, and vocabulary.">
@@ -85,6 +87,52 @@ import {
         ))
       }
     </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Capitalisation</h2>
+    <p class="mt-2 text-anzuk-content">{capitalization.summary}</p>
+    <div class="mt-6 overflow-x-auto rounded-anzuk-card border border-anzuk-light-gray bg-white">
+      <table class="w-full min-w-[640px] text-left text-sm">
+        <thead class="border-b border-anzuk-light-gray bg-anzuk-page-bg">
+          <tr>
+            <th class="px-4 py-3 font-semibold text-anzuk-title">Context</th>
+            <th class="px-4 py-3 font-semibold text-anzuk-title">Style</th>
+            <th class="px-4 py-3 font-semibold text-anzuk-title">Example</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-anzuk-light-gray">
+          {
+            capitalization.rules.map((rule) => (
+              <tr>
+                <td class="px-4 py-3 align-top font-medium text-anzuk-title">{rule.context}</td>
+                <td class="px-4 py-3 align-top text-anzuk-content">{rule.style}</td>
+                <td class="px-4 py-3 align-top">
+                  <p class="font-semibold text-anzuk-title">{rule.example}</p>
+                  <p class="mt-1 text-anzuk-content">{rule.note}</p>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <article class="mt-4 rounded-anzuk-card border border-anzuk-light-gray bg-white p-6">
+      <h3 class="!mt-0 !text-lg font-semibold">Avoid</h3>
+      <ul class="mt-3 space-y-2 text-sm text-anzuk-content">
+        {
+          capitalization.avoid.map((item) => (
+            <li class="flex gap-2">
+              <span class="text-anzuk-purple" aria-hidden="true">×</span>
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+    </article>
+    <p class="mt-4 text-sm text-anzuk-content">
+      See also <a href={withBase('/brand/typography')}>Typography</a> for heading scale and type treatments.
+    </p>
   </section>
 
   <section class="mt-12 grid gap-8 lg:grid-cols-2">

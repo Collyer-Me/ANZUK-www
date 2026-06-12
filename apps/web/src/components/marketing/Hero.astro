@@ -1,5 +1,8 @@
 ---
 import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
 import type { HeroBlock } from '../../lib/strapi/types';
 
 interface Props {
@@ -10,22 +13,19 @@ const { block } = Astro.props;
 const isDark = block.variant === 'dark';
 ---
 
-<section
-  class:list={[
-    'px-6 py-20 lg:px-[72px]',
-    isDark ? 'bg-anzuk-dark-purple text-white' : 'bg-anzuk-page-bg',
-  ]}
+<Section
+  variant={isDark ? 'darkPurple' : 'page'}
   aria-labelledby={`hero-${block.id}`}
 >
-  <div class="mx-auto max-w-anzuk-container text-center">
-    <h1 id={`hero-${block.id}`} class:list={[isDark && '!text-white']}>
-      {block.heading}
-    </h1>
-    {block.subheading && (
-      <p class:list={['mx-auto mt-6 max-w-2xl text-lg', isDark ? 'text-anzuk-light-gray' : 'text-anzuk-content']}>
-        {block.subheading}
-      </p>
-    )}
+  <Container class="text-center">
+    <SectionHeading
+      id={`hero-${block.id}`}
+      title={block.heading}
+      description={block.subheading}
+      level="h1"
+      dark={isDark}
+      class="[&_h1]:!text-[clamp(2.5rem,6vw,5rem)]"
+    />
     {block.ctaLabel && block.ctaUrl && (
       <div class="mt-10">
         <Button variant={isDark ? 'light' : 'primary'} href={block.ctaUrl}>
@@ -33,5 +33,5 @@ const isDark = block.variant === 'dark';
         </Button>
       </div>
     )}
-  </div>
-</section>
+  </Container>
+</Section>

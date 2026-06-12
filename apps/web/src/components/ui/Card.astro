@@ -1,0 +1,36 @@
+---
+import { shadows } from '@anzuk/brand';
+
+type Variant = 'default' | 'elevated' | 'outlined';
+
+interface Props {
+  variant?: Variant;
+  href?: string;
+  class?: string;
+}
+
+const { variant = 'default', href, class: className = '' } = Astro.props;
+
+const baseClasses = 'block overflow-hidden rounded-anzuk-card bg-white no-underline';
+
+const variantClasses: Record<Variant, string> = {
+  default: 'border border-anzuk-light-gray',
+  elevated: '',
+  outlined: 'border-2 border-anzuk-light-gray',
+};
+
+const classes = [baseClasses, variantClasses[variant], className];
+const style = variant === 'elevated' ? `box-shadow: ${shadows.countryCard}` : undefined;
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes} style={style}>
+      <slot />
+    </a>
+  ) : (
+    <article class:list={classes} style={style}>
+      <slot />
+    </article>
+  )
+}

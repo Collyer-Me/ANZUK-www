@@ -2,55 +2,52 @@
 
 Single source of truth for ANZUK Education design tokens and static brand assets.
 
-## What lives here
+Sourced from the live [anzuk.education](https://anzuk.education/) WordPress theme (`anzuk-home`).
+
+## Directory structure
+
+```
+assets/
+├── fonts/           Poppins + Roboto (woff2)
+├── logos/           Primary SVG wordmarks
+│   ├── affiliates/  Scoot, regional ANZUK marks
+│   └── partners/    School partner logos (homepage carousel)
+├── images/          Hero photography, values photo, regional flags
+├── illustrations/   Hero blobs and hand-drawn doodles (SVG)
+├── icons/           UI icons + BE GREAT value illustrations
+│   └── values/      belief, equity, growth, etc.
+└── ui/              Section decorations, overlays, job backgrounds
+```
+
+## Tokens
 
 | Path | Purpose |
 |------|---------|
-| `tokens/` | Typed TypeScript tokens (colors, typography, spacing) |
-| `styles/tokens.css` | CSS custom properties and `@font-face` rules |
-| `styles/theme.css` | Tailwind v4 `@theme` extension |
-| `tailwind/preset.ts` | Tailwind v3-style preset for reference |
-| `assets/fonts/` | Poppins and Roboto web fonts |
-| `assets/logos/` | SVG wordmarks |
-| `assets/images/` | Hero, flags, favicon, photography |
+| `tokens/colors.ts` | Brand colour palette |
+| `tokens/typography.ts` | Font families and type scale |
+| `tokens/spacing.ts` | Layout spacing, button dimensions |
+| `tokens/voice.ts` | Taglines, personas, tone, BE GREAT values |
+| `tokens/effects.ts` | Shadows, hero highlight, section backgrounds |
+| `tokens/assets.ts` | Asset manifest with descriptions |
+| `styles/tokens.css` | CSS custom properties + @font-face |
+| `styles/theme.css` | Tailwind v4 @theme extension |
 
-## Usage in Astro (`apps/web`)
-
-```css
-/* src/styles/global.css */
-@import "@anzuk/brand/styles/tokens.css";
-@import "@anzuk/brand/styles/theme.css";
-```
+## Usage in Astro
 
 ```ts
-import { colors } from '@anzuk/brand';
+import { colors, shadows, brandAssets } from '@anzuk/brand';
+import heroBlob from '@anzuk/brand/assets/illustrations/hero-blob-light-blue.svg';
 ```
 
 ```html
-<button class="bg-anzuk-blue text-white rounded-anzuk-button">CTA</button>
+<div style={`box-shadow: ${shadows.countryCard}`}>
 ```
-
-## Tokens vs CMS
-
-- **Brand tokens** (colors, fonts, spacing): code in this package
-- **Marketing content** (copy, pages, jobs): Strapi (`apps/cms`)
-
-Do not hardcode hex values in components — import from `@anzuk/brand` or use Tailwind `anzuk-*` classes.
 
 ## Brand preview
 
-Run the web app and open `/brand` for the live style guide (noindex in production).
+`/brand/assets` — full asset library browser in the web app.
 
-## Asset inventory
+## Tokens vs CMS
 
-### Fonts
-- Poppins: Regular, Medium, SemiBold, Bold
-- Roboto: Regular
-
-### Logos
-- `anzuk-education.svg` — default (black wordmark, blue accents)
-- `anzuk-education-white.svg` — reversed for dark backgrounds
-
-### Images
-- `hero-home.png`, `values.jpg`, `favicon.ico`, `banner-bottom-bg.png`
-- Regional flags: `flag-aus.png`, `flag-uk.png`, `flag-can.png`, `flag-usa.png`, `flag-nz.png`
+- **Brand tokens & assets:** code in this package
+- **Marketing content:** Strapi (`apps/cms`)

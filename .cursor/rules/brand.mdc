@@ -15,7 +15,9 @@ alwaysApply: false
 
 ## Components
 
-- Use `src/components/ui/Logo.astro` and `Button.astro` for brand-consistent UI.
+- UI primitives live in `src/components/ui/` — import these on all marketing pages.
+- Core library: `Button`, `Logo`, `Section`, `Container`, `SectionHeading`, `Card`, `Badge`, `CountryCard`, `ValuePanel`, `FeatureCard`, `HeroHighlight`, `PartnerLogoGrid`.
+- Strapi blocks in `src/components/marketing/` compose primitives — do not duplicate layout styles inline.
 - Brand preview pages live under `src/pages/brand/` and must use the same primitives as marketing pages.
 
 ## Tokens vs CMS

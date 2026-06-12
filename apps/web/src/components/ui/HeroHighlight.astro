@@ -1,0 +1,25 @@
+---
+import { heroHighlight } from '@anzuk/brand';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<span class:list={['relative inline-block', className]}>
+  <span
+    class="absolute -inset-x-1 -inset-y-0.5 -z-10"
+    style={`background-color: ${heroHighlight.colors.back}; transform: rotate(${heroHighlight.rotationSecondary});`}
+    aria-hidden="true"
+  />
+  <span
+    class="relative inline-block px-1"
+    style={`background-color: ${heroHighlight.colors.front}; transform: rotate(${heroHighlight.rotationPrimary});`}
+  >
+    <span class="relative inline-block text-white">
+      <slot />
+    </span>
+  </span>
+</span>

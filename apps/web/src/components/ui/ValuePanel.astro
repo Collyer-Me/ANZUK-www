@@ -1,0 +1,36 @@
+---
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title: string;
+  description: string;
+  icon: ImageMetadata;
+  active?: boolean;
+  class?: string;
+}
+
+const { title, description, icon, active = false, class: className = '' } = Astro.props;
+---
+
+<article
+  class:list={[
+    'flex items-start gap-4 rounded-anzuk-card border-2 p-6 transition-colors',
+    active
+      ? 'border-anzuk-green bg-anzuk-values-accordion'
+      : 'border-anzuk-light-green bg-anzuk-extra-light-green',
+    className,
+  ]}
+>
+  <img
+    src={icon.src}
+    alt=""
+    class="h-16 w-16 shrink-0 object-contain"
+    width={icon.width}
+    height={icon.height}
+    aria-hidden="true"
+  />
+  <div>
+    <h3 class="!mt-0 !text-lg font-semibold text-anzuk-green">{title}</h3>
+    <p class="mt-1 text-sm text-anzuk-content">{description}</p>
+  </div>
+</article>

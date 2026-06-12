@@ -1,0 +1,23 @@
+---
+interface Props {
+  name: string;
+  description?: string;
+  props?: string;
+  class?: string;
+}
+
+const { name, description, props: propsDoc, class: className = '' } = Astro.props;
+---
+
+<article class:list={['rounded-anzuk-card border border-anzuk-light-gray bg-white overflow-hidden', className]}>
+  <div class="border-b border-anzuk-light-gray bg-anzuk-page-bg px-6 py-4">
+    <h3 class="!mt-0 !text-lg font-semibold font-mono text-anzuk-title">{name}</h3>
+    {description && <p class="mt-1 text-sm text-anzuk-content">{description}</p>}
+    {propsDoc && (
+      <p class="mt-2 font-mono text-xs text-anzuk-icon-muted">{propsDoc}</p>
+    )}
+  </div>
+  <div class="p-6">
+    <slot />
+  </div>
+</article>

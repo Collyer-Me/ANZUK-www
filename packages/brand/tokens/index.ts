@@ -7,4 +7,7 @@ export {
   tonePrinciples,
   vocabulary,
   beGreatValues,
+  capitalization,
 } from './voice';
+export { shadows, heroHighlight, sectionBackgrounds } from './effects';
+export { brandAssets, assetCategories, type BrandAsset, type AssetCategory } from './assets';

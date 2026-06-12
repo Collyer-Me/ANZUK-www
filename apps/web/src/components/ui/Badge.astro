@@ -1,0 +1,29 @@
+---
+interface Props {
+  href?: string;
+  active?: boolean;
+  class?: string;
+}
+
+const { href, active = false, class: className = '' } = Astro.props;
+
+const classes = [
+  'inline-flex items-center rounded-full px-3 py-1 text-sm no-underline transition-colors',
+  active
+    ? 'bg-anzuk-blue font-semibold text-white hover:no-underline'
+    : 'text-anzuk-content hover:bg-anzuk-extra-light-blue hover:no-underline',
+  className,
+];
+---
+
+{
+  href ? (
+    <a href={href} class:list={classes}>
+      <slot />
+    </a>
+  ) : (
+    <span class:list={classes}>
+      <slot />
+    </span>
+  )
+}

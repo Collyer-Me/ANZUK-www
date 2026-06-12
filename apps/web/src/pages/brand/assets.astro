@@ -1,0 +1,122 @@
+---
+import BrandLayout from '../../layouts/BrandLayout.astro';
+import AssetCard from '../../components/brand/AssetCard.astro';
+import {
+  assetCategories,
+  brandAssets,
+  heroHighlight,
+  sectionBackgrounds,
+  shadows,
+} from '@anzuk/brand';
+import { getBrandAssetUrl } from '../../lib/brand-assets';
+import { withBase } from '../../lib/url';
+import heroBlob from '@anzuk/brand/assets/illustrations/hero-blob-light-blue.svg';
+import heroDoodleYellow from '@anzuk/brand/assets/illustrations/hero-doodle-yellow.svg';
+import heroDoodlePurple from '@anzuk/brand/assets/illustrations/hero-doodle-purple.svg';
+---
+
+<BrandLayout title="Assets" description="ANZUK Education design assets — illustrations, icons, UI decorations, and photography.">
+  <div class="max-w-3xl space-y-4">
+    <h1 class="!mt-0">Design assets</h1>
+    <p class="text-lg text-anzuk-content">
+      Pulled from the live <a href="https://anzuk.education/" target="_blank" rel="noopener noreferrer">anzuk.education</a>
+      WordPress theme. All files live in <code class="rounded bg-white px-1.5 py-0.5 text-sm">packages/brand/assets/</code>.
+    </p>
+  </div>
+
+  <section class="mt-12 rounded-anzuk-card border border-anzuk-light-gray bg-white p-8">
+    <h2 class="!mt-0 !text-2xl">Hero composition</h2>
+    <p class="text-anzuk-content">How the international homepage hero is assembled on the live site.</p>
+    <div class="relative mt-6 flex min-h-[220px] items-center justify-center overflow-hidden rounded-anzuk-card bg-anzuk-page-bg p-8">
+      <img src={heroBlob.src} alt="" class="absolute left-4 top-4 h-40 w-auto opacity-80" aria-hidden="true" />
+      <img src={heroDoodleYellow.src} alt="" class="absolute bottom-6 left-16 h-16 w-auto" aria-hidden="true" />
+      <img src={heroDoodlePurple.src} alt="" class="absolute right-12 top-8 h-20 w-auto" aria-hidden="true" />
+      <p class="relative z-10 max-w-sm text-center text-sm text-anzuk-content">
+        Light blue blob + yellow/purple hand-drawn doodles + masked photography
+      </p>
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Effects & section backgrounds</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-2">
+      <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6">
+        <h3 class="!mt-0 !text-lg font-semibold">Shadows</h3>
+        <ul class="mt-3 space-y-2 text-sm text-anzuk-content">
+          <li><strong>Country card:</strong> <code class="text-xs">{shadows.countryCard}</code></li>
+          <li><strong>Sticky header:</strong> <code class="text-xs">{shadows.headerSticky}</code></li>
+        </ul>
+      </article>
+      <article class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6">
+        <h3 class="!mt-0 !text-lg font-semibold">Hero highlight rotation</h3>
+        <p class="mt-2 text-sm text-anzuk-content">
+          Primary: {heroHighlight.rotationPrimary}, secondary: {heroHighlight.rotationSecondary}.
+          Green ({heroHighlight.colors.front}) over purple ({heroHighlight.colors.back}).
+        </p>
+      </article>
+    </div>
+    <div class="mt-4 flex flex-wrap gap-3">
+      {
+        Object.entries(sectionBackgrounds).map(([name, hex]) => (
+          <div class="flex items-center gap-2 rounded-full border border-anzuk-light-gray bg-white px-3 py-1 text-sm">
+            <span class="inline-block h-4 w-4 rounded-full border border-anzuk-light-gray" style={`background:${hex}`} />
+            {name}
+            <span class="font-mono text-xs text-anzuk-icon-muted">{hex}</span>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    assetCategories.map((category) => {
+      const items = brandAssets.filter((a) => a.category === category.id);
+      if (items.length === 0 && category.id !== 'fonts') return null;
+
+      return (
+        <section class="mt-12">
+          <h2 class="!text-2xl">{category.label}</h2>
+          <p class="mt-1 text-anzuk-content">{category.description}</p>
+          {category.id === 'fonts' ? (
+            <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {['Poppins-Regular.woff2', 'Poppins-Medium.woff2', 'Poppins-SemiBold.woff2', 'Poppins-Bold.woff2', 'Roboto-Regular.woff2'].map((font) => (
+                <li class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-4 text-sm">
+                  <p class="font-semibold text-anzuk-title">{font}</p>
+                  <p class="font-mono text-xs text-anzuk-icon-muted">assets/fonts/{font}</p>
+                </li>
+              ))}
+            </ul>
+          ) : category.id === 'logos' ? (
+            <p class="mt-4 text-sm text-anzuk-content">
+              See the <a href={withBase('/brand/logos')}>Logos</a> page for wordmark usage.
+              Files: <code>assets/logos/anzuk-education.svg</code>, <code>anzuk-education-white.svg</code>
+            </p>
+          ) : (
+            <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {items.map((asset) => (
+                <AssetCard asset={asset} />
+              ))}
+            </div>
+          )}
+        </section>
+      );
+    })
+  }
+
+  <section class="mt-12 rounded-anzuk-card bg-anzuk-extra-light-purple p-8">
+    <h2 class="!mt-0 !text-xl">BE GREAT value icons</h2>
+    <div class="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-7">
+      {
+        ['belief', 'equity', 'growth', 'relationships', 'empower', 'attitude', 'team'].map((value) => {
+          const src = getBrandAssetUrl(`icons/values/${value}.svg`);
+          return (
+            <figure class="rounded-anzuk-card bg-white p-4 text-center">
+              {src && <img src={src} alt="" class="mx-auto h-14 w-14 object-contain" />}
+              <figcaption class="mt-2 text-xs font-semibold capitalize text-anzuk-title">{value}</figcaption>
+            </figure>
+          );
+        })
+      }
+    </div>
+  </section>
+</BrandLayout>

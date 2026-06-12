@@ -1,0 +1,42 @@
+---
+type Variant = 'page' | 'white' | 'lightBlue' | 'lightGreen' | 'lightPurple' | 'darkPurple';
+
+interface Props {
+  variant?: Variant;
+  class?: string;
+  id?: string;
+  padding?: 'default' | 'compact' | 'none';
+  'aria-labelledby'?: string;
+}
+
+const {
+  variant = 'page',
+  class: className = '',
+  id,
+  padding = 'default',
+  'aria-labelledby': ariaLabelledby,
+} = Astro.props;
+
+const variantClasses: Record<Variant, string> = {
+  page: 'bg-anzuk-page-bg text-anzuk-content',
+  white: 'bg-white text-anzuk-content',
+  lightBlue: 'bg-anzuk-extra-light-blue text-anzuk-content',
+  lightGreen: 'bg-anzuk-extra-light-green text-anzuk-content',
+  lightPurple: 'bg-anzuk-extra-light-purple text-anzuk-content',
+  darkPurple: 'bg-anzuk-dark-purple text-white [&_h1]:!text-white [&_h2]:!text-white [&_h3]:!text-white [&_h4]:!text-white',
+};
+
+const paddingClasses = {
+  default: 'py-[var(--anzuk-section-space)]',
+  compact: 'py-16',
+  none: '',
+};
+---
+
+<section
+  id={id}
+  class:list={[variantClasses[variant], paddingClasses[padding], className]}
+  aria-labelledby={ariaLabelledby}
+>
+  <slot />
+</section>
