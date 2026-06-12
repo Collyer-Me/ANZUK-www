@@ -1,0 +1,54 @@
+---
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import { demoSteps, type DemoStepsVariant } from '../../data/demo-content';
+
+interface Props {
+  variant?: DemoStepsVariant;
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+  background?: 'page' | 'white';
+}
+
+const {
+  variant = 'home',
+  eyebrow = 'How it works',
+  title = 'Three steps to your next classroom',
+  description,
+  background = 'page',
+} = Astro.props;
+
+const steps = demoSteps[variant];
+const headingId = `steps-heading-${variant}`;
+---
+
+<Section variant={background} aria-labelledby={headingId}>
+  <Container>
+    <SectionHeading id={headingId} eyebrow={eyebrow} title={title} description={description} />
+    <ol class="mt-14 grid gap-10 md:grid-cols-3" role="list">
+      {
+        steps.map((step, index) => (
+          <li class="relative" data-reveal="up" data-reveal-delay={String(index * 150)}>
+            <div class="flex items-center gap-4">
+              <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-anzuk-blue text-xl font-bold text-white">
+                {index + 1}
+              </span>
+              {index < steps.length - 1 && (
+                <span
+                  class="hidden h-0.5 flex-1 bg-anzuk-light-blue md:block"
+                  data-reveal="draw"
+                  data-reveal-delay={String(index * 150 + 350)}
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+            <h3 class="mt-6 !text-xl">{step.title}</h3>
+            <p class="mt-2 text-sm text-anzuk-content">{step.description}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </Container>
+</Section>

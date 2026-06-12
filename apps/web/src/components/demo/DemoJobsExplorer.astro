@@ -1,0 +1,203 @@
+---
+import heroDoodlePurple from '@anzuk/brand/assets/illustrations/hero-doodle-purple.svg';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import DemoFilterPill from './DemoFilterPill.astro';
+import DemoJobCard from './DemoJobCard.astro';
+import { demoJobs, jobRegionFilters, jobSearchText, jobTypeFilters } from '../../data/demo-jobs';
+---
+
+<Section variant="page" aria-labelledby="jobs-explorer-heading">
+  <Container>
+    <h2 id="jobs-explorer-heading" class="sr-only">Job listings</h2>
+
+    <div data-jobs-explorer>
+      <div class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-5 sm:p-6" data-reveal="up">
+        <label class="relative block">
+          <span class="sr-only">Search jobs by role, school, or location</span>
+          <svg
+            class="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-anzuk-icon-muted"
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="9" cy="9" r="6"></circle>
+            <path d="m13.5 13.5 4 4"></path>
+          </svg>
+          <input
+            type="search"
+            data-job-search
+            placeholder="Search by role, school, or location…"
+            autocomplete="off"
+            class="demo-input !pl-12"
+          />
+        </label>
+
+        <div class="mt-5 space-y-3">
+          <div role="group" aria-label="Filter by region" class="flex flex-wrap gap-2">
+            {
+              jobRegionFilters.map((filter, index) => (
+                <DemoFilterPill group="region" value={filter.value} label={filter.label} pressed={index === 0} />
+              ))
+            }
+          </div>
+          <div role="group" aria-label="Filter by role type" class="flex flex-wrap gap-2">
+            {
+              jobTypeFilters.map((filter, index) => (
+                <DemoFilterPill group="type" value={filter.value} label={filter.label} pressed={index === 0} />
+              ))
+            }
+          </div>
+        </div>
+
+        <div class="mt-5 flex items-center justify-between gap-3 border-t border-anzuk-light-gray pt-4">
+          <p data-job-count aria-live="polite" class="text-sm text-anzuk-content">
+            Showing all {demoJobs.length} roles
+          </p>
+          <button
+            type="button"
+            data-job-clear="toolbar"
+            hidden
+            class="text-sm font-semibold text-anzuk-blue underline-offset-4 hover:underline"
+          >
+            Clear all filters
+          </button>
+        </div>
+      </div>
+
+      <ul role="list" data-job-grid class="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        {
+          demoJobs.map((job, index) => (
+            <li
+              data-job
+              data-region={job.region}
+              data-type={job.type}
+              data-search={jobSearchText(job)}
+              data-reveal="up"
+              data-reveal-delay={String(Math.min(index, 6) * 80)}
+              class="h-full"
+            >
+              <DemoJobCard job={job} />
+            </li>
+          ))
+        }
+      </ul>
+
+      <div
+        data-job-empty
+        hidden
+        class="mt-8 rounded-anzuk-card border border-anzuk-light-gray bg-white px-6 py-16 text-center"
+      >
+        <img
+          src={heroDoodlePurple.src}
+          alt=""
+          width={heroDoodlePurple.width}
+          height={heroDoodlePurple.height}
+          class="mx-auto h-16 w-16 opacity-80"
+          aria-hidden="true"
+        />
+        <h3 class="mt-5 !text-xl">No roles match your filters</h3>
+        <p class="mt-2 text-sm text-anzuk-content">Try different keywords, or clear a filter to see more roles.</p>
+        <div class="mt-7">
+          <button
+            type="button"
+            data-job-clear="empty"
+            class="inline-flex min-h-12 items-center justify-center rounded-anzuk-button border-2 border-anzuk-blue bg-transparent px-6 font-semibold text-anzuk-blue transition-colors hover:bg-anzuk-extra-light-blue"
+          >
+            Clear all filters
+          </button>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<script>
+  const explorer = document.querySelector<HTMLElement>('[data-jobs-explorer]');
+
+  if (explorer) {
+    const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const pills = Array.from(explorer.querySelectorAll<HTMLButtonElement>('[data-filter-group]'));
+    const cards = Array.from(explorer.querySelectorAll<HTMLElement>('[data-job]'));
+    const searchInput = explorer.querySelector<HTMLInputElement>('[data-job-search]')!;
+    const countLabel = explorer.querySelector<HTMLElement>('[data-job-count]')!;
+    const grid = explorer.querySelector<HTMLElement>('[data-job-grid]')!;
+    const emptyState = explorer.querySelector<HTMLElement>('[data-job-empty]')!;
+    const toolbarClear = explorer.querySelector<HTMLButtonElement>('[data-job-clear="toolbar"]')!;
+    const clearButtons = Array.from(explorer.querySelectorAll<HTMLButtonElement>('[data-job-clear]'));
+    const total = cards.length;
+
+    const state: { region: string; type: string; q: string } = { region: 'all', type: 'all', q: '' };
+
+    const apply = (animate = true) => {
+      const terms = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const matches =
+          (state.region === 'all' || card.dataset.region === state.region) &&
+          (state.type === 'all' || card.dataset.type === state.type) &&
+          terms.every((term) => (card.dataset.search ?? '').includes(term));
+
+        card.hidden = !matches;
+
+        if (matches) {
+          // Once the user interacts, scroll-reveal choreography is over.
+          card.classList.add('is-revealed');
+          if (animate && !reducedQuery.matches) {
+            card.style.setProperty('--stagger', String(Math.min(visible, 8)));
+            card.classList.remove('demo-card-enter');
+            void card.offsetWidth;
+            card.classList.add('demo-card-enter');
+          }
+          visible += 1;
+        }
+      });
+
+      const filtered = state.region !== 'all' || state.type !== 'all' || terms.length > 0;
+      countLabel.textContent = filtered ? `Showing ${visible} of ${total} roles` : `Showing all ${total} roles`;
+      grid.hidden = visible === 0;
+      emptyState.hidden = visible !== 0;
+      toolbarClear.hidden = !filtered;
+    };
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const group = pill.dataset.filterGroup as 'region' | 'type';
+        state[group] = pill.dataset.filterValue ?? 'all';
+        pills
+          .filter((other) => other.dataset.filterGroup === group)
+          .forEach((other) => other.setAttribute('aria-pressed', String(other === pill)));
+        apply();
+      });
+    });
+
+    let debounce: number | undefined;
+    searchInput.addEventListener('input', () => {
+      window.clearTimeout(debounce);
+      debounce = window.setTimeout(() => {
+        state.q = searchInput.value;
+        apply();
+      }, 150);
+    });
+
+    clearButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        state.region = 'all';
+        state.type = 'all';
+        state.q = '';
+        searchInput.value = '';
+        pills.forEach((pill) =>
+          pill.setAttribute('aria-pressed', String(pill.dataset.filterValue === 'all')),
+        );
+        apply();
+        searchInput.focus();
+      });
+    });
+  }
+</script>

@@ -1,0 +1,19 @@
+---
+import arrowRight from '@anzuk/brand/assets/icons/arrow-right-blue.svg';
+import { withBase } from '../../lib/url';
+---
+
+<a
+  href={withBase('/brand')}
+  class="fixed bottom-4 left-4 z-50 inline-flex items-center gap-2 rounded-full border border-anzuk-light-gray bg-white/90 px-4 py-2 text-sm font-semibold text-anzuk-title no-underline shadow-lg backdrop-blur transition-colors hover:bg-white hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-anzuk-blue print:hidden"
+>
+  <img
+    src={arrowRight.src}
+    alt=""
+    width={arrowRight.width}
+    height={arrowRight.height}
+    class="h-3.5 w-3.5 rotate-180"
+    aria-hidden="true"
+  />
+  Brand guide
+</a>

@@ -1,0 +1,45 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import DemoBackPill from '../components/demo/DemoBackPill.astro';
+import DemoFooter from '../components/demo/DemoFooter.astro';
+import DemoHeader from '../components/demo/DemoHeader.astro';
+import '../styles/demo.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout
+  title={`${title} — ANZUK demo`}
+  description={description ?? 'Internal concept demo for a refreshed anzuk.education.'}
+  noindex={true}
+>
+  {/* Must stay inline: gates the reveal CSS so no-JS visitors always see content. */}
+  <script is:inline>document.documentElement.classList.add('js');</script>
+
+  <a
+    href="#main"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:rounded-anzuk-button focus:bg-anzuk-blue focus:px-4 focus:py-2 focus:font-semibold focus:text-white"
+  >
+    Skip to content
+  </a>
+
+  <div data-header-sentinel aria-hidden="true" class="absolute top-0 h-px w-px"></div>
+
+  <DemoHeader />
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <DemoFooter />
+  <DemoBackPill />
+
+  <script>
+    import '../scripts/demo-motion.ts';
+  </script>
+</BaseLayout>

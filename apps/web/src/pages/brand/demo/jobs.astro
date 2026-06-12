@@ -1,0 +1,37 @@
+---
+import DemoLayout from '../../../layouts/DemoLayout.astro';
+import DemoCtaBand from '../../../components/demo/DemoCtaBand.astro';
+import DemoJobsExplorer from '../../../components/demo/DemoJobsExplorer.astro';
+import Container from '../../../components/ui/Container.astro';
+import Section from '../../../components/ui/Section.astro';
+import { withBase } from '../../../lib/url';
+---
+
+<DemoLayout
+  title="Browse jobs"
+  description="Concept demo of a refreshed anzuk.education job search with interactive filters."
+>
+  <Section variant="lightBlue" padding="compact">
+    <Container>
+      <p data-reveal="up" class="text-sm font-semibold uppercase tracking-wide text-anzuk-blue">For educators</p>
+      <h1 data-reveal="up" data-reveal-delay="100" class="mt-4 !text-[clamp(2.5rem,5vw,4rem)]">
+        Find your next classroom
+      </h1>
+      <p data-reveal="up" data-reveal-delay="200" class="mt-6 max-w-2xl text-lg text-anzuk-content">
+        Browse demo roles across our five regions. The search and filters below are fully interactive — every role
+        is fictional.
+      </p>
+    </Container>
+  </Section>
+
+  <DemoJobsExplorer />
+
+  <DemoCtaBand
+    heading="Don't see the right role yet?"
+    body="Tell us what you're after and a consultant will keep an eye out — roles move fast."
+    primaryLabel="Expression of interest"
+    primaryHref={withBase('/brand/demo/educators') + '#eoi'}
+    secondaryLabel="Back to demo home"
+    secondaryHref={withBase('/brand/demo')}
+  />
+</DemoLayout>

@@ -1,0 +1,113 @@
+---
+import { personas } from '@anzuk/brand';
+import heroDoodleYellow from '@anzuk/brand/assets/illustrations/hero-doodle-yellow.svg';
+import DemoLayout from '../../../layouts/DemoLayout.astro';
+import DemoCtaBand from '../../../components/demo/DemoCtaBand.astro';
+import DemoEoiForm from '../../../components/demo/DemoEoiForm.astro';
+import DemoSteps from '../../../components/demo/DemoSteps.astro';
+import Button from '../../../components/ui/Button.astro';
+import Card from '../../../components/ui/Card.astro';
+import Container from '../../../components/ui/Container.astro';
+import HeroHighlight from '../../../components/ui/HeroHighlight.astro';
+import Section from '../../../components/ui/Section.astro';
+import SectionHeading from '../../../components/ui/SectionHeading.astro';
+import { demoBenefits, demoTestimonials } from '../../../data/demo-content';
+import { valueIcons } from '../../../components/demo/value-icons';
+import { withBase } from '../../../lib/url';
+
+const educatorPersona = personas.find((persona) => persona.id === 'educators')!;
+const testimonial = demoTestimonials[0];
+---
+
+<DemoLayout
+  title="For educators"
+  description="Concept demo of a refreshed anzuk.education page for educators, including a modern expression-of-interest form."
+>
+  <Section variant="lightBlue" padding="compact" class="relative overflow-hidden">
+    <img
+      src={heroDoodleYellow.src}
+      alt=""
+      width={heroDoodleYellow.width}
+      height={heroDoodleYellow.height}
+      class="pointer-events-none absolute -right-4 top-10 w-20 opacity-80 lg:right-16 lg:w-24"
+      data-parallax="0.1"
+      aria-hidden="true"
+    />
+    <Container class="relative">
+      <p data-reveal="up" class="text-sm font-semibold uppercase tracking-wide text-anzuk-blue">For educators</p>
+      <h1 data-reveal="up" data-reveal-delay="100" class="mt-4 max-w-3xl !text-[clamp(2.5rem,5vw,4rem)]">
+        Teach where you'll <HeroHighlight>thrive</HeroHighlight>
+      </h1>
+      <p data-reveal="up" data-reveal-delay="200" class="mt-6 max-w-2xl text-lg text-anzuk-content">
+        {educatorPersona.description}
+      </p>
+      <div data-reveal="up" data-reveal-delay="300" class="mt-9 flex flex-wrap gap-4">
+        <Button variant="primary" href="#eoi">Start your expression of interest</Button>
+        <Button variant="bordered" href={withBase('/brand/demo/jobs')}>Browse jobs</Button>
+      </div>
+    </Container>
+  </Section>
+
+  <Section variant="white" aria-labelledby="benefits-heading">
+    <Container>
+      <SectionHeading
+        id="benefits-heading"
+        eyebrow="Why ANZUK"
+        title="Support from first chat to first day — and beyond"
+      />
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          demoBenefits.map((benefit, index) => (
+            <div data-reveal="up" data-reveal-delay={String(index * 100)} class="h-full">
+              <Card variant="outlined" class="h-full bg-anzuk-page-bg p-7 transition motion-safe:hover:-translate-y-1">
+                <img
+                  src={valueIcons[benefit.icon].src}
+                  alt=""
+                  width={valueIcons[benefit.icon].width}
+                  height={valueIcons[benefit.icon].height}
+                  class="h-12 w-12 object-contain"
+                  aria-hidden="true"
+                />
+                <h3 class="mt-4 !text-xl">{benefit.title}</h3>
+                <p class="mt-2 text-sm text-anzuk-content">{benefit.description}</p>
+              </Card>
+            </div>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <DemoSteps
+    variant="educators"
+    background="page"
+    eyebrow="Your journey"
+    title="From hello to your new classroom"
+    description="Three steps, one consultant, zero guesswork."
+  />
+
+  <DemoEoiForm />
+
+  <Section variant="white" padding="compact">
+    <Container narrow>
+      <figure data-reveal="up" class="text-center">
+        <blockquote>
+          <p class="text-xl text-anzuk-content lg:text-2xl">“{testimonial.quote}”</p>
+        </blockquote>
+        <figcaption class="mt-6 text-sm">
+          <span class="font-semibold text-anzuk-title">{testimonial.name}</span>
+          <span class="text-anzuk-content"> — {testimonial.role}</span>
+        </figcaption>
+      </figure>
+    </Container>
+  </Section>
+
+  <DemoCtaBand
+    heading="See where you could teach next"
+    body="Browse live-style demo roles across our five regions, or head back to the concept homepage."
+    primaryLabel="Browse demo jobs"
+    primaryHref={withBase('/brand/demo/jobs')}
+    secondaryLabel="Back to demo home"
+    secondaryHref={withBase('/brand/demo')}
+  />
+</DemoLayout>

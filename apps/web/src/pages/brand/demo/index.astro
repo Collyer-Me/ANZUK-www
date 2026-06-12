@@ -1,0 +1,37 @@
+---
+import DemoLayout from '../../../layouts/DemoLayout.astro';
+import DemoCtaBand from '../../../components/demo/DemoCtaBand.astro';
+import DemoHero from '../../../components/demo/DemoHero.astro';
+import DemoLogoMarquee from '../../../components/demo/DemoLogoMarquee.astro';
+import DemoPersonaCards from '../../../components/demo/DemoPersonaCards.astro';
+import DemoRegions from '../../../components/demo/DemoRegions.astro';
+import DemoStats from '../../../components/demo/DemoStats.astro';
+import DemoSteps from '../../../components/demo/DemoSteps.astro';
+import DemoTestimonials from '../../../components/demo/DemoTestimonials.astro';
+import DemoValues from '../../../components/demo/DemoValues.astro';
+import { withBase } from '../../../lib/url';
+---
+
+<DemoLayout title="Home" description="Concept demo of a refreshed anzuk.education homepage.">
+  <DemoHero />
+  <DemoPersonaCards />
+  <DemoStats />
+  <DemoSteps
+    variant="home"
+    eyebrow="How it works"
+    title="Three steps to your next classroom"
+    description="No portals, no guesswork — a consultant who knows your region guides every step."
+  />
+  <DemoValues />
+  <DemoTestimonials />
+  <DemoLogoMarquee />
+  <DemoRegions />
+  <DemoCtaBand
+    heading="Ready to experience exceptional?"
+    body="Whether you're a school searching for educators or a teacher planning your next move, our local teams are ready to help."
+    primaryLabel="Expression of interest"
+    primaryHref={withBase('/brand/demo/educators') + '#eoi'}
+    secondaryLabel="Browse jobs"
+    secondaryHref={withBase('/brand/demo/jobs')}
+  />
+</DemoLayout>

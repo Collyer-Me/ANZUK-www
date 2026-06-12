@@ -1,0 +1,80 @@
+---
+import flagAus from '@anzuk/brand/assets/images/flag-aus.png';
+import flagCan from '@anzuk/brand/assets/images/flag-can.png';
+import flagNz from '@anzuk/brand/assets/images/flag-nz.png';
+import flagUk from '@anzuk/brand/assets/images/flag-uk.png';
+import flagUsa from '@anzuk/brand/assets/images/flag-usa.png';
+import { taglines } from '@anzuk/brand';
+import Container from '../ui/Container.astro';
+import Logo from '../ui/Logo.astro';
+import { demoFooterColumns } from '../../data/demo-content';
+import { withBase } from '../../lib/url';
+
+const flags = [
+  { src: flagAus, alt: 'Australia' },
+  { src: flagUk, alt: 'United Kingdom' },
+  { src: flagCan, alt: 'Canada' },
+  { src: flagNz, alt: 'New Zealand' },
+  { src: flagUsa, alt: 'United States' },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-anzuk-dark-purple text-white">
+  <Container class="py-16">
+    <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+      <div>
+        <Logo variant="white" class="h-9 w-auto" />
+        <p class="mt-4 max-w-xs text-sm text-anzuk-light-gray">{taglines.secondary}</p>
+        <ul class="mt-6 flex items-center gap-2" role="list" aria-label="Regions we serve">
+          {
+            flags.map((flag) => (
+              <li>
+                <img
+                  src={flag.src.src}
+                  alt={flag.alt}
+                  width={flag.src.width}
+                  height={flag.src.height}
+                  class="h-6 w-auto rounded-sm"
+                  loading="lazy"
+                />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {
+        demoFooterColumns.map((column) => (
+          <nav aria-label={column.heading}>
+            <h2 class="!mt-0 !text-base font-semibold !text-white">{column.heading}</h2>
+            <ul class="mt-4 space-y-3" role="list">
+              {column.links.map((link) => (
+                <li>
+                  <a
+                    href={link.path ? withBase(link.path) : link.href}
+                    target={link.external ? '_blank' : undefined}
+                    rel={link.external ? 'noopener noreferrer' : undefined}
+                    class="text-sm text-anzuk-light-gray no-underline transition-colors hover:text-white hover:underline"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-14 flex flex-col items-start justify-between gap-3 border-t border-white/15 pt-6 text-sm text-anzuk-light-gray sm:flex-row sm:items-center"
+    >
+      <p>© {year} ANZUK Education — internal concept demo, not a live site.</p>
+      <a href={withBase('/brand')} class="text-anzuk-light-blue no-underline hover:text-white hover:underline">
+        Back to brand guide
+      </a>
+    </div>
+  </Container>
+</footer>

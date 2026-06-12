@@ -1,0 +1,106 @@
+---
+import { shadows } from '@anzuk/brand';
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+import Logo from '../ui/Logo.astro';
+import { demoNavItems } from '../../data/demo-content';
+import { routeKey, withBase } from '../../lib/url';
+
+const currentRoute = routeKey(Astro.url.pathname);
+const eoiHref = withBase('/brand/demo/educators') + '#eoi';
+---
+
+<header
+  data-demo-header
+  class="sticky top-0 z-40 border-b border-anzuk-light-gray/60 bg-anzuk-page-bg/85 backdrop-blur-md"
+  style={`--demo-header-shadow: ${shadows.headerSticky}`}
+>
+  <Container>
+    <div class="demo-header-row flex items-center justify-between gap-4">
+      <a
+        href={withBase('/brand/demo')}
+        class="demo-header-logo shrink-0 no-underline hover:no-underline"
+        aria-label="ANZUK Education — demo home"
+      >
+        <Logo class="h-8 w-auto lg:h-9" />
+      </a>
+
+      <nav aria-label="Demo site" class="hidden md:block">
+        <ul class="flex items-center gap-1" role="list">
+          {
+            demoNavItems.map((item) => {
+              const active = currentRoute === routeKey(item.path);
+              return (
+                <li>
+                  <a
+                    href={withBase(item.path)}
+                    aria-current={active ? 'page' : undefined}
+                    class:list={[
+                      'rounded-full px-4 py-2 text-sm font-semibold no-underline transition-colors hover:no-underline',
+                      active ? 'bg-anzuk-blue text-white' : 'text-anzuk-title hover:bg-white/70',
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <span class="hidden sm:block">
+          <Button variant="primary" href={eoiHref} class="!min-h-12 !min-w-0 px-5 !text-sm">
+            Expression of interest
+          </Button>
+        </span>
+        <button
+          type="button"
+          data-nav-toggle
+          aria-expanded="false"
+          aria-controls="demo-mobile-nav"
+          class="inline-flex h-11 w-11 items-center justify-center rounded-anzuk-button border border-anzuk-light-gray bg-white text-anzuk-title focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-anzuk-blue md:hidden"
+        >
+          <span class="sr-only">Menu</span>
+          <span class="demo-burger" aria-hidden="true"><span></span><span></span><span></span></span>
+        </button>
+      </div>
+    </div>
+  </Container>
+
+  <div
+    id="demo-mobile-nav"
+    hidden
+    class="demo-mobile-panel absolute inset-x-0 top-full border-b border-anzuk-light-gray bg-anzuk-page-bg shadow-lg md:hidden"
+  >
+    <nav aria-label="Demo site">
+      <ul class="flex flex-col gap-1 px-6 py-4" role="list">
+        {
+          demoNavItems.map((item) => {
+            const active = currentRoute === routeKey(item.path);
+            return (
+              <li>
+                <a
+                  href={withBase(item.path)}
+                  aria-current={active ? 'page' : undefined}
+                  class:list={[
+                    'block rounded-anzuk-button px-4 py-3 font-semibold no-underline hover:no-underline',
+                    active ? 'bg-anzuk-blue text-white' : 'text-anzuk-title hover:bg-white/70',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            );
+          })
+        }
+        <li class="mt-2">
+          <Button variant="primary" href={eoiHref} class="w-full">
+            Expression of interest
+          </Button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

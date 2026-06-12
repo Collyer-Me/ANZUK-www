@@ -1,0 +1,420 @@
+/*
+ * Demo-site styles — loaded only via DemoLayout (pages under /brand/demo/).
+ * All colours come from @anzuk/brand CSS variables; the two --demo-error
+ * vars below are demo-scoped additions because the brand palette has no
+ * error token yet (flagged as a future brand addition).
+ */
+
+:root {
+  --demo-error: #b3261e;
+  --demo-error-bg: #fcebea;
+  --demo-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------------------
+ * Fluid heading scale.
+ * global.css fixes h1/h2/h3 at 80/61/47px; on the demo pages headings scale
+ * with the viewport instead. Utility overrides (!text-*) still win.
+ * ------------------------------------------------------------------------- */
+main h1 {
+  font-size: clamp(2.75rem, 6vw, 5rem);
+}
+
+main h2 {
+  font-size: clamp(1.9rem, 4vw, 3.25rem);
+}
+
+main h3 {
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+}
+
+/* ---------------------------------------------------------------------------
+ * Scroll-reveal system.
+ * Elements opt in with data-reveal="up|left|right|zoom|draw".
+ * Initial hidden states apply ONLY when JS is present (html.js) AND the user
+ * allows motion — no-JS and reduced-motion visitors always see content.
+ * ------------------------------------------------------------------------- */
+/* Reveal offsets (translateX/Y before reveal) must never create horizontal
+   scroll. clip (not hidden) so no new scroll container is formed. */
+main {
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html.js [data-reveal] {
+    opacity: 0;
+    transition:
+      opacity 0.65s var(--demo-ease),
+      transform 0.65s var(--demo-ease);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  html.js [data-reveal='up'] {
+    transform: translateY(28px);
+  }
+
+  html.js [data-reveal='left'] {
+    transform: translateX(-28px);
+  }
+
+  html.js [data-reveal='right'] {
+    transform: translateX(28px);
+  }
+
+  html.js [data-reveal='zoom'] {
+    transform: scale(0.94);
+  }
+
+  html.js [data-reveal='draw'] {
+    opacity: 1;
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  html.js [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Sticky demo header — shrinks once the page is scrolled.
+ * The shadow value is injected from @anzuk/brand shadows.headerSticky via a
+ * style attribute (--demo-header-shadow) in DemoHeader.astro.
+ * ------------------------------------------------------------------------- */
+.demo-header-row {
+  padding-block: 16px;
+}
+
+[data-demo-header][data-scrolled] {
+  box-shadow: var(--demo-header-shadow);
+}
+
+[data-demo-header][data-scrolled] .demo-header-row {
+  padding-block: 8px;
+}
+
+[data-demo-header][data-scrolled] .demo-header-logo {
+  transform: scale(0.88);
+}
+
+.demo-header-logo {
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-demo-header] {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .demo-header-row {
+    transition: padding 0.3s var(--demo-ease);
+  }
+
+  .demo-header-logo {
+    transition: transform 0.3s var(--demo-ease);
+  }
+}
+
+/* Hamburger icon (three bars morphing to an X) */
+.demo-burger {
+  position: relative;
+  display: block;
+  width: 22px;
+  height: 16px;
+}
+
+.demo-burger span {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--anzuk-title);
+}
+
+.demo-burger span:nth-child(2) {
+  top: 7px;
+}
+
+.demo-burger span:nth-child(3) {
+  top: 14px;
+}
+
+[aria-expanded='true'] .demo-burger span:nth-child(1) {
+  top: 7px;
+  transform: rotate(45deg);
+}
+
+[aria-expanded='true'] .demo-burger span:nth-child(2) {
+  opacity: 0;
+}
+
+[aria-expanded='true'] .demo-burger span:nth-child(3) {
+  top: 7px;
+  transform: rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .demo-burger span {
+    transition:
+      transform 0.25s var(--demo-ease),
+      opacity 0.2s ease,
+      top 0.25s var(--demo-ease);
+  }
+
+  html.js .demo-mobile-panel:not([hidden]) {
+    animation: demo-panel-in 0.25s var(--demo-ease) both;
+  }
+}
+
+@keyframes demo-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Partner logo marquee.
+ * Default (no JS, or reduced motion): a static, wrapped, centred logo wall
+ * with the duplicate copy hidden. With JS + motion: an infinite scroll track.
+ * ------------------------------------------------------------------------- */
+.demo-marquee-track {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+}
+
+.demo-marquee-copy {
+  display: contents;
+}
+
+.demo-marquee-copy[data-marquee-duplicate] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .demo-marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+
+  html.js .demo-marquee-track {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: max-content;
+    gap: 0;
+    animation: demo-marquee 36s linear infinite;
+  }
+
+  html.js .demo-marquee-copy,
+  html.js .demo-marquee-copy[data-marquee-duplicate] {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    padding-right: 64px;
+  }
+
+  html.js .demo-marquee:hover .demo-marquee-track,
+  html.js .demo-marquee:focus-within .demo-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes demo-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * BE GREAT values tabs.
+ * Panels are all server-rendered; non-active ones are hidden only when JS is
+ * available, so no-JS visitors see the full list of seven values.
+ * ------------------------------------------------------------------------- */
+html.js .demo-value-panel:not([data-active='true']) {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .demo-value-panel[data-active='true'] {
+    animation: demo-card-in 0.3s var(--demo-ease) both;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Jobs explorer.
+ * Pressed filter pills are driven by the aria-pressed state the script sets.
+ * Card re-entry animation on filter change: the script toggles
+ * .demo-card-enter (with a per-card --stagger index).
+ * ------------------------------------------------------------------------- */
+.demo-filter-pill[aria-pressed='true'] {
+  border-color: var(--anzuk-blue);
+  background-color: var(--anzuk-blue);
+  color: var(--anzuk-white);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .demo-card-enter {
+    animation: demo-card-in 0.22s var(--demo-ease) both;
+    animation-delay: calc(var(--stagger, 0) * 30ms);
+  }
+}
+
+@keyframes demo-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Expression-of-interest form.
+ * Floating labels use the placeholder-shown technique: the input carries
+ * placeholder=" " and the label sits after it in the DOM.
+ * ------------------------------------------------------------------------- */
+.demo-field {
+  position: relative;
+}
+
+.demo-field input,
+.demo-field textarea {
+  width: 100%;
+  border: 2px solid var(--anzuk-light-gray);
+  border-radius: var(--anzuk-button-radius);
+  background: var(--anzuk-white);
+  padding: 26px 16px 10px;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--anzuk-title);
+}
+
+.demo-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.demo-field label {
+  position: absolute;
+  left: 18px;
+  top: 19px;
+  font-size: 16px;
+  color: var(--anzuk-icon-muted);
+  pointer-events: none;
+  transform-origin: left top;
+}
+
+.demo-field input:focus ~ label,
+.demo-field input:not(:placeholder-shown) ~ label,
+.demo-field textarea:focus ~ label,
+.demo-field textarea:not(:placeholder-shown) ~ label {
+  transform: translateY(-11px) scale(0.72);
+  color: var(--anzuk-blue);
+}
+
+.demo-field input:not(:placeholder-shown):not(:focus) ~ label,
+.demo-field textarea:not(:placeholder-shown):not(:focus) ~ label {
+  color: var(--anzuk-icon-muted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .demo-field label {
+    transition:
+      transform 0.15s ease,
+      color 0.15s ease;
+  }
+}
+
+/* Shared focus + error treatment for all demo form controls */
+.demo-input:focus,
+.demo-field input:focus,
+.demo-field textarea:focus {
+  outline: none;
+  border-color: var(--anzuk-blue);
+  box-shadow: 0 0 0 3px var(--anzuk-extra-light-blue);
+}
+
+.demo-input {
+  width: 100%;
+  border: 2px solid var(--anzuk-light-gray);
+  border-radius: var(--anzuk-button-radius);
+  background: var(--anzuk-white);
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--anzuk-title);
+}
+
+.demo-field input[aria-invalid='true'],
+.demo-field textarea[aria-invalid='true'],
+.demo-input[aria-invalid='true'] {
+  border-color: var(--demo-error);
+  background-color: var(--demo-error-bg);
+}
+
+.demo-field input[aria-invalid='true'] ~ label {
+  color: var(--demo-error);
+}
+
+.demo-error-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--demo-error);
+}
+
+/* Success-panel check mark, drawn with a dash animation when motion allows */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .demo-check-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: demo-draw 0.6s 0.1s var(--demo-ease) forwards;
+  }
+
+  html.js .demo-check-mark {
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: demo-draw 0.35s 0.6s var(--demo-ease) forwards;
+  }
+}
+
+@keyframes demo-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Spinner used on the simulated submit */
+.demo-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .demo-spinner {
+    animation: demo-spin 0.7s linear infinite;
+  }
+}
+
+@keyframes demo-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

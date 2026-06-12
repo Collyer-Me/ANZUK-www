@@ -1,0 +1,453 @@
+---
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import { withBase } from '../../lib/url';
+
+const locations = ['Australia', 'United Kingdom', 'Canada', 'New Zealand', 'Other / international'];
+const roleTypes = ['Casual relief', 'Contract', 'Permanent', 'Leadership'];
+const experienceLevels = ['0–2 years', '3–7 years', '8+ years'];
+const destinations = ['Australia', 'United Kingdom', 'Canada', 'New Zealand', 'International schools'];
+---
+
+<Section variant="page" id="eoi" class="scroll-mt-24" aria-labelledby="eoi-heading">
+  <Container>
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.25fr]">
+      <div data-reveal="left">
+        <p class="text-sm font-semibold uppercase tracking-wide text-anzuk-blue">Expression of interest</p>
+        <h2 id="eoi-heading" class="mt-3">Tell us where you'd love to teach</h2>
+        <p class="mt-5 text-anzuk-content">
+          A few details are all we need to start the conversation. A consultant who knows your region — not a
+          portal — will be in touch.
+        </p>
+
+        <h3 class="mt-10 !text-lg">What happens next</h3>
+        <ol class="mt-4 space-y-4" role="list">
+          {
+            [
+              'We review your details and match you with a local consultant.',
+              'They call to talk through your goals and the roles that fit.',
+              'You choose what happens next — no pressure, no spam.',
+            ].map((item, index) => (
+              <li class="flex items-start gap-3 text-sm text-anzuk-content">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-anzuk-extra-light-blue text-xs font-bold text-anzuk-blue">
+                  {index + 1}
+                </span>
+                {item}
+              </li>
+            ))
+          }
+        </ol>
+
+        <p class="mt-10 text-sm text-anzuk-content">
+          Prefer email? Reach us at
+          <a href="mailto:hello@anzuk.education" class="font-semibold">hello@anzuk.education</a>
+        </p>
+        <p class="mt-3 text-xs text-anzuk-icon-muted">
+          This is a design demo — nothing you type here is stored or sent.
+        </p>
+      </div>
+
+      <div data-reveal="right">
+        <div class="rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 shadow-sm sm:p-8">
+          <form novalidate data-eoi-form>
+            <div
+              data-eoi-summary
+              role="alert"
+              tabindex="-1"
+              hidden
+              class="mb-6 rounded-anzuk-button border-2 p-4"
+              style="border-color: var(--demo-error); background-color: var(--demo-error-bg);"
+            >
+              <p class="font-semibold" style="color: var(--demo-error);">Please fix the following to continue:</p>
+              <ul class="mt-2 list-inside list-disc space-y-1 text-sm" data-eoi-summary-list></ul>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <div class="demo-field">
+                  <input
+                    type="text"
+                    id="eoi-first-name"
+                    name="firstName"
+                    placeholder=" "
+                    required
+                    aria-required="true"
+                    autocomplete="given-name"
+                    aria-describedby="eoi-first-name-error"
+                  />
+                  <label for="eoi-first-name">First name *</label>
+                </div>
+                <p class="demo-error-text" id="eoi-first-name-error" hidden></p>
+              </div>
+
+              <div>
+                <div class="demo-field">
+                  <input
+                    type="text"
+                    id="eoi-last-name"
+                    name="lastName"
+                    placeholder=" "
+                    required
+                    aria-required="true"
+                    autocomplete="family-name"
+                    aria-describedby="eoi-last-name-error"
+                  />
+                  <label for="eoi-last-name">Last name *</label>
+                </div>
+                <p class="demo-error-text" id="eoi-last-name-error" hidden></p>
+              </div>
+            </div>
+
+            <div class="mt-5">
+              <div class="demo-field">
+                <input
+                  type="email"
+                  id="eoi-email"
+                  name="email"
+                  placeholder=" "
+                  required
+                  aria-required="true"
+                  autocomplete="email"
+                  aria-describedby="eoi-email-error"
+                />
+                <label for="eoi-email">Email address *</label>
+              </div>
+              <p class="demo-error-text" id="eoi-email-error" hidden></p>
+            </div>
+
+            <div class="mt-5">
+              <div class="demo-field">
+                <input
+                  type="tel"
+                  id="eoi-phone"
+                  name="phone"
+                  placeholder=" "
+                  autocomplete="tel"
+                />
+                <label for="eoi-phone">Phone (optional)</label>
+              </div>
+            </div>
+
+            <div class="mt-5 grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="eoi-location" class="mb-2 block text-sm font-semibold text-anzuk-title">
+                  Current location *
+                </label>
+                <select
+                  id="eoi-location"
+                  name="location"
+                  class="demo-input"
+                  required
+                  aria-required="true"
+                  aria-describedby="eoi-location-error"
+                >
+                  <option value="">Choose a location</option>
+                  {locations.map((location) => <option value={location}>{location}</option>)}
+                </select>
+                <p class="demo-error-text" id="eoi-location-error" hidden></p>
+              </div>
+
+              <div>
+                <label for="eoi-role-type" class="mb-2 block text-sm font-semibold text-anzuk-title">
+                  Role type *
+                </label>
+                <select
+                  id="eoi-role-type"
+                  name="roleType"
+                  class="demo-input"
+                  required
+                  aria-required="true"
+                  aria-describedby="eoi-role-type-error"
+                >
+                  <option value="">Choose a role type</option>
+                  {roleTypes.map((role) => <option value={role}>{role}</option>)}
+                </select>
+                <p class="demo-error-text" id="eoi-role-type-error" hidden></p>
+              </div>
+            </div>
+
+            <fieldset class="mt-7" aria-describedby="eoi-experience-error">
+              <legend class="text-sm font-semibold text-anzuk-title">Teaching experience *</legend>
+              <div class="mt-3 flex flex-wrap gap-3">
+                {
+                  experienceLevels.map((level, index) => (
+                    <label class="flex cursor-pointer items-center gap-2 rounded-full border-2 border-anzuk-light-gray bg-white px-4 py-2 text-sm text-anzuk-content transition-colors hover:border-anzuk-blue has-[:checked]:border-anzuk-blue has-[:checked]:bg-anzuk-extra-light-blue has-[:checked]:font-semibold">
+                      <input
+                        type="radio"
+                        name="experience"
+                        value={level}
+                        id={`eoi-experience-${index}`}
+                        class="accent-anzuk-blue"
+                      />
+                      {level}
+                    </label>
+                  ))
+                }
+              </div>
+              <p class="demo-error-text" id="eoi-experience-error" hidden></p>
+            </fieldset>
+
+            <fieldset class="mt-7">
+              <legend class="text-sm font-semibold text-anzuk-title">
+                Preferred destinations <span class="font-normal text-anzuk-icon-muted">(optional)</span>
+              </legend>
+              <div class="mt-3 flex flex-wrap gap-3">
+                {
+                  destinations.map((destination, index) => (
+                    <label class="flex cursor-pointer items-center gap-2 rounded-full border-2 border-anzuk-light-gray bg-white px-4 py-2 text-sm text-anzuk-content transition-colors hover:border-anzuk-green has-[:checked]:border-anzuk-green has-[:checked]:bg-anzuk-extra-light-green has-[:checked]:font-semibold">
+                      <input
+                        type="checkbox"
+                        name="destinations"
+                        value={destination}
+                        id={`eoi-destination-${index}`}
+                        class="accent-anzuk-green"
+                      />
+                      {destination}
+                    </label>
+                  ))
+                }
+              </div>
+            </fieldset>
+
+            <div class="mt-7">
+              <div class="demo-field">
+                <textarea id="eoi-message" name="message" placeholder=" " rows="4"></textarea>
+                <label for="eoi-message">Tell us about you (optional)</label>
+              </div>
+            </div>
+
+            <div class="mt-7">
+              <label class="flex cursor-pointer items-start gap-3 text-sm text-anzuk-content">
+                <input
+                  type="checkbox"
+                  id="eoi-consent"
+                  name="consent"
+                  required
+                  aria-required="true"
+                  aria-describedby="eoi-consent-error"
+                  class="mt-1 h-4 w-4 accent-anzuk-blue"
+                />
+                <span>
+                  I'm happy to be contacted about teaching opportunities.
+                  <span class="text-anzuk-icon-muted">Demo only — nothing is sent.</span>
+                </span>
+              </label>
+              <p class="demo-error-text" id="eoi-consent-error" hidden></p>
+            </div>
+
+            <Button type="submit" variant="primary" class="mt-8 w-full">
+              <span data-submit-idle>Submit expression of interest</span>
+              <span data-submit-busy hidden class="inline-flex items-center gap-2.5">
+                <span class="demo-spinner" aria-hidden="true"></span>
+                Submitting…
+              </span>
+            </Button>
+          </form>
+
+          <div data-eoi-success role="status" tabindex="-1" hidden class="demo-success py-6 text-center">
+            <svg viewBox="0 0 56 56" class="mx-auto h-20 w-20 text-anzuk-green" fill="none" aria-hidden="true">
+              <circle class="demo-check-circle" cx="28" cy="28" r="26" stroke="currentColor" stroke-width="3"></circle>
+              <path
+                class="demo-check-mark"
+                d="M16 29.5 24.5 38 40 20"
+                stroke="currentColor"
+                stroke-width="3.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+            </svg>
+            <h3 class="mt-6 !text-2xl">
+              Thanks<span data-success-name></span> — talk soon!
+            </h3>
+            <p class="mx-auto mt-3 max-w-sm text-anzuk-content">
+              A consultant would be in touch within one business day.
+            </p>
+            <p class="mt-2 text-xs text-anzuk-icon-muted">This is a demo — nothing was submitted.</p>
+            <div class="mt-7 flex flex-wrap justify-center gap-3">
+              <Button variant="bordered" href={withBase('/brand/demo/jobs')} class="!min-h-12">
+                Browse demo jobs
+              </Button>
+              <button
+                type="button"
+                data-eoi-reset
+                class="inline-flex min-h-12 items-center justify-center rounded-anzuk-button px-5 font-semibold text-anzuk-blue underline-offset-4 hover:underline"
+              >
+                Start again
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<script>
+  type RuleType = 'text' | 'email' | 'select' | 'radio' | 'checkbox';
+
+  interface FieldRule {
+    id: string;
+    type: RuleType;
+    message: string;
+    label: string;
+    /** Radio group name (radio rules only). */
+    name?: string;
+  }
+
+  const rules: FieldRule[] = [
+    { id: 'eoi-first-name', type: 'text', message: 'Enter your first name', label: 'First name' },
+    { id: 'eoi-last-name', type: 'text', message: 'Enter your last name', label: 'Last name' },
+    { id: 'eoi-email', type: 'email', message: 'Enter a valid email address', label: 'Email address' },
+    { id: 'eoi-location', type: 'select', message: 'Choose your current location', label: 'Current location' },
+    { id: 'eoi-role-type', type: 'select', message: 'Choose the type of role you’re after', label: 'Role type' },
+    {
+      id: 'eoi-experience-0',
+      type: 'radio',
+      name: 'experience',
+      message: 'Select your teaching experience',
+      label: 'Teaching experience',
+    },
+    {
+      id: 'eoi-consent',
+      type: 'checkbox',
+      message: 'Confirm you’re happy to be contacted',
+      label: 'Contact consent',
+    },
+  ];
+
+  const form = document.querySelector<HTMLFormElement>('[data-eoi-form]');
+
+  if (form) {
+    const summary = form.querySelector<HTMLElement>('[data-eoi-summary]')!;
+    const summaryList = form.querySelector<HTMLElement>('[data-eoi-summary-list]')!;
+    const success = document.querySelector<HTMLElement>('[data-eoi-success]')!;
+    const successName = success.querySelector<HTMLElement>('[data-success-name]')!;
+    const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    const idleLabel = submitButton.querySelector<HTMLElement>('[data-submit-idle]')!;
+    const busyLabel = submitButton.querySelector<HTMLElement>('[data-submit-busy]')!;
+    const dirty = new Set<string>();
+    let submitting = false;
+
+    const controlsFor = (rule: FieldRule): HTMLInputElement[] => {
+      if (rule.type === 'radio' && rule.name) {
+        return Array.from(form.querySelectorAll<HTMLInputElement>(`input[name="${rule.name}"]`));
+      }
+      const control = form.querySelector<HTMLInputElement>(`#${rule.id}`);
+      return control ? [control] : [];
+    };
+
+    const isValid = (rule: FieldRule): boolean => {
+      const controls = controlsFor(rule);
+      if (controls.length === 0) return true;
+      switch (rule.type) {
+        case 'text':
+          return controls[0].value.trim() !== '';
+        case 'email':
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(controls[0].value.trim());
+        case 'select':
+          return controls[0].value !== '';
+        case 'radio':
+          return controls.some((control) => control.checked);
+        case 'checkbox':
+          return controls[0].checked;
+      }
+    };
+
+    const errorFor = (rule: FieldRule): HTMLElement | null =>
+      document.getElementById(
+        rule.type === 'radio' ? 'eoi-experience-error' : `${rule.id}-error`,
+      );
+
+    const applyState = (rule: FieldRule, valid: boolean) => {
+      const error = errorFor(rule);
+      controlsFor(rule).forEach((control) => {
+        if (valid) {
+          control.removeAttribute('aria-invalid');
+        } else {
+          control.setAttribute('aria-invalid', 'true');
+        }
+      });
+      if (error) {
+        error.hidden = valid;
+        if (!valid) error.textContent = `⚠ ${rule.message}`;
+      }
+    };
+
+    const ruleForControl = (control: Element): FieldRule | undefined =>
+      rules.find((rule) => controlsFor(rule).includes(control as HTMLInputElement));
+
+    form.addEventListener('focusout', (event) => {
+      const rule = ruleForControl(event.target as Element);
+      if (!rule) return;
+      dirty.add(rule.id);
+      applyState(rule, isValid(rule));
+    });
+
+    form.addEventListener('input', (event) => {
+      const rule = ruleForControl(event.target as Element);
+      if (!rule || !dirty.has(rule.id)) return;
+      applyState(rule, isValid(rule));
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (submitting) return;
+
+      const invalid = rules.filter((rule) => {
+        dirty.add(rule.id);
+        const valid = isValid(rule);
+        applyState(rule, valid);
+        return !valid;
+      });
+
+      if (invalid.length > 0) {
+        summaryList.innerHTML = '';
+        invalid.forEach((rule) => {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = `#${rule.id}`;
+          link.textContent = `${rule.label}: ${rule.message}`;
+          link.addEventListener('click', (clickEvent) => {
+            clickEvent.preventDefault();
+            controlsFor(rule)[0]?.focus();
+          });
+          item.appendChild(link);
+          summaryList.appendChild(item);
+        });
+        summary.hidden = false;
+        summary.focus();
+        return;
+      }
+
+      summary.hidden = true;
+      submitting = true;
+      submitButton.setAttribute('aria-busy', 'true');
+      idleLabel.hidden = true;
+      busyLabel.hidden = false;
+
+      window.setTimeout(() => {
+        submitting = false;
+        submitButton.removeAttribute('aria-busy');
+        idleLabel.hidden = false;
+        busyLabel.hidden = true;
+
+        const firstName = (form.querySelector<HTMLInputElement>('#eoi-first-name')?.value ?? '').trim();
+        successName.textContent = firstName ? ` ${firstName}` : '';
+        form.hidden = true;
+        success.hidden = false;
+        success.focus();
+      }, 900);
+    });
+
+    const reset = success.querySelector<HTMLElement>('[data-eoi-reset]');
+    reset?.addEventListener('click', () => {
+      form.reset();
+      dirty.clear();
+      rules.forEach((rule) => applyState(rule, true));
+      summary.hidden = true;
+      success.hidden = true;
+      form.hidden = false;
+      form.querySelector<HTMLInputElement>('#eoi-first-name')?.focus();
+    });
+  }
+</script>

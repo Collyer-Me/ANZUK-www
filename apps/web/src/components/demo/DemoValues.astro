@@ -1,0 +1,119 @@
+---
+import { beGreatValues } from '@anzuk/brand';
+import valuesPhoto from '@anzuk/brand/assets/images/values.jpg';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import ValuePanel from '../ui/ValuePanel.astro';
+import { valueIcons } from './value-icons';
+import type { DemoValueIconKey } from '../../data/demo-content';
+---
+
+<Section variant="lightGreen" aria-labelledby="values-heading">
+  <Container>
+    <div class="grid items-center gap-12 lg:grid-cols-[1fr_1.15fr]">
+      <div data-reveal="left">
+        <img
+          src={valuesPhoto.src}
+          width={valuesPhoto.width}
+          height={valuesPhoto.height}
+          alt="The ANZUK team celebrating together"
+          class="w-full rounded-anzuk-card object-cover"
+          loading="lazy"
+        />
+      </div>
+
+      <div data-reveal="right">
+        <SectionHeading
+          id="values-heading"
+          align="left"
+          eyebrow="Our values"
+          title="We live BE GREAT"
+          description="Seven values guide every conversation, shortlist, and placement we make."
+        />
+
+        <div class="mt-8" data-values-tabs>
+          <div role="tablist" aria-label="BE GREAT values" class="flex flex-wrap gap-2">
+            {
+              beGreatValues.map((value, index) => (
+                <button
+                  type="button"
+                  role="tab"
+                  id={`value-tab-${index}`}
+                  aria-selected={index === 0 ? 'true' : 'false'}
+                  aria-controls={`value-panel-${index}`}
+                  tabindex={index === 0 ? 0 : -1}
+                  class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-anzuk-green bg-white text-lg font-bold text-anzuk-green transition-colors hover:bg-anzuk-extra-light-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-anzuk-green aria-selected:bg-anzuk-green aria-selected:text-white"
+                >
+                  {value.letter}
+                  <span class="sr-only"> — {value.word}</span>
+                </button>
+              ))
+            }
+          </div>
+
+          <div class="mt-6">
+            {
+              beGreatValues.map((value, index) => (
+                <div
+                  role="tabpanel"
+                  id={`value-panel-${index}`}
+                  aria-labelledby={`value-tab-${index}`}
+                  class="demo-value-panel"
+                  data-active={index === 0 ? 'true' : undefined}
+                >
+                  <ValuePanel
+                    title={value.word.toUpperCase()}
+                    description={value.summary}
+                    icon={valueIcons[value.word.toLowerCase() as DemoValueIconKey]}
+                    active={true}
+                  />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-values-tabs]');
+
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(root.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, i) => {
+        tab.setAttribute('aria-selected', String(i === index));
+        tab.tabIndex = i === index ? 0 : -1;
+      });
+      panels.forEach((panel, i) => {
+        if (i === index) {
+          panel.setAttribute('data-active', 'true');
+        } else {
+          panel.removeAttribute('data-active');
+        }
+      });
+      if (focus) tabs[index].focus();
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(index));
+      tab.addEventListener('keydown', (event) => {
+        const last = tabs.length - 1;
+        let next: number | null = null;
+        if (event.key === 'ArrowRight') next = index === last ? 0 : index + 1;
+        else if (event.key === 'ArrowLeft') next = index === 0 ? last : index - 1;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = last;
+        if (next !== null) {
+          event.preventDefault();
+          select(next, true);
+        }
+      });
+    });
+  }
+</script>
