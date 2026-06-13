@@ -483,14 +483,14 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::article.article'
     >;
-    market: Schema.Attribute.Enumeration<['au', 'uk', 'ca', 'nz']> &
+    publishedAt: Schema.Attribute.DateTime;
+    region: Schema.Attribute.Relation<'manyToOne', 'api::region.region'> &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: false;
         };
       }>;
-    publishedAt: Schema.Attribute.DateTime;
     seo: Schema.Attribute.Component<'shared.seo', false> &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -517,11 +517,142 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
+  collectionName: 'global_settings';
+  info: {
+    description: 'Brand-wide site configuration';
+    displayName: 'Global Settings';
+    pluralName: 'global-settings';
+    singularName: 'global-setting';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    affiliateBrands: Schema.Attribute.Component<
+      'shared.affiliate-brand',
+      true
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    defaultOgImage: Schema.Attribute.Media<'images'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    executiveUrl: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'https://www.anzukexecutive.com'>;
+    ketchEnabled: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    ketchOrganizationCode: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    ketchPropertyCode: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::global-setting.global-setting'
+    >;
+    optionalGtmContainerId: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    organizationName: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'ANZUK Education'>;
+    organizationUrl: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    rudderStackDataPlaneUrl: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    rudderStackEnabled: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    rudderStackWriteKey: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    scootUrl: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'https://scoot.education'>;
+    socialLinks: Schema.Attribute.Component<'shared.social-link', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    tagline: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiLocalizedPageLocalizedPage
   extends Struct.CollectionTypeSchema {
   collectionName: 'localized_pages';
   info: {
-    description: 'Marketing page scoped by market with dynamic content blocks';
+    description: 'Marketing page scoped by market. Slug is the URL path without market prefix (e.g. who-we-are/meet-the-team).';
     displayName: 'Localized Page';
     pluralName: 'localized-pages';
     singularName: 'localized-page';
@@ -536,7 +667,17 @@ export interface ApiLocalizedPageLocalizedPage
   };
   attributes: {
     body: Schema.Attribute.DynamicZone<
-      ['blocks.hero', 'blocks.feature-grid', 'blocks.cta', 'blocks.testimonial']
+      [
+        'blocks.hero',
+        'blocks.feature-grid',
+        'blocks.cta',
+        'blocks.testimonial',
+        'blocks.region-grid',
+        'blocks.values-grid',
+        'blocks.form-embed',
+        'blocks.rich-text',
+        'blocks.stats-row',
+      ]
     > &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -575,6 +716,19 @@ export interface ApiLocalizedPageLocalizedPage
           localized: false;
         };
       }>;
+    navLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    navOrder: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<0>;
     noIndex: Schema.Attribute.Boolean &
       Schema.Attribute.SetPluginOptions<{
         i18n: {
@@ -617,6 +771,194 @@ export interface ApiLocalizedPageLocalizedPage
           localized: true;
         };
       }>;
+    showInNav: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiMarketNavigationMarketNavigation
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'market_navigations';
+  info: {
+    description: 'Main navigation menu for a market site';
+    displayName: 'Market Navigation';
+    pluralName: 'market-navigations';
+    singularName: 'market-navigation';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    items: Schema.Attribute.Component<'shared.nav-item', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::market-navigation.market-navigation'
+    > &
+      Schema.Attribute.Private;
+    market: Schema.Attribute.Enumeration<
+      ['international', 'au', 'uk', 'ca', 'nz']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPagePage extends Struct.CollectionTypeSchema {
+  collectionName: 'pages';
+  info: {
+    description: 'Marketing page with region scope and page tree';
+    displayName: 'Page';
+    pluralName: 'pages';
+    singularName: 'page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    body: Schema.Attribute.DynamicZone<
+      [
+        'blocks.hero',
+        'blocks.feature-grid',
+        'blocks.cta',
+        'blocks.cta-band',
+        'blocks.testimonial',
+        'blocks.testimonials',
+        'blocks.region-grid',
+        'blocks.values-grid',
+        'blocks.value-tabs',
+        'blocks.form-embed',
+        'blocks.rich-text',
+        'blocks.stats-row',
+        'blocks.stats-band',
+        'blocks.persona-cards',
+        'blocks.steps-row',
+        'blocks.logo-marquee',
+        'blocks.shared-section',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    children: Schema.Attribute.Relation<'oneToMany', 'api::page.page'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    equivalentOf: Schema.Attribute.Relation<'manyToMany', 'api::page.page'>;
+    equivalents: Schema.Attribute.Relation<'manyToMany', 'api::page.page'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    jobBoardConfig: Schema.Attribute.Component<
+      'shared.job-board-config',
+      false
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::page.page'>;
+    navLabel: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    noIndex: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<false>;
+    pageType: Schema.Attribute.Enumeration<
+      [
+        'home-international',
+        'home-regional',
+        'service-educators',
+        'service-schools',
+        'service-leadership',
+        'sector',
+        'job-listing',
+        'blog-listing',
+        'about',
+        'team-listing',
+        'contact',
+        'faq',
+        'form-landing',
+        'policy',
+        'product',
+        'process',
+        'cross-market',
+        'generic',
+      ]
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    parent: Schema.Attribute.Relation<'manyToOne', 'api::page.page'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    region: Schema.Attribute.Relation<'manyToOne', 'api::region.region'> &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    seo: Schema.Attribute.Component<'shared.seo', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     slug: Schema.Attribute.UID<'title'> &
       Schema.Attribute.Required &
       Schema.Attribute.SetPluginOptions<{
@@ -629,6 +971,119 @@ export interface ApiLocalizedPageLocalizedPage
       Schema.Attribute.SetPluginOptions<{
         i18n: {
           localized: true;
+        };
+      }>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiRegionRegion extends Struct.CollectionTypeSchema {
+  collectionName: 'regions';
+  info: {
+    description: 'Site boundary and regional configuration';
+    displayName: 'Region';
+    pluralName: 'regions';
+    singularName: 'region';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    code: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    contactEmail: Schema.Attribute.Email;
+    contactPhone: Schema.Attribute.String;
+    cookiePolicyUrl: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    defaultSeo: Schema.Attribute.Component<'shared.seo', false>;
+    footer: Schema.Attribute.Component<'nav.footer', false>;
+    geoSuggestEnabled: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<true>;
+    header: Schema.Attribute.Component<'nav.menu', false>;
+    hreflang: Schema.Attribute.String & Schema.Attribute.Required;
+    isDefault: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    isGlobalHub: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    jobAdderBoardId: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::region.region'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    pages: Schema.Attribute.Relation<'oneToMany', 'api::page.page'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSectionSection extends Struct.CollectionTypeSchema {
+  collectionName: 'sections';
+  info: {
+    description: 'Reusable shared content section';
+    displayName: 'Section';
+    pluralName: 'sections';
+    singularName: 'section';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
+  attributes: {
+    body: Schema.Attribute.DynamicZone<
+      [
+        'blocks.hero',
+        'blocks.feature-grid',
+        'blocks.cta',
+        'blocks.cta-band',
+        'blocks.testimonial',
+        'blocks.testimonials',
+        'blocks.region-grid',
+        'blocks.values-grid',
+        'blocks.value-tabs',
+        'blocks.form-embed',
+        'blocks.rich-text',
+        'blocks.stats-row',
+        'blocks.stats-band',
+        'blocks.persona-cards',
+        'blocks.steps-row',
+        'blocks.logo-marquee',
+      ]
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::section.section'
+    >;
+    name: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
+        };
+      }>;
+    publishedAt: Schema.Attribute.DateTime;
+    region: Schema.Attribute.Relation<'manyToOne', 'api::region.region'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: false;
         };
       }>;
     updatedAt: Schema.Attribute.DateTime;
@@ -1210,7 +1665,12 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::article.article': ApiArticleArticle;
+      'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;
       'api::localized-page.localized-page': ApiLocalizedPageLocalizedPage;
+      'api::market-navigation.market-navigation': ApiMarketNavigationMarketNavigation;
+      'api::page.page': ApiPagePage;
+      'api::region.region': ApiRegionRegion;
+      'api::section.section': ApiSectionSection;
       'api::site-setting.site-setting': ApiSiteSettingSiteSetting;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

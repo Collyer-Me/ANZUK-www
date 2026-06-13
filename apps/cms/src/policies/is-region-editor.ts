@@ -27,6 +27,7 @@ export default async (policyContext, _config, { strapi }) => {
     if (regionRef) {
       const region = await strapi.documents('api::region.region').findOne({
         documentId: String(regionRef),
+        fields: ['code'],
       });
       regionCode = region?.code;
     }
