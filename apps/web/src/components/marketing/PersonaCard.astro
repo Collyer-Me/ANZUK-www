@@ -1,0 +1,106 @@
+---
+/**
+ * Audience persona card with colour-coded accent, needs checklist, and CTA.
+ * `featured` lifts the card and adds a label — use it to make the primary
+ * audience visually dominant in a trio.
+ */
+import type { ImageMetadata } from 'astro';
+import arrowRight from '@anzuk/brand/assets/icons/arrow-right-blue.svg';
+import Badge from '../ui/Badge.astro';
+import Card from '../ui/Card.astro';
+
+type Accent = 'blue' | 'green' | 'purple';
+
+interface Props {
+  title: string;
+  description: string;
+  needs: readonly string[];
+  icon: ImageMetadata;
+  accent?: Accent;
+  ctaLabel: string;
+  ctaHref: string;
+  featured?: boolean;
+  featuredLabel?: string;
+  class?: string;
+}
+
+const {
+  title,
+  description,
+  needs,
+  icon,
+  accent = 'blue',
+  ctaLabel,
+  ctaHref,
+  featured = false,
+  featuredLabel = 'Start here',
+  class: className = '',
+} = Astro.props;
+
+const accentClasses: Record<Accent, string> = {
+  blue: 'bg-anzuk-blue',
+  green: 'bg-anzuk-green',
+  purple: 'bg-anzuk-purple',
+};
+---
+
+<Card
+  variant="elevated"
+  class:list={[
+    'group relative flex h-full flex-col transition motion-safe:hover:-translate-y-1',
+    featured && 'border-2 border-anzuk-green lg:-translate-y-2 lg:motion-safe:hover:-translate-y-3',
+    className,
+  ]}
+>
+  <div class={`${featured ? 'h-2' : 'h-1.5'} ${accentClasses[accent]}`} aria-hidden="true"></div>
+  <div class="flex flex-1 flex-col p-7">
+    <div class="flex items-start justify-between gap-3">
+      <img
+        src={icon.src}
+        alt=""
+        width={icon.width}
+        height={icon.height}
+        class="h-14 w-14 object-contain"
+        aria-hidden="true"
+      />
+      {featured && <Badge active>{featuredLabel}</Badge>}
+    </div>
+    <h3 class="mt-5 !text-2xl">{title}</h3>
+    <p class="mt-3 text-sm text-anzuk-content">{description}</p>
+    <ul class="mt-5 space-y-2" role="list">
+      {
+        needs.map((need) => (
+          <li class="flex items-start gap-2 text-sm text-anzuk-content">
+            <svg
+              class="mt-0.5 h-4 w-4 shrink-0 text-anzuk-green"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M2.5 8.5 6 12l7.5-8" />
+            </svg>
+            {need}
+          </li>
+        ))
+      }
+    </ul>
+    <a
+      href={ctaHref}
+      class="mt-auto inline-flex items-center gap-2 pt-7 font-semibold text-anzuk-blue no-underline hover:underline"
+    >
+      {ctaLabel}
+      <img
+        src={arrowRight.src}
+        alt=""
+        width={arrowRight.width}
+        height={arrowRight.height}
+        class="h-3.5 w-3.5 motion-safe:transition-transform motion-safe:group-hover:translate-x-1"
+        aria-hidden="true"
+      />
+    </a>
+  </div>
+</Card>

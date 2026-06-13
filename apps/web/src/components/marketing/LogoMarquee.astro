@@ -1,0 +1,98 @@
+---
+/**
+ * Infinite partner-logo marquee.
+ * No-JS / reduced-motion: a static, wrapped, centred logo wall (the duplicate
+ * copy stays hidden). With JS + motion: a seamless scroll that pauses on
+ * hover and via an explicit pause/play control (WCAG 2.2.2).
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Section from '../ui/Section.astro';
+import '../../styles/components.css';
+
+export interface MarqueeLogo {
+  src: ImageMetadata;
+  alt: string;
+}
+
+interface Props {
+  logos: readonly MarqueeLogo[];
+  heading?: string;
+  class?: string;
+}
+
+const { logos, heading = 'Trusted by partner schools worldwide', class: className = '' } = Astro.props;
+
+const logoClass =
+  'h-12 w-auto max-w-[140px] object-contain opacity-80 grayscale transition hover:opacity-100 hover:grayscale-0';
+---
+
+<Section variant="page" padding="compact" class={className} aria-labelledby="partners-heading">
+  <div class="flex items-center justify-center gap-3 px-6">
+    <h2 id="partners-heading" class="!mt-0 text-center !text-sm font-semibold uppercase tracking-wide !text-anzuk-blue">
+      {heading}
+    </h2>
+    <button
+      type="button"
+      data-marquee-toggle
+      aria-pressed="false"
+      class="az-marquee-toggle hidden h-8 w-8 shrink-0 items-center justify-center rounded-full border border-anzuk-light-gray bg-white text-anzuk-title transition-colors hover:border-anzuk-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-anzuk-blue"
+    >
+      <span class="sr-only">Pause logo animation</span>
+      <svg data-icon-pause viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true">
+        <rect x="3" y="2.5" width="3.5" height="11" rx="1"></rect>
+        <rect x="9.5" y="2.5" width="3.5" height="11" rx="1"></rect>
+      </svg>
+      <svg data-icon-play viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true" style="display:none">
+        <path d="M4.5 2.8a1 1 0 0 1 1.52-.85l8 5.2a1 1 0 0 1 0 1.7l-8 5.2a1 1 0 0 1-1.52-.85z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="az-marquee mt-10" data-reveal="up" data-marquee>
+    <div class="az-marquee-track">
+      <ul class="az-marquee-copy" role="list">
+        {
+          logos.map((logo) => (
+            <li class="shrink-0">
+              <Image src={logo.src} alt={logo.alt} class={logoClass} loading="lazy" />
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="az-marquee-copy" data-marquee-duplicate aria-hidden="true">
+        {
+          logos.map((logo) => (
+            <li class="shrink-0">
+              <Image src={logo.src} alt="" class={logoClass} loading="lazy" />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</Section>
+
+<script>
+  function initMarquee(): void {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-marquee-toggle]');
+    const marquee = document.querySelector<HTMLElement>('[data-marquee]');
+    if (!toggle || !marquee || toggle.dataset.bound === 'true') return;
+    toggle.dataset.bound = 'true';
+
+    const pauseIcon = toggle.querySelector<SVGElement>('[data-icon-pause]')!;
+    const playIcon = toggle.querySelector<SVGElement>('[data-icon-play]')!;
+    const label = toggle.querySelector<HTMLElement>('.sr-only')!;
+
+    toggle.addEventListener('click', () => {
+      const paused = marquee.toggleAttribute('data-paused');
+      toggle.setAttribute('aria-pressed', String(paused));
+      pauseIcon.style.display = paused ? 'none' : '';
+      playIcon.style.display = paused ? '' : 'none';
+      label.textContent = paused ? 'Play logo animation' : 'Pause logo animation';
+    });
+  }
+
+  initMarquee();
+  document.addEventListener('astro:after-swap', initMarquee);
+</script>

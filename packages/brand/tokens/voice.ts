@@ -100,7 +100,7 @@ export const capitalization = {
       context: 'Eyebrows & subtitles',
       style: 'Sentence case',
       example: 'Teacher recruitment for international schools',
-      note: 'Small labels above headings use sentence case, not ALL CAPS (unless a design token explicitly sets uppercase styling).',
+      note: 'Write eyebrows in sentence case in source copy. SectionHeading and BlobHero apply CSS uppercase as a design token — authors do not type ALL CAPS. Keep ANZUK and BE GREAT in their required casing.',
     },
     {
       context: 'Buttons & CTAs',

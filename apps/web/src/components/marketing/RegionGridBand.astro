@@ -1,0 +1,101 @@
+---
+import flagAus from '@anzuk/brand/assets/images/flag-aus.png';
+import flagCan from '@anzuk/brand/assets/images/flag-can.png';
+import flagNz from '@anzuk/brand/assets/images/flag-nz.png';
+import flagUk from '@anzuk/brand/assets/images/flag-uk.png';
+import flagUsa from '@anzuk/brand/assets/images/flag-usa.png';
+import arrowRight from '@anzuk/brand/assets/icons/arrow-right-blue.svg';
+import type { ImageMetadata } from 'astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import { withBase } from '../../lib/url';
+
+export interface RegionCard {
+  name: string;
+  description?: string | null;
+  url: string;
+  flagKey: 'aus' | 'uk' | 'can' | 'nz' | 'usa';
+  external?: boolean;
+}
+
+interface Props {
+  id: string;
+  heading?: string | null;
+  subheading?: string | null;
+  regions: readonly RegionCard[];
+}
+
+const { id, heading, subheading, regions } = Astro.props;
+
+const flagMap: Record<string, ImageMetadata> = {
+  aus: flagAus,
+  uk: flagUk,
+  can: flagCan,
+  nz: flagNz,
+  usa: flagUsa,
+};
+---
+
+<Section variant="white" aria-labelledby={id}>
+  <Container>
+    {
+      (heading || subheading) && (
+        <SectionHeading
+          id={id}
+          title={heading ?? ''}
+          description={subheading}
+          level="h2"
+          class="mb-12"
+        />
+      )
+    }
+    <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-5" role="list">
+      {
+        regions.map((region, index) => {
+          const flag = flagMap[region.flagKey];
+          const href = region.external ? region.url : withBase(region.url);
+          return (
+            <li class="h-full" data-reveal="up" data-reveal-delay={String(index * 80)}>
+              <a
+                href={href}
+                target={region.external ? '_blank' : undefined}
+                rel={region.external ? 'noopener noreferrer' : undefined}
+                class="group flex h-full flex-col rounded-anzuk-card border border-anzuk-light-gray bg-white p-5 no-underline transition hover:border-anzuk-blue hover:shadow-lg motion-safe:hover:-translate-y-1"
+              >
+                {
+                  flag && (
+                    <img
+                      src={flag.src}
+                      alt=""
+                      width={flag.width}
+                      height={flag.height}
+                      class="h-9 w-auto self-start rounded-sm"
+                      loading="lazy"
+                      aria-hidden="true"
+                    />
+                  )
+                }
+                <h3 class="mt-4 !text-lg font-semibold text-anzuk-title">{region.name}</h3>
+                {region.description && (
+                  <p class="mt-1 flex-1 text-sm text-anzuk-content">{region.description}</p>
+                )}
+                <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-anzuk-blue">
+                  {region.external ? 'Visit site' : 'Explore'}
+                  <img
+                    src={arrowRight.src}
+                    alt=""
+                    width={arrowRight.width}
+                    height={arrowRight.height}
+                    class="h-3 w-3 motion-safe:transition-transform motion-safe:group-hover:translate-x-1"
+                    aria-hidden="true"
+                  />
+                </span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </Container>
+</Section>

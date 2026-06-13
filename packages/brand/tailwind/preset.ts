@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss';
 import { colors } from '../tokens/colors';
-import { fontFamilies, fontSizes } from '../tokens/typography';
+import { fontFamilies, fontSizes, fluidFontSizes } from '../tokens/typography';
 import { spacing } from '../tokens/spacing';
 
 /**
@@ -32,6 +32,12 @@ export const brandPreset: Partial<Config> = {
           'page-bg': colors.pageBg,
           'icon-neutral': colors.iconNeutral,
           'icon-muted': colors.iconMuted,
+          error: colors.error,
+          'error-bg': colors.errorBg,
+          success: colors.success,
+          'success-bg': colors.successBg,
+          warning: colors.warning,
+          'warning-bg': colors.warningBg,
         },
       },
       fontFamily: {
@@ -46,6 +52,9 @@ export const brandPreset: Partial<Config> = {
         'anzuk-h4': [fontSizes.h4.size, { lineHeight: fontSizes.h4.lineHeight, letterSpacing: fontSizes.h4.letterSpacing }],
         'anzuk-h5': [fontSizes.h5.size, { lineHeight: fontSizes.h5.lineHeight, letterSpacing: fontSizes.h5.letterSpacing }],
         'anzuk-h6': [fontSizes.h6.size, { lineHeight: fontSizes.h6.lineHeight, letterSpacing: fontSizes.h6.letterSpacing }],
+        'anzuk-h1-fluid': [fluidFontSizes.h1.size, { lineHeight: fluidFontSizes.h1.lineHeight, letterSpacing: fluidFontSizes.h1.letterSpacing }],
+        'anzuk-h2-fluid': [fluidFontSizes.h2.size, { lineHeight: fluidFontSizes.h2.lineHeight, letterSpacing: fluidFontSizes.h2.letterSpacing }],
+        'anzuk-h3-fluid': [fluidFontSizes.h3.size, { lineHeight: fluidFontSizes.h3.lineHeight, letterSpacing: fluidFontSizes.h3.letterSpacing }],
       },
       spacing: {
         'anzuk-section': spacing.section,

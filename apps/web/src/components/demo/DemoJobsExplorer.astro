@@ -1,10 +1,15 @@
 ---
 import heroDoodlePurple from '@anzuk/brand/assets/illustrations/hero-doodle-purple.svg';
 import Container from '../ui/Container.astro';
+import FilterPill from '../ui/FilterPill.astro';
 import Section from '../ui/Section.astro';
-import DemoFilterPill from './DemoFilterPill.astro';
-import DemoJobCard from './DemoJobCard.astro';
+import JobCard from '../jobs/JobCard.astro';
 import { demoJobs, jobRegionFilters, jobSearchText, jobTypeFilters } from '../../data/demo-jobs';
+import { withBase } from '../../lib/url';
+import '../../styles/components.css';
+
+const expressHref = (title: string) =>
+  `${withBase('/brand/demo/educators')}?job=${encodeURIComponent(title)}#eoi`;
 ---
 
 <Section variant="page" aria-labelledby="jobs-explorer-heading">
@@ -34,7 +39,7 @@ import { demoJobs, jobRegionFilters, jobSearchText, jobTypeFilters } from '../..
             data-job-search
             placeholder="Search by role, school, or location…"
             autocomplete="off"
-            class="demo-input !pl-12"
+            class="az-input !pl-12"
           />
         </label>
 
@@ -42,14 +47,14 @@ import { demoJobs, jobRegionFilters, jobSearchText, jobTypeFilters } from '../..
           <div role="group" aria-label="Filter by region" class="flex flex-wrap gap-2">
             {
               jobRegionFilters.map((filter, index) => (
-                <DemoFilterPill group="region" value={filter.value} label={filter.label} pressed={index === 0} />
+                <FilterPill group="region" value={filter.value} label={filter.label} pressed={index === 0} />
               ))
             }
           </div>
           <div role="group" aria-label="Filter by role type" class="flex flex-wrap gap-2">
             {
               jobTypeFilters.map((filter, index) => (
-                <DemoFilterPill group="type" value={filter.value} label={filter.label} pressed={index === 0} />
+                <FilterPill group="type" value={filter.value} label={filter.label} pressed={index === 0} />
               ))
             }
           </div>
@@ -82,7 +87,7 @@ import { demoJobs, jobRegionFilters, jobSearchText, jobTypeFilters } from '../..
               data-reveal-delay={String(Math.min(index, 6) * 80)}
               class="h-full"
             >
-              <DemoJobCard job={job} />
+              <JobCard job={job} expressHref={expressHref(job.title)} />
             </li>
           ))
         }
@@ -118,9 +123,11 @@ import { demoJobs, jobRegionFilters, jobSearchText, jobTypeFilters } from '../..
 </Section>
 
 <script>
-  const explorer = document.querySelector<HTMLElement>('[data-jobs-explorer]');
+  function initJobsExplorer(): void {
+    const explorer = document.querySelector<HTMLElement>('[data-jobs-explorer]');
+    if (!explorer || explorer.dataset.bound === 'true') return;
+    explorer.dataset.bound = 'true';
 
-  if (explorer) {
     const reducedQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const pills = Array.from(explorer.querySelectorAll<HTMLButtonElement>('[data-filter-group]'));
     const cards = Array.from(explorer.querySelectorAll<HTMLElement>('[data-job]'));
@@ -151,9 +158,9 @@ import { demoJobs, jobRegionFilters, jobSearchText, jobTypeFilters } from '../..
           card.classList.add('is-revealed');
           if (animate && !reducedQuery.matches) {
             card.style.setProperty('--stagger', String(Math.min(visible, 8)));
-            card.classList.remove('demo-card-enter');
+            card.classList.remove('az-card-enter');
             void card.offsetWidth;
-            card.classList.add('demo-card-enter');
+            card.classList.add('az-card-enter');
           }
           visible += 1;
         }
@@ -192,12 +199,13 @@ import { demoJobs, jobRegionFilters, jobSearchText, jobTypeFilters } from '../..
         state.type = 'all';
         state.q = '';
         searchInput.value = '';
-        pills.forEach((pill) =>
-          pill.setAttribute('aria-pressed', String(pill.dataset.filterValue === 'all')),
-        );
+        pills.forEach((pill) => pill.setAttribute('aria-pressed', String(pill.dataset.filterValue === 'all')));
         apply();
         searchInput.focus();
       });
     });
   }
+
+  initJobsExplorer();
+  document.addEventListener('astro:after-swap', initJobsExplorer);
 </script>

@@ -1,4 +1,4 @@
-import type { Market } from '../../config/markets';
+import type { Market } from '../../../config/markets';
 import { fetchStrapiOptional, shouldUseMockData } from '../client';
 import { MOCK_MARKET_NAVIGATIONS } from '../mock-navigation';
 import type { MarketNavigation, NavItem, NavLink, StrapiListResponse } from '../types';

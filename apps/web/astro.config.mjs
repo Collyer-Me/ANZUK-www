@@ -20,7 +20,7 @@ export default defineConfig({
     defaultLocale: 'au',
     locales: ['au', 'uk', 'ca', 'nz'],
     routing: {
-      prefixDefaultLocale: true,
+      prefixDefaultLocale: false,
       redirectToDefaultLocale: false,
     },
   },

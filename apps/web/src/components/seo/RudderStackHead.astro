@@ -1,0 +1,102 @@
+---
+import type { GlobalSettings } from '../../lib/strapi/types';
+import { rudderStackConfigFromSettings } from '../../lib/strapi/queries/global-settings';
+
+interface Props {
+  settings: GlobalSettings;
+  regionCode: string;
+  locale?: string;
+  pageType: string;
+  pagePath: string;
+}
+
+const { settings, regionCode, locale = 'en', pageType, pagePath } = Astro.props;
+const rs = rudderStackConfigFromSettings(settings);
+const optionalGtm = settings.optionalGtmContainerId;
+---
+
+{
+  rs.enabled && rs.writeKey && rs.dataPlaneUrl && (
+    <>
+      <script is:inline>
+        window.rudderanalytics = [];
+        var methods = ['load', 'page', 'track', 'identify', 'alias', 'group', 'ready', 'reset', 'getAnonymousId', 'setAnonymousId', 'consent'];
+        for (var i = 0; i < methods.length; i++) {
+          (function (method) {
+            window.rudderanalytics[method] = function () {
+              window.rudderanalytics.push([method].concat(Array.prototype.slice.call(arguments)));
+            };
+          })(methods[i]);
+        }
+      </script>
+      <script src="https://cdn.rudderlabs.com/v3/rudder-analytics.min.js" async />
+      <script
+        is:inline
+        define:vars={{
+          writeKey: rs.writeKey,
+          dataPlaneUrl: rs.dataPlaneUrl,
+          regionCode,
+          locale,
+          pageType,
+          pagePath,
+        }}
+      >
+        function firePageView() {
+          if (!window.rudderanalytics || !window.__anzukRudderLoaded) return;
+          window.rudderanalytics.page(undefined, undefined, {
+            region: regionCode,
+            locale: locale,
+            pageType: pageType,
+            pagePath: pagePath,
+            event: 'Page Viewed',
+          });
+        }
+
+        function initRudder(consent) {
+          if (window.__anzukRudderLoaded) {
+            firePageView();
+            return;
+          }
+          if (!consent.analytics && !consent.marketing) return;
+          window.rudderanalytics.load(writeKey, dataPlaneUrl);
+          window.rudderanalytics.consent({
+            consentManagement: { enabled: true, provider: 'custom' },
+            trackConsent: consent.analytics,
+          });
+          window.__anzukRudderLoaded = true;
+          window.rudderanalytics.ready(firePageView);
+        }
+
+        window.addEventListener('anzuk:consent-updated', function (e) {
+          initRudder(e.detail);
+        });
+
+        try {
+          var stored = sessionStorage.getItem('anzuk_consent_state');
+          if (stored) initRudder(JSON.parse(stored));
+        } catch (err) {}
+
+        if (!window.__anzukConsentRequired) {
+          initRudder({ essential: true, functional: true, analytics: true, marketing: true });
+        }
+      </script>
+    </>
+  )
+}
+
+{
+  optionalGtm && (
+    <script is:inline define:vars={{ gtmId: optionalGtm }}>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', gtmId);
+    </script>
+  )
+}

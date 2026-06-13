@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_shared_analytics_overrides",
+  "info": {
+    "displayName": "Analytics Override",
+    "description": "Per-region GTM container override"
+  },
+  "options": {},
+  "attributes": {
+    "regionCode": {
+      "type": "enumeration",
+      "enum": ["international", "au", "uk", "ca", "nz"],
+      "required": true
+    },
+    "gtmContainerId": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

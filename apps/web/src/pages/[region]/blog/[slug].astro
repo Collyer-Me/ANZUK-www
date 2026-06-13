@@ -2,15 +2,15 @@
 import RegionalLayout from '../../../layouts/RegionalLayout.astro';
 import { getRegionByPath, isValidRegion, type RegionPath } from '../../../config/regions';
 import { getAllArticles, getArticleByMarketAndSlug } from '../../../lib/strapi/queries/articles';
-import { getSiteSettings } from '../../../lib/strapi/queries/site-settings';
-import type { LocalizedPage } from '../../../lib/strapi/types';
+import { getGlobalSettings } from '../../../lib/strapi/queries/global-settings';
+import type { CmsPage } from '../../../lib/strapi/types';
 
 export async function getStaticPaths() {
   const articles = await getAllArticles();
 
   return articles.map((a) => ({
-    params: { region: a.market, slug: a.slug },
-    props: { region: a.market, slug: a.slug },
+    params: { region: a.region, slug: a.slug },
+    props: { region: a.region, slug: a.slug },
   }));
 }
 
@@ -25,23 +25,23 @@ if (!isValidRegion(region)) {
   return Astro.redirect('/404');
 }
 
-const regionConfig = getRegionByPath(region)!;
 const article = await getArticleByMarketAndSlug(region, slug);
 
 if (!article) {
   return Astro.redirect('/404');
 }
 
-const pageShell: LocalizedPage = {
+const pageShell: CmsPage = {
   documentId: article.documentId,
   title: article.title,
   slug: article.slug,
-  market: region,
-  pageTemplate: 'blog-article',
+  path: `blog/${article.slug}`,
+  regionCode: region,
+  pageType: 'blog-article',
   seo: article.seo,
 };
 
-const settings = await getSiteSettings(regionConfig.strapiLocale);
+const settings = await getGlobalSettings();
 ---
 
 <RegionalLayout {region} page={pageShell} {settings}>

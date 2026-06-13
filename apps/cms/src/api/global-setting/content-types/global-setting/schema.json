@@ -1,0 +1,123 @@
+{
+  "kind": "singleType",
+  "collectionName": "global_settings",
+  "info": {
+    "singularName": "global-setting",
+    "pluralName": "global-settings",
+    "displayName": "Global Settings",
+    "description": "Brand-wide site configuration"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "organizationName": {
+      "type": "string",
+      "default": "ANZUK Education",
+      "required": true,
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "organizationUrl": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "tagline": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "defaultOgImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": ["images"],
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    },
+    "socialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.social-link",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "affiliateBrands": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.affiliate-brand",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "scootUrl": {
+      "type": "string",
+      "default": "https://scoot.education",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "executiveUrl": {
+      "type": "string",
+      "default": "https://www.anzukexecutive.com",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "ketchEnabled": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "ketchOrganizationCode": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "ketchPropertyCode": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "rudderStackEnabled": {
+      "type": "boolean",
+      "default": false,
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "rudderStackWriteKey": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "rudderStackDataPlaneUrl": {
+      "type": "string",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "optionalGtmContainerId": {
+      "type": "string",
+      "description": "Optional GTM for marketing widgets only — not primary tracking",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    }
+  }
+}

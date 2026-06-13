@@ -20,6 +20,7 @@ export type PageTemplate =
   | 'sector'
   | 'job-listing'
   | 'blog-listing'
+  | 'blog-article'
   | 'about'
   | 'team-listing'
   | 'contact'

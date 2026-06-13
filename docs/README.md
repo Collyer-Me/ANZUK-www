@@ -5,6 +5,7 @@ Central index for architecture decisions, setup guides, and production migration
 ## Architecture
 
 - [Original vision](../project_architecture.md) — high-level roadmap (Azure/Cloudflare target state)
+- [Data, consent & tracking](architecture/data-consent-tracking.md) — Ketch + RudderStack pipeline (POC)
 - [Project rules](../project-rules.md) — coding standards for the team
 
 ## Architecture Decision Records (ADRs)
@@ -19,6 +20,7 @@ Central index for architecture decisions, setup guides, and production migration
 | [005](decisions/005-github-pages-url-tbd.md) | GitHub Pages URL TBD | Accepted |
 | [006](decisions/006-monorepo-apps-layout.md) | Monorepo apps layout | Accepted |
 | [007](decisions/007-as-is-ia-markets.md) | As-is IA markets and CMS boundaries | Accepted |
+| [010](decisions/010-ketch-rudderstack-data-pipeline.md) | Ketch + RudderStack data pipeline | Accepted |
 
 ## Information architecture (as-is)
 
@@ -30,9 +32,11 @@ Central index for architecture decisions, setup guides, and production migration
 - [Strapi Cloud setup](guides/strapi-cloud-setup.md)
 - [Seed Strapi content](guides/seed-strapi.md)
 - [GitHub Pages deploy](guides/github-pages-deploy.md)
+- [POC demo script](guides/poc-demo-script.md)
 
 ## Future production
 
+- [Marketing data platform setup](future/marketing-data-setup.md) — Ketch + RudderStack checklist (POC → production)
 - [Azure SWA migration](future/azure-swa-migration.md)
 - [Cloudflare geo worker](future/cloudflare-geo-worker.md)
 

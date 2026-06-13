@@ -21,6 +21,15 @@ export const colors = {
   black: '#000000',
   iconNeutral: '#333132',
   iconMuted: '#9E9995',
+
+  /* Semantic state colours (forms, alerts). Text variants meet WCAG AA (≥4.5:1)
+     on white; *Bg variants are their pale companions for field/alert fills. */
+  error: '#B3261E',
+  errorBg: '#FCEBEA',
+  success: '#2E7D32',
+  successBg: '#ECF7ED',
+  warning: '#A16207',
+  warningBg: '#FDF3DC',
 } as const;
 
 export type BrandColor = keyof typeof colors;

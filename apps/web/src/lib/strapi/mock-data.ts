@@ -2,7 +2,7 @@ import { INTERNATIONAL_MARKET } from '../../config/markets';
 import type { Market, PageTemplate, RegionalMarket } from '../../config/markets';
 import { REGIONS } from '../../config/regions';
 import { beGreatValues } from '@anzuk/brand';
-import type { Article, ContentBlock, LocalizedPage, SiteSettings } from './types';
+import type { Article, CmsPage, ContentBlock, GlobalSettings } from './types';
 
 function seo(title: string, description: string) {
   return { metaTitle: title, metaDescription: description, ogImage: null };
@@ -27,20 +27,21 @@ function hero(
 }
 
 function page(
-  market: Market,
-  slug: string,
+  regionCode: Market,
+  path: string,
   title: string,
-  pageTemplate: PageTemplate,
+  pageType: PageTemplate,
   blocks: ContentBlock[],
-  extras?: Partial<LocalizedPage>,
-): LocalizedPage {
+  extras?: Partial<CmsPage>,
+): CmsPage {
+  const slug = path.includes('/') ? path.split('/').pop()! : path;
   return {
-    documentId: `mock-${market}-${slug.replace(/\//g, '-')}`,
+    documentId: `mock-${regionCode}-${path.replace(/\//g, '-')}`,
     title,
     slug,
-    market,
-    pageTemplate,
-    canonicalUrl: null,
+    path,
+    regionCode,
+    pageType,
     noIndex: false,
     seo: seo(`${title} - ANZUK Education`, `ANZUK Education — ${title}`),
     body: blocks,
@@ -187,8 +188,8 @@ function formPageBlocks(
   ];
 }
 
-function buildMockPages(): LocalizedPage[] {
-  const pages: LocalizedPage[] = [];
+function buildMockPages(): CmsPage[] {
+  const pages: CmsPage[] = [];
 
   pages.push(
     page(INTERNATIONAL_MARKET, 'home', 'Home - ANZUK Education', 'home-international', internationalHomeBlocks),
@@ -230,19 +231,19 @@ function buildMockPages(): LocalizedPage[] {
 
   const regionalSamples: Array<{
     market: RegionalMarket;
-    slug: string;
+    path: string;
     title: string;
-    pageTemplate: PageTemplate;
+    pageType: PageTemplate;
     heading: string;
     subheading: string;
     blocks?: ContentBlock[];
   }> = [
-    { market: 'au', slug: 'home', title: 'ANZUK Education — Australia', pageTemplate: 'home-regional', heading: '', subheading: '' },
+    { market: 'au', path: 'home', title: 'ANZUK Education — Australia', pageType: 'home-regional', heading: '', subheading: '' },
     {
       market: 'au',
-      slug: 'who-we-are',
+      path: 'who-we-are',
       title: 'Who we are',
-      pageTemplate: 'about',
+      pageType: 'about',
       heading: 'Making a global impact since 2004',
       subheading: 'The ANZUK story.',
       blocks: richTextPageBlocks(
@@ -253,26 +254,26 @@ function buildMockPages(): LocalizedPage[] {
     },
     {
       market: 'au',
-      slug: 'who-we-are/meet-the-team',
+      path: 'who-we-are/meet-the-team',
       title: 'Meet the Team',
-      pageTemplate: 'team-listing',
+      pageType: 'team-listing',
       heading: 'Meet the team',
       subheading: 'The people behind ANZUK Australia.',
     },
-    { market: 'au', slug: 'browse-jobs', title: 'Browse Jobs', pageTemplate: 'job-listing', heading: 'Browse education jobs', subheading: 'Roles sourced from JobAdder.' },
-    { market: 'au', slug: 'casual-opportunities', title: 'Casual Educator Jobs', pageTemplate: 'service-educators', heading: 'Teach your way', subheading: 'Casual relief teaching opportunities.' },
-    { market: 'uk', slug: 'home', title: 'ANZUK Education — United Kingdom', pageTemplate: 'home-regional', heading: '', subheading: '' },
-    { market: 'uk', slug: 'teach-with-us', title: 'Teach with us', pageTemplate: 'service-educators', heading: 'Teach with us', subheading: 'Start your UK teaching journey with ANZUK.' },
-    { market: 'uk', slug: 'featured-jobs', title: 'Featured jobs', pageTemplate: 'job-listing', heading: 'Featured jobs', subheading: 'Curated UK roles from JobAdder.' },
-    { market: 'ca', slug: 'home', title: 'ANZUK Education — Canada', pageTemplate: 'home-regional', heading: '', subheading: '' },
-    { market: 'ca', slug: 'teach-in-australia', title: 'Teach in Australia', pageTemplate: 'cross-market', heading: 'Teach in Australia', subheading: 'Plan your move from Canada to Australia.' },
-    { market: 'ca', slug: 'browse-jobs', title: 'Browse Jobs', pageTemplate: 'job-listing', heading: 'Browse jobs', subheading: 'Canadian job board via JobAdder.' },
-    { market: 'nz', slug: 'home', title: 'ANZUK Education — New Zealand', pageTemplate: 'home-regional', heading: '', subheading: '' },
+    { market: 'au', path: 'browse-jobs', title: 'Browse Jobs', pageType: 'job-listing', heading: 'Browse education jobs', subheading: 'Roles sourced from JobAdder.' },
+    { market: 'au', path: 'casual-opportunities', title: 'Casual Educator Jobs', pageType: 'service-educators', heading: 'Teach your way', subheading: 'Casual relief teaching opportunities.' },
+    { market: 'uk', path: 'home', title: 'ANZUK Education — United Kingdom', pageType: 'home-regional', heading: '', subheading: '' },
+    { market: 'uk', path: 'teach-with-us', title: 'Teach with us', pageType: 'service-educators', heading: 'Teach with us', subheading: 'Start your UK teaching journey with ANZUK.', blocks: formPageBlocks('Teach with us', 'Start your UK teaching journey with ANZUK.', '251698770470871') },
+    { market: 'uk', path: 'featured-jobs', title: 'Featured jobs', pageType: 'job-listing', heading: 'Featured jobs', subheading: 'Curated UK roles from JobAdder.' },
+    { market: 'ca', path: 'home', title: 'ANZUK Education — Canada', pageType: 'home-regional', heading: '', subheading: '' },
+    { market: 'ca', path: 'teach-in-australia', title: 'Teach in Australia', pageType: 'cross-market', heading: 'Teach in Australia', subheading: 'Plan your move from Canada to Australia.' },
+    { market: 'ca', path: 'browse-jobs', title: 'Browse Jobs', pageType: 'job-listing', heading: 'Browse jobs', subheading: 'Canadian job board via JobAdder.' },
+    { market: 'nz', path: 'home', title: 'ANZUK Education — New Zealand', pageType: 'home-regional', heading: '', subheading: '' },
     {
       market: 'nz',
-      slug: 'four-step-process',
+      path: 'four-step-process',
       title: 'Four Agency Process',
-      pageTemplate: 'process',
+      pageType: 'process',
       heading: 'Four-step process',
       subheading: 'Your path to teaching in New Zealand.',
       blocks: richTextPageBlocks(
@@ -283,18 +284,18 @@ function buildMockPages(): LocalizedPage[] {
     },
     {
       market: 'nz',
-      slug: 'refer-earn',
+      path: 'refer-earn',
       title: 'Refer & Earn',
-      pageTemplate: 'form-landing',
+      pageType: 'form-landing',
       heading: 'Refer & Earn',
       subheading: 'Refer educators and earn rewards.',
       blocks: formPageBlocks('Refer & Earn', 'Refer educators and earn rewards.', '251698770470871'),
     },
     {
       market: 'nz',
-      slug: 'partner-with-us',
+      path: 'partner-with-us',
       title: 'Partner with ANZUK Education',
-      pageTemplate: 'form-landing',
+      pageType: 'form-landing',
       heading: 'Partner with us',
       subheading: 'School recruitment enquiries.',
       blocks: formPageBlocks('Partner with us', 'School recruitment enquiries.', '251698159691877'),
@@ -304,12 +305,12 @@ function buildMockPages(): LocalizedPage[] {
   for (const sample of regionalSamples) {
     const blocks =
       sample.blocks ??
-      (sample.slug === 'home'
+      (sample.path === 'home'
         ? homeBlocks(REGIONS.find((r) => r.path === sample.market)!.label)
         : innerPageBlocks(sample.heading, sample.subheading));
 
-    const extras: Partial<LocalizedPage> = {};
-    if (sample.pageTemplate === 'job-listing') {
+    const extras: Partial<CmsPage> = {};
+    if (sample.pageType === 'job-listing') {
       extras.jobBoardConfig = {
         jobAdderBoardId: sample.market,
         featuredOnly: sample.market === 'uk',
@@ -317,7 +318,7 @@ function buildMockPages(): LocalizedPage[] {
       };
     }
 
-    pages.push(page(sample.market, sample.slug, sample.title, sample.pageTemplate, blocks, extras));
+    pages.push(page(sample.market, sample.path, sample.title, sample.pageType, blocks, extras));
   }
 
   return pages;
@@ -379,6 +380,7 @@ function buildMockArticles(): Article[] {
     documentId: `mock-article-${s.market}-${s.slug}`,
     title: s.title,
     slug: s.slug,
+    regionCode: s.market,
     market: s.market,
     excerpt: s.excerpt,
     body: `<p>${s.excerpt}</p><p>Prototype article body — production content to be migrated from WordPress regional blog.</p>`,
@@ -391,48 +393,70 @@ function buildMockArticles(): Article[] {
 export const MOCK_PAGES = buildMockPages();
 export const MOCK_ARTICLES = buildMockArticles();
 
-export const MOCK_SITE_SETTINGS: SiteSettings = {
-  siteName: 'ANZUK Education',
+export const MOCK_GLOBAL_SETTINGS: GlobalSettings = {
+  organizationName: 'ANZUK Education',
   tagline: 'International expertise in education. Local understanding.',
   organizationUrl: 'https://www.anzuk.education',
-  contactEmail: 'info@anzuk.education',
-  defaultLocale: 'en-AU',
   scootUrl: 'https://scoot.education',
   executiveUrl: 'https://www.anzukexecutive.com',
-  geoSuggestEnabled: true,
+  ketchEnabled: true,
+  ketchOrganizationCode: import.meta.env.PUBLIC_KETCH_ORG ?? 'anzuk',
+  ketchPropertyCode: import.meta.env.PUBLIC_KETCH_PROPERTY ?? 'website_smart_tag',
+  rudderStackEnabled: Boolean(import.meta.env.PUBLIC_RUDDERSTACK_WRITE_KEY),
+  rudderStackWriteKey: import.meta.env.PUBLIC_RUDDERSTACK_WRITE_KEY ?? null,
+  rudderStackDataPlaneUrl: import.meta.env.PUBLIC_RUDDERSTACK_DATA_PLANE_URL ?? null,
+  optionalGtmContainerId: import.meta.env.PUBLIC_GTM_ID ?? null,
   affiliateBrands: [
     { name: 'Scoot Education', url: 'https://scoot.education', logo: null },
     { name: 'ANZUK Executive', url: 'https://www.anzukexecutive.com', logo: null },
   ],
 };
 
-export function getMockPagesByMarket(market: Market): LocalizedPage[] {
-  return MOCK_PAGES.filter((p) => p.market === market);
+export const MOCK_SITE_SETTINGS = {
+  ...MOCK_GLOBAL_SETTINGS,
+  siteName: MOCK_GLOBAL_SETTINGS.organizationName,
+  contactEmail: 'info@anzuk.education',
+  defaultLocale: 'en',
+  geoSuggestEnabled: true,
+};
+
+export function getMockPagesByRegion(regionCode: Market): CmsPage[] {
+  return MOCK_PAGES.filter((p) => p.regionCode === regionCode);
+}
+
+export function getMockPageByRegionAndPath(
+  regionCode: Market,
+  path: string,
+): CmsPage | undefined {
+  return MOCK_PAGES.find((p) => p.regionCode === regionCode && p.path === path);
+}
+
+export function getMockPagesByMarket(market: Market): CmsPage[] {
+  return getMockPagesByRegion(market);
 }
 
 export function getMockPageByMarketAndSlug(
   market: Market,
   slug: string,
-): LocalizedPage | undefined {
-  return MOCK_PAGES.find((p) => p.market === market && p.slug === slug);
+): CmsPage | undefined {
+  return getMockPageByRegionAndPath(market, slug);
 }
 
-/** @deprecated Use getMockPageByMarketAndSlug */
-export function getMockPagesByLocale(locale: string): LocalizedPage[] {
-  const region = REGIONS.find((r) => r.strapiLocale === locale);
-  if (!region) return [];
-  return getMockPagesByMarket(region.path);
+export function getMockPagesByLocale(locale: string): CmsPage[] {
+  void locale;
+  return MOCK_PAGES;
 }
 
-/** @deprecated Use getMockPageByMarketAndSlug */
-export function getMockPageBySlug(locale: string, slug: string): LocalizedPage | undefined {
-  const region = REGIONS.find((r) => r.strapiLocale === locale);
-  if (!region) return undefined;
-  return getMockPageByMarketAndSlug(region.path, slug);
+export function getMockPageBySlug(_locale: string, slug: string): CmsPage | undefined {
+  return MOCK_PAGES.find((p) => p.path === slug);
+}
+
+export function getMockArticlesByRegion(regionCode: RegionalMarket): Article[] {
+  return MOCK_ARTICLES.filter((a) => a.regionCode === regionCode);
 }
 
 export function getMockArticlesByMarket(market: RegionalMarket): Article[] {
-  return MOCK_ARTICLES.filter((a) => a.market === market);
+  return getMockArticlesByRegion(market);
 }
 
 export function getMockArticleBySlug(

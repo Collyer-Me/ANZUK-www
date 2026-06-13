@@ -1,0 +1,83 @@
+---
+/**
+ * Three-up social-proof grid with initials avatars cycling through brand
+ * colour pairs.
+ */
+import Card from '../ui/Card.astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+
+export interface TestimonialItem {
+  quote: string;
+  name: string;
+  role: string;
+}
+
+interface Props {
+  testimonials: readonly TestimonialItem[];
+  eyebrow?: string;
+  title?: string;
+  background?: 'white' | 'page';
+  class?: string;
+}
+
+const {
+  testimonials,
+  eyebrow = 'In their words',
+  title = 'What people say about working with ANZUK',
+  background = 'white',
+  class: className = '',
+} = Astro.props;
+
+const avatarStyles = [
+  'bg-anzuk-extra-light-blue text-anzuk-blue',
+  'bg-anzuk-extra-light-green text-anzuk-green',
+  'bg-anzuk-extra-light-purple text-anzuk-purple',
+];
+
+function initials(name: string): string {
+  return name
+    .split(' ')
+    .map((word) => word[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+}
+---
+
+<Section variant={background} class={className} aria-labelledby="testimonials-heading">
+  <Container>
+    <SectionHeading id="testimonials-heading" eyebrow={eyebrow} title={title} />
+    <div class="mt-14 grid gap-6 md:grid-cols-3">
+      {
+        testimonials.map((testimonial, index) => (
+          <div data-reveal="up" data-reveal-delay={String(index * 120)} class="h-full">
+            <Card class="flex h-full flex-col p-7 transition hover:shadow-lg motion-safe:hover:-translate-y-1">
+              <figure class="flex h-full flex-col">
+                <blockquote class="flex-1">
+                  <p class="text-anzuk-content">“{testimonial.quote}”</p>
+                </blockquote>
+                <figcaption class="mt-6 flex items-center gap-3">
+                  <span
+                    class:list={[
+                      'flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold',
+                      avatarStyles[index % avatarStyles.length],
+                    ]}
+                    aria-hidden="true"
+                  >
+                    {initials(testimonial.name)}
+                  </span>
+                  <span>
+                    <span class="block text-sm font-semibold text-anzuk-title">{testimonial.name}</span>
+                    <span class="block text-xs text-anzuk-content">{testimonial.role}</span>
+                  </span>
+                </figcaption>
+              </figure>
+            </Card>
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</Section>

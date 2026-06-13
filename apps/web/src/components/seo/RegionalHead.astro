@@ -1,12 +1,13 @@
 ---
 import { getRegionByPath, type RegionPath } from '../../config/regions';
 import { absolutePageUrl, buildCanonicalUrl, xDefaultUrl } from '../../lib/seo/urls';
-import type { LocalizedPage } from '../../lib/strapi/types';
+import { assetWithBase } from '../../lib/url';
+import type { CmsPage } from '../../lib/strapi/types';
 import { buildAlternates } from '../../lib/strapi/queries/pages';
 
 interface Props {
   region: RegionPath;
-  page: LocalizedPage;
+  page: CmsPage;
 }
 
 const { region, page } = Astro.props;
@@ -14,7 +15,7 @@ const regionConfig = getRegionByPath(region)!;
 const alternates = buildAlternates(page, region);
 const title = page.seo?.metaTitle ?? page.title;
 const description = page.seo?.metaDescription ?? '';
-const canonical = buildCanonicalUrl(region, page.slug, page.canonicalUrl);
+const canonical = buildCanonicalUrl(region, page.path);
 ---
 
 <meta charset="UTF-8" />
@@ -22,7 +23,7 @@ const canonical = buildCanonicalUrl(region, page.slug, page.canonicalUrl);
 <title>{title}</title>
 {description && <meta name="description" content={description} />}
 {page.noIndex && <meta name="robots" content="noindex, nofollow" />}
-<link rel="icon" href="/favicon.ico" />
+<link rel="icon" href={assetWithBase('/favicon.svg')} type="image/svg+xml" />
 <link rel="canonical" href={canonical} />
 {
   alternates.map((alt) => (

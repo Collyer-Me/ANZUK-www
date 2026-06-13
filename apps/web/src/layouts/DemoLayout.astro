@@ -1,9 +1,16 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import BaseLayout from './BaseLayout.astro';
 import DemoBackPill from '../components/demo/DemoBackPill.astro';
 import DemoFooter from '../components/demo/DemoFooter.astro';
 import DemoHeader from '../components/demo/DemoHeader.astro';
+import '../styles/motion.css';
 import '../styles/demo.css';
+/* Imported here as well as by the components so every demo page ships the
+   identical shared sheets — ClientRouter's head-diff then keeps them across
+   view transitions instead of re-inserting per-page styles. */
+import '../styles/components.css';
+import '../styles/forms.css';
 
 interface Props {
   title: string;
@@ -18,8 +25,14 @@ const { title, description } = Astro.props;
   description={description ?? 'Internal concept demo for a refreshed anzuk.education.'}
   noindex={true}
 >
-  {/* Must stay inline: gates the reveal CSS so no-JS visitors always see content. */}
-  <script is:inline>document.documentElement.classList.add('js');</script>
+  <Fragment slot="head">
+    <ClientRouter />
+  </Fragment>
+
+  {/* Must stay inline: gates the reveal CSS so no-JS visitors always see content.
+      data-astro-rerun: the ClientRouter swap resets <html> attributes and dedupes
+      identical inline scripts, so without it the js class is lost on soft navs. */}
+  <script is:inline data-astro-rerun>document.documentElement.classList.add('js');</script>
 
   <a
     href="#main"
@@ -40,6 +53,6 @@ const { title, description } = Astro.props;
   <DemoBackPill />
 
   <script>
-    import '../scripts/demo-motion.ts';
+    import '../scripts/motion.ts';
   </script>
 </BaseLayout>

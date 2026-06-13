@@ -1,0 +1,56 @@
+---
+/**
+ * Radio or checkbox group rendered as pill "chips" inside a fieldset.
+ * Option inputs get ids `${idPrefix}-0..n`. For required groups the error
+ * element id is `${idPrefix}-error`.
+ */
+import '../../../styles/forms.css';
+
+interface Props {
+  legend: string;
+  name: string;
+  options: readonly string[];
+  idPrefix: string;
+  type?: 'radio' | 'checkbox';
+  required?: boolean;
+  accent?: 'blue' | 'green';
+  class?: string;
+}
+
+const {
+  legend,
+  name,
+  options,
+  idPrefix,
+  type = 'radio',
+  required = false,
+  accent = 'blue',
+  class: className = '',
+} = Astro.props;
+
+const errorId = `${idPrefix}-error`;
+---
+
+<fieldset class={className} aria-describedby={required ? errorId : undefined}>
+  <legend class="text-sm font-semibold text-anzuk-title">
+    {legend}{required ? ' *' : ''}
+    {!required && <span class="font-normal text-anzuk-icon-muted"> (optional)</span>}
+  </legend>
+  <div class="mt-3 flex flex-wrap gap-3">
+    {
+      options.map((option, index) => (
+        <label class="az-chip" data-accent={accent}>
+          <input
+            type={type}
+            name={name}
+            value={option}
+            id={`${idPrefix}-${index}`}
+            class={accent === 'green' ? 'accent-anzuk-green' : 'accent-anzuk-blue'}
+          />
+          {option}
+        </label>
+      ))
+    }
+  </div>
+  {required && <p class="az-error-text" id={errorId} hidden></p>}
+</fieldset>

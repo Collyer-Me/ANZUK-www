@@ -3,17 +3,17 @@ import JsonLd from './JsonLd.astro';
 import { getSiteUrl, siteConfig } from '../../config/site';
 import { getRegionByPath, type RegionPath } from '../../config/regions';
 import { buildCanonicalUrl } from '../../lib/seo/urls';
-import type { LocalizedPage } from '../../lib/strapi/types';
+import type { CmsPage } from '../../lib/strapi/types';
 
 interface Props {
   region: RegionPath;
-  page: LocalizedPage;
+  page: CmsPage;
 }
 
 const { region, page } = Astro.props;
 const regionConfig = getRegionByPath(region)!;
 const siteUrl = getSiteUrl();
-const pageUrl = buildCanonicalUrl(region, page.slug, page.canonicalUrl);
+const pageUrl = buildCanonicalUrl(region, page.path);
 
 const schema = {
   '@type': 'WebPage',

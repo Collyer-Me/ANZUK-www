@@ -69,8 +69,8 @@ export async function fetchStrapiOptional<T>(
     },
   });
 
-  if (response.status === 404 || response.status >= 500) {
-    if (response.status >= 500) {
+  if (response.status === 404 || response.status === 400 || response.status >= 500) {
+    if (response.status >= 500 || response.status === 400) {
       console.warn(
         `[strapi] ${endpoint} returned ${response.status} — using fallback data. ` +
           'Check Strapi Cloud deployment and Content Manager.',

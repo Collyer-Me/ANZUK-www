@@ -10,8 +10,9 @@ interface Props {
 const { block } = Astro.props;
 ---
 
-<Section variant="lightBlue" aria-label="Key statistics">
+<Section variant="lightBlue" aria-labelledby={`stats-${block.id}`}>
   <Container>
+    <h2 id={`stats-${block.id}`} class="sr-only">Key statistics</h2>
     <ul class="grid gap-8 text-center sm:grid-cols-2 lg:grid-cols-4" role="list">
       {
         block.stats?.map((stat) => (

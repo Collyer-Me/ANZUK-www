@@ -17,8 +17,15 @@ alwaysApply: false
 
 - UI primitives live in `src/components/ui/` — import these on all marketing pages.
 - Core library: `Button`, `Logo`, `Section`, `Container`, `SectionHeading`, `Card`, `Badge`, `CountryCard`, `ValuePanel`, `FeatureCard`, `HeroHighlight`, `PartnerLogoGrid`.
+- **Presentational bands** (`*Band.astro`, props-driven): the visual source of truth — e.g. `RegionGridBand`, `StatsBand`, `StepsRow`, `CtaBand`.
+- **Strapi adapters** (`RegionGrid`, `StatsRow`, `ValuesGrid`, …): thin wrappers that accept `block: XBlock`, map CMS fields to presentational props, and delegate. Do not duplicate layout or motion markup in adapters.
 - Strapi blocks in `src/components/marketing/` compose primitives — do not duplicate layout styles inline.
 - Brand preview pages live under `src/pages/brand/` and must use the same primitives as marketing pages.
+
+## Demo vs production chrome
+
+- Demo-only: `DemoHeader`, `DemoFooter`, `DemoBackPill`, `demo.css` — used only via `DemoLayout` under `/brand/demo/`.
+- Production: `SiteHeader`, `InternationalHeader`, `SiteFooter` with Strapi `market-navigation`. Do not import demo chrome on real pages.
 
 ## Tokens vs CMS
 

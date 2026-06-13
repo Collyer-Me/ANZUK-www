@@ -25,3 +25,10 @@ export const fontSizes = {
   sectionTitle3: { size: '36px', lineHeight: '1.25' },
   sectionTitle4: { size: '27px', lineHeight: '1.4' },
 } as const;
+
+/** Production heading scale — fluid clamp with fixed maxima from fontSizes h1–h3. */
+export const fluidFontSizes = {
+  h1: { size: 'clamp(2.75rem, 6vw, 5rem)', lineHeight: '1.25', letterSpacing: '-0.02em' },
+  h2: { size: 'clamp(1.9rem, 4vw, 3.25rem)', lineHeight: '1.25', letterSpacing: '-0.02em' },
+  h3: { size: 'clamp(1.4rem, 2.6vw, 1.9rem)', lineHeight: '1.25', letterSpacing: '-0.02em' },
+} as const;

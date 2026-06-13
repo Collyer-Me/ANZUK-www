@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_nav_menus",
+  "info": {
+    "displayName": "Nav Menu",
+    "description": "Header navigation menu"
+  },
+  "options": {},
+  "attributes": {
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "nav.item"
+    }
+  }
+}

@@ -2,6 +2,37 @@
 
 Systems that provide content or functionality **outside** Strapi. The CMS stores configuration and page shells only.
 
+See also: [`docs/architecture/data-consent-tracking.md`](../architecture/data-consent-tracking.md), [ADR 010](../decisions/010-ketch-rudderstack-data-pipeline.md), and the [marketing setup checklist](../future/marketing-data-setup.md).
+
+## Data, consent & tracking (Ketch + RudderStack)
+
+**Role:** Consent-first, event-driven data pipeline replacing GTM-as-primary-tracking.
+
+| Layer | Tool | Config location |
+|-------|------|-----------------|
+| Consent | **Ketch** | `global-setting.ketchOrganizationCode`, `ketchPropertyCode` |
+| Events | **RudderStack** | `global-setting.rudderStackWriteKey`, `rudderStackDataPlaneUrl` |
+| Optional widgets | GTM (reduced) | `global-setting.optionalGtmContainerId` |
+
+**Frontend:**
+
+- `KetchConsent.astro` — Ketch boot + dev fallback banner
+- `RudderStackHead.astro` — SDK, consent-gated `Page Viewed` events
+- `lib/analytics/events.ts` — canonical event names
+- Env: `PUBLIC_KETCH_ORG`, `PUBLIC_KETCH_PROPERTY`, `PUBLIC_RUDDERSTACK_WRITE_KEY`, `PUBLIC_RUDDERSTACK_DATA_PLANE_URL`
+
+**Destinations (RudderStack Cloud — configure in dashboard):**
+
+| Destination | Events | Consent filter |
+|-------------|--------|----------------|
+| GA4 | Page Viewed, Application Submitted, … | Analytics |
+| Meta (web + CAPI) | Application Submitted, … | Marketing |
+| Google Ads | Application Submitted, … | Marketing |
+| JobAdder | Application Submitted | Per policy |
+| Relief Roster | Application Submitted, Booking Confirmed | Per policy |
+
+GTM is **not** used for GA4/Meta pixels. Optional GTM loads marketing widgets only.
+
 ## JobAdder (jobs)
 
 **Role:** Source of truth for all job listings.
@@ -16,80 +47,54 @@ Systems that provide content or functionality **outside** Strapi. The CMS stores
 
 **Strapi approach:**
 
-- `localized-page` with `pageTemplate: job-listing` provides the archive shell
-- Optional `jobBoardConfig` component: `jobAdderBoardId`, `featuredOnly`, `externalApply`
-- No `job` collection in Strapi
-- Frontend fetches jobs at build time via `apps/web/src/lib/jobadder/` (stub in prototype)
+- `page` with `pageType: job-listing` provides the archive shell
+- Optional `jobBoardConfig` component on page
+- Frontend stub at `apps/web/src/lib/jobadder/` (POC)
+- **Tracking:** `Job Viewed`, `Application Started`, `Application Submitted` events via RudderStack → JobAdder destination (next step)
 
 ## JotForm (forms)
 
-**Role:** Registration, school enquiries, referrals, some job applications.
+**Role:** Registration, school enquiries, referrals.
 
 | Form purpose | Example ID |
 |--------------|------------|
 | Educator expression of interest | `251698770470871` |
 | School enquiries | `251698159691877` |
-| Job application (with JobAdder ID) | `251699142417866` |
+| Job application | `251699142417866` |
 
-**Strapi approach:**
+**Strapi:** `blocks.form-embed` with `jotformId`, optional `trackingParams`.
 
-- Store JotForm IDs in page content or a future `form-embed` block
-- Form submissions stay in JotForm — not synced to Strapi
+**Tracking:** `Form Viewed` RudderStack event + UTM/region prefill via `marketing-identity.ts`. Submissions stay in JotForm.
+
+## Marketing identity (lead capture — no login)
+
+| Capability | Implementation |
+|------------|----------------|
+| Campaign attribution | UTM → sessionStorage → event properties + JotForm prefill |
+| Progressive profiling | JotForm hidden fields (`region`, `landing_page`, `utm_*`) |
+| Product handoff | Tracked outbound URLs on external CTAs |
+| Future CDP | RudderStack warehouse destination |
 
 ## Scoot Education (United States)
 
-**URL:** [scoot.education](https://scoot.education/)
-
-**Role:** US market brand on a separate domain. Linked from international homepage country grid (USA tile).
-
-**Strapi approach:**
-
-- `site-setting.scootUrl` — external link only
-- No `/us/` subsite on anzuk.education in production
-- Prototype region picker links to Scoot instead of hosting US pages
+**URL:** [scoot.education](https://scoot.education/) — external link via `global-setting.scootUrl`.
 
 ## ANZUK Executive
 
-**URL:** [anzukexecutive.com](https://www.anzukexecutive.com/)
-
-**Role:** Executive search brand. Linked from AU/NZ executive pages and international footer.
-
-**Strapi approach:**
-
-- `site-setting.executiveUrl` — external link in `affiliateBrands` or site settings
+**URL:** [anzukexecutive.com](https://www.anzukexecutive.com/) — `global-setting.executiveUrl`.
 
 ## Ready2Book / Ready2Work
 
-**Role:** SaaS products for schools and educators.
+Marketing pages in CMS; SaaS apps external. Outbound CTAs append UTM + region via marketing identity layer.
 
-**Strapi approach:**
+## Geo-suggest banner
 
-- Marketing pages as `localized-page` with `pageTemplate: product`
-- Product apps themselves are external
+`region.geoSuggestEnabled` — deferred; see `docs/future/cloudflare-geo-worker.md`.
 
-## Growth Hub (Australia)
+## Publish → rebuild webhook
 
-**URL:** `/au/growth-hub/`
-
-**Role:** Professional development courses for educators.
-
-**Strapi approach:**
-
-- Marketing page in CMS; course catalogue likely external LMS
+Strapi publish lifecycle → `DEPLOY_WEBHOOK_URL` → GitHub Actions deploy. See `apps/cms/src/index.ts`.
 
 ## WordPress legacy (migration reference)
 
-| WP type | Count | Prototype handling |
-|---------|-------|-------------------|
-| `post` (root blog) | ~118 | Ignored — legacy NZ posts |
-| Regional blog | Per market | `article` collection |
-| `staff-member` CPT | ~144 | Deferred — team pages use `team-listing` template only |
-| Events (WP pages) | Per market | Deferred |
-| Pages | Many | `localized-page` per market |
-
-## Analytics and geo-routing
-
-| System | Role | Strapi |
-|--------|------|--------|
-| Google Tag Manager | Analytics | Not in CMS |
-| Geo-redirect banner | Suggest local site | `site-setting.geoSuggestEnabled` |
+Regional blog → `article`. Pages → `page` with region relation.

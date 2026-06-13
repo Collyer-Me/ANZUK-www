@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { assetWithBase } from '../lib/url';
 
 interface Props {
   title?: string;
@@ -21,8 +22,9 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href={assetWithBase('/favicon.svg')} type="image/svg+xml" />
     <title>{title}</title>
+    <slot name="head" />
   </head>
   <body>
     <slot />

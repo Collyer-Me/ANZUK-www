@@ -3,17 +3,30 @@ import BrandLayout from '../../layouts/BrandLayout.astro';
 import ComponentDemo from '../../components/brand/ComponentDemo.astro';
 import ButtonShowcase from '../../components/brand/ButtonShowcase.astro';
 import Badge from '../../components/ui/Badge.astro';
-import Button from '../../components/ui/Button.astro';
 import Card from '../../components/ui/Card.astro';
 import Container from '../../components/ui/Container.astro';
 import CountryCard from '../../components/ui/CountryCard.astro';
+import DuotoneImage from '../../components/ui/DuotoneImage.astro';
 import FeatureCard from '../../components/ui/FeatureCard.astro';
+import FilterPill from '../../components/ui/FilterPill.astro';
 import HeroHighlight from '../../components/ui/HeroHighlight.astro';
 import PartnerLogoGrid from '../../components/ui/PartnerLogoGrid.astro';
 import Section from '../../components/ui/Section.astro';
 import SectionHeading from '../../components/ui/SectionHeading.astro';
 import ValuePanel from '../../components/ui/ValuePanel.astro';
+import ChoiceChipGroup from '../../components/ui/forms/ChoiceChipGroup.astro';
+import FloatingField from '../../components/ui/forms/FloatingField.astro';
+import SelectField from '../../components/ui/forms/SelectField.astro';
+import CtaBand from '../../components/marketing/CtaBand.astro';
+import LogoMarquee from '../../components/marketing/LogoMarquee.astro';
+import PersonaCard from '../../components/marketing/PersonaCard.astro';
+import StatsBand from '../../components/marketing/StatsBand.astro';
+import StepsRow from '../../components/marketing/StepsRow.astro';
+import TestimonialGrid from '../../components/marketing/TestimonialGrid.astro';
+import ValueTabs from '../../components/marketing/ValueTabs.astro';
+import JobCard from '../../components/jobs/JobCard.astro';
 import heroImage from '@anzuk/brand/assets/images/hero-home.png';
+import valuesPhoto from '@anzuk/brand/assets/images/values.jpg';
 import flagAus from '@anzuk/brand/assets/images/flag-aus.png';
 import flagUk from '@anzuk/brand/assets/images/flag-uk.png';
 import heroBlob from '@anzuk/brand/assets/illustrations/hero-blob-light-blue.svg';
@@ -22,15 +35,39 @@ import equityIcon from '@anzuk/brand/assets/icons/values/equity.svg';
 import inspiredLogo from '@anzuk/brand/assets/logos/partners/inspired-education.png';
 import cognitaLogo from '@anzuk/brand/assets/logos/partners/cognita-logo.webp';
 import aisLogo from '@anzuk/brand/assets/logos/partners/ais-logo.png';
+import { beGreatValues } from '@anzuk/brand';
+import { demoJobs } from '../../data/demo-jobs';
+import { demoSteps, demoTestimonials } from '../../data/demo-content';
+import { partnerLogos as marqueeLogos } from '../../lib/partner-logos';
+import { valueIcons, type ValueIconKey } from '../../lib/value-icons';
+import { withBase } from '../../lib/url';
+import '../../styles/motion.css';
 
 const partnerLogos = [
   { src: inspiredLogo.src, alt: 'Inspired Education', width: inspiredLogo.width, height: inspiredLogo.height },
   { src: cognitaLogo.src, alt: 'Cognita', width: cognitaLogo.width, height: cognitaLogo.height },
   { src: aisLogo.src, alt: 'Australian International School', width: aisLogo.width, height: aisLogo.height },
 ];
+
+const valueTabs = beGreatValues.map((value) => ({
+  letter: value.letter,
+  word: value.word,
+  summary: value.summary,
+  icon: valueIcons[value.word.toLowerCase() as ValueIconKey],
+}));
+
+const showcaseStats = [
+  { value: 20, suffix: '+', label: 'Years in education recruitment' },
+  { value: 12000, suffix: '+', label: 'Educators supported worldwide' },
+  { value: 600, suffix: '+', label: 'Partner schools' },
+  { value: 5, suffix: '', label: 'Countries with local teams' },
+];
 ---
 
 <BrandLayout title="Components" description="ANZUK Education UI component library.">
+  {/* Enables the motion system on this page so the showcased components run live. */}
+  <script is:inline>document.documentElement.classList.add('js');</script>
+
   <div class="max-w-3xl space-y-4">
     <h1 class="!mt-0">Component library</h1>
     <p class="text-lg text-anzuk-content">
@@ -77,7 +114,7 @@ const partnerLogos = [
         class="lg:col-span-2"
       >
         <SectionHeading
-          eyebrow="International expertise"
+          eyebrow="International expertise in education"
           title="Local recruitment teams, distributed globally."
           description="Used above country grids, feature sections, and partner carousels."
           align="center"
@@ -206,6 +243,219 @@ const partnerLogos = [
   </section>
 
   <section class="mt-12">
+    <h2 class="!text-2xl">Marketing bands</h2>
+    <p class="mt-2 max-w-3xl text-anzuk-content">
+      Full-width, props-driven sections promoted from the <a href={withBase('/brand/demo')}>demo site</a>. Counters,
+      tabs, and the marquee below are live — they use the shared motion system
+      (<code class="rounded bg-white px-1.5 py-0.5 text-sm">scripts/motion.ts</code> +
+      <code class="rounded bg-white px-1.5 py-0.5 text-sm">styles/motion.css</code>), degrade to static content
+      without JavaScript, and respect reduced-motion. Strapi block adapters
+      (<code class="rounded bg-white px-1.5 py-0.5 text-sm">RegionGrid</code>,
+      <code class="rounded bg-white px-1.5 py-0.5 text-sm">StatsRow</code>,
+      <code class="rounded bg-white px-1.5 py-0.5 text-sm">ValuesGrid</code>…) wrap presentational bands
+      (<code class="rounded bg-white px-1.5 py-0.5 text-sm">RegionGridBand</code>, <code class="rounded bg-white px-1.5 py-0.5 text-sm">StatsBand</code>…) in
+      <code class="rounded bg-white px-1.5 py-0.5 text-sm">src/components/marketing/</code>.
+    </p>
+    <div class="mt-6 grid gap-6">
+      <ComponentDemo
+        name="BlobHero"
+        description="Split hero with blob-masked photography, parallax doodles, and slots for title/subtitle/actions/note. Best seen full-bleed."
+        props="image, imageAlt, eyebrow? + slots: title, subtitle, actions, note"
+      >
+        <p class="text-sm text-anzuk-content">
+          The hero ships with eager loading and high fetch priority for Core Web Vitals — see it live on the
+          <a href={withBase('/brand/demo')}>demo homepage</a>.
+        </p>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="StatsBand"
+        description="Dark band with scroll-triggered counters; final values are server-rendered."
+        props="stats: { value, suffix, label }[], heading?, footnote?"
+      >
+        <div class="overflow-hidden rounded-anzuk-card">
+          <StatsBand stats={showcaseStats} footnote="Illustrative figures." />
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="StepsRow"
+        description="Numbered journey strip with a continuous connector line that draws in."
+        props="steps, title, eyebrow?, description?, background?: page | white"
+      >
+        <div class="overflow-hidden rounded-anzuk-card">
+          <StepsRow steps={demoSteps.home} title="Three steps to your next classroom" />
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="ValueTabs"
+        description="BE GREAT letter tabs. Auto-advances every 5s, pauses on hover/focus, stops on manual choice, static under reduced motion or no-JS."
+        props="values: { letter, word, summary, icon }[], autoAdvance?"
+      >
+        <ValueTabs values={valueTabs} />
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="TestimonialGrid"
+        description="Three-up social proof with initials avatars cycling brand colour pairs."
+        props="testimonials: { quote, name, role }[], eyebrow?, title?, background?"
+      >
+        <div class="overflow-hidden rounded-anzuk-card">
+          <TestimonialGrid testimonials={demoTestimonials} title="What people say" />
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="LogoMarquee"
+        description="Infinite partner-logo scroll with an explicit pause/play control (WCAG 2.2.2); static wrapped wall without JS or with reduced motion."
+        props="logos: { src, alt }[], heading?"
+      >
+        <div class="overflow-hidden rounded-anzuk-card">
+          <LogoMarquee logos={marqueeLogos} />
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="CtaBand"
+        description="Closing call-to-action band with parallax blob accent."
+        props="heading, body?, primaryLabel, primaryHref, secondaryLabel?, secondaryHref?"
+      >
+        <div class="overflow-hidden rounded-anzuk-card">
+          <CtaBand
+            heading="Ready to experience exceptional?"
+            body="Props-driven — reuse with any copy and destinations."
+            primaryLabel="Primary action"
+            primaryHref={withBase('/brand/demo')}
+            secondaryLabel="Secondary"
+            secondaryHref={withBase('/brand/demo')}
+          />
+        </div>
+      </ComponentDemo>
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Cards & media</h2>
+    <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <ComponentDemo
+        name="PersonaCard"
+        description="Audience card with accent bar, needs checklist, and CTA. `featured` makes the primary audience dominant."
+        props="title, description, needs, icon, accent, ctaLabel, ctaHref, featured?, featuredLabel?"
+      >
+        <PersonaCard
+          title="Educators & job seekers"
+          description="Teachers and leaders exploring roles at home and abroad."
+          needs={['Personalised guidance', 'Curriculum-matched roles']}
+          icon={valueIcons.growth}
+          accent="green"
+          ctaLabel="Expression of interest"
+          ctaHref={withBase('/brand/demo/educators') + '#eoi'}
+          featured
+        />
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="JobCard"
+        description="Listing card with salary line and contextual express-interest link."
+        props="job: DemoJob, expressHref"
+      >
+        <JobCard
+          job={demoJobs[0]}
+          expressHref={`${withBase('/brand/demo/educators')}?job=${encodeURIComponent(demoJobs[0].title)}#eoi`}
+        />
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="DuotoneImage"
+        description="Brand-colour duotone photo treatment — art direction without new assets."
+        props="src, alt, tone: blue | green | purple, widths?, sizes?"
+        class="lg:col-span-2"
+      >
+        <div class="grid gap-4 sm:grid-cols-3">
+          <DuotoneImage src={valuesPhoto} alt="ANZUK team, blue duotone" tone="blue" class="rounded-anzuk-card" sizes="30vw" />
+          <DuotoneImage src={valuesPhoto} alt="ANZUK team, green duotone" tone="green" class="rounded-anzuk-card" sizes="30vw" />
+          <DuotoneImage src={valuesPhoto} alt="ANZUK team, purple duotone" tone="purple" class="rounded-anzuk-card" sizes="30vw" />
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="FilterPill"
+        description="Toggleable filter with a check glyph in the pressed state — never colour alone."
+        props="group, value, label, pressed?"
+      >
+        <div class="flex flex-wrap gap-2">
+          <FilterPill group="example" value="all" label="All regions" pressed />
+          <FilterPill group="example" value="au" label="Australia" />
+          <FilterPill group="example" value="uk" label="United Kingdom" />
+        </div>
+      </ComponentDemo>
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">Form fields</h2>
+    <p class="mt-2 max-w-3xl text-anzuk-content">
+      Presentational fields from <code class="rounded bg-white px-1.5 py-0.5 text-sm">src/components/ui/forms/</code>.
+      Validation is page-driven via <code class="rounded bg-white px-1.5 py-0.5 text-sm">aria-invalid</code> /
+      <code class="rounded bg-white px-1.5 py-0.5 text-sm">data-valid</code> and uses the
+      <a href={withBase('/brand/colours')}>semantic state tokens</a> — see the live flow on the
+      <a href={withBase('/brand/demo/educators') + '#eoi'}>demo expression-of-interest form</a>.
+    </p>
+    <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      <ComponentDemo
+        name="FloatingField"
+        description="Floating-label input or textarea with valid-state tick."
+        props="id, label, type?, multiline?, required?, autocomplete?"
+      >
+        <div class="space-y-4">
+          <FloatingField id="showcase-name" label="First name" required />
+          <FloatingField id="showcase-about" label="Tell us about you (optional)" multiline rows={3} />
+        </div>
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="SelectField"
+        description="Static-label select."
+        props="id, label, options, required?, placeholder?"
+      >
+        <SelectField
+          id="showcase-location"
+          label="Current location"
+          options={['Australia', 'United Kingdom', 'Canada', 'New Zealand']}
+          required
+          placeholder="Choose a location"
+        />
+      </ComponentDemo>
+
+      <ComponentDemo
+        name="ChoiceChipGroup"
+        description="Radio or checkbox pills in a fieldset."
+        props="legend, name, options, idPrefix, type?, required?, accent?"
+        class="lg:col-span-2"
+      >
+        <div class="space-y-6">
+          <ChoiceChipGroup
+            legend="Teaching experience"
+            name="showcase-experience"
+            idPrefix="showcase-experience"
+            options={['0–2 years', '3–7 years', '8+ years']}
+            required
+          />
+          <ChoiceChipGroup
+            legend="Preferred destinations"
+            name="showcase-destinations"
+            idPrefix="showcase-destinations"
+            options={['Australia', 'United Kingdom', 'Canada']}
+            type="checkbox"
+            accent="green"
+          />
+        </div>
+      </ComponentDemo>
+    </div>
+  </section>
+
+  <section class="mt-12">
     <h2 class="!text-2xl">Composed example</h2>
     <p class="text-anzuk-content">How primitives compose into a homepage section.</p>
     <div class="mt-6 overflow-hidden rounded-anzuk-card border border-anzuk-light-gray">
@@ -238,4 +488,8 @@ import CountryCard from '../ui/CountryCard.astro';
   </Container>
 </Section>`}</code></pre>
   </section>
+
+  <script>
+    import '../../scripts/motion.ts';
+  </script>
 </BrandLayout>

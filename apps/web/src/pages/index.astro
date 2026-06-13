@@ -3,7 +3,7 @@ import InternationalLayout from '../layouts/InternationalLayout.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { INTERNATIONAL_MARKET } from '../config/markets';
 import { getPageByMarketAndSlug } from '../lib/strapi/queries/pages';
-import { getSiteSettings } from '../lib/strapi/queries/site-settings';
+import { getGlobalSettings } from '../lib/strapi/queries/global-settings';
 
 const page = await getPageByMarketAndSlug(INTERNATIONAL_MARKET, 'home');
 
@@ -11,11 +11,11 @@ if (!page) {
   return Astro.redirect('/404');
 }
 
-const settings = await getSiteSettings('en-AU');
+const settings = await getGlobalSettings();
 ---
 
 <InternationalLayout {page} {settings}>
   <article>
-    <BlockRenderer blocks={page.body} />
+    <BlockRenderer blocks={page.body} regionCode="international" />
   </article>
 </InternationalLayout>

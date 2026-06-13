@@ -7,6 +7,12 @@ export function withBase(path: string): string {
   return `${base}${withSlash}`;
 }
 
+/** Build a static asset URL (no trailing slash — for favicons, images in public/). */
+export function assetWithBase(path: string): string {
+  const normalized = path.replace(/^\//, '');
+  return `${base}${normalized}`;
+}
+
 /** Strip the configured base path so routes can be compared (e.g. /brand/voice). */
 export function stripBase(pathname: string): string {
   const basePath = base.replace(/\/$/, '');

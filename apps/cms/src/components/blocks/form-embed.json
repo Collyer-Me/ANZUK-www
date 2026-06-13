@@ -21,6 +21,10 @@
       "default": 600,
       "min": 400,
       "max": 1200
+    },
+    "trackingParams": {
+      "type": "json",
+      "description": "Optional JotForm hidden field name to value mappings"
     }
   }
 }

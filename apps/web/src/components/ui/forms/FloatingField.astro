@@ -1,0 +1,81 @@
+---
+/**
+ * Floating-label text field (input or textarea).
+ * Presentational only — validation state is driven by the consuming page's
+ * script via aria-invalid / data-valid and the `${id}-error` element.
+ */
+import '../../../styles/forms.css';
+
+interface Props {
+  id: string;
+  label: string;
+  type?: 'text' | 'email' | 'tel';
+  multiline?: boolean;
+  name?: string;
+  required?: boolean;
+  autocomplete?: string;
+  rows?: number;
+  class?: string;
+}
+
+const {
+  id,
+  label,
+  type = 'text',
+  multiline = false,
+  name = id,
+  required = false,
+  autocomplete,
+  rows = 4,
+  class: className = '',
+} = Astro.props;
+
+const errorId = `${id}-error`;
+---
+
+<div class={className}>
+  <div class="az-field">
+    {
+      multiline ? (
+        <textarea
+          id={id}
+          name={name}
+          placeholder=" "
+          rows={rows}
+          required={required || undefined}
+          aria-required={required ? 'true' : undefined}
+          aria-describedby={required ? errorId : undefined}
+        />
+      ) : (
+        <input
+          type={type}
+          id={id}
+          name={name}
+          placeholder=" "
+          required={required || undefined}
+          aria-required={required ? 'true' : undefined}
+          autocomplete={autocomplete}
+          aria-describedby={required ? errorId : undefined}
+        />
+      )
+    }
+    <label for={id}>{label}{required && ' *'}</label>
+    {
+      !multiline && (
+        <svg
+          class="az-field-tick"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M2.5 8.5 6 12l7.5-8" />
+        </svg>
+      )
+    }
+  </div>
+  {required && <p class="az-error-text" id={errorId} hidden></p>}
+</div>

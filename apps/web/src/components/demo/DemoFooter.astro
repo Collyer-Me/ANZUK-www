@@ -1,21 +1,18 @@
 ---
-import flagAus from '@anzuk/brand/assets/images/flag-aus.png';
-import flagCan from '@anzuk/brand/assets/images/flag-can.png';
-import flagNz from '@anzuk/brand/assets/images/flag-nz.png';
-import flagUk from '@anzuk/brand/assets/images/flag-uk.png';
-import flagUsa from '@anzuk/brand/assets/images/flag-usa.png';
+import { Image } from 'astro:assets';
 import { taglines } from '@anzuk/brand';
 import Container from '../ui/Container.astro';
 import Logo from '../ui/Logo.astro';
 import { demoFooterColumns } from '../../data/demo-content';
+import { flagImages } from '../../lib/flags';
 import { withBase } from '../../lib/url';
 
 const flags = [
-  { src: flagAus, alt: 'Australia' },
-  { src: flagUk, alt: 'United Kingdom' },
-  { src: flagCan, alt: 'Canada' },
-  { src: flagNz, alt: 'New Zealand' },
-  { src: flagUsa, alt: 'United States' },
+  { src: flagImages.aus, alt: 'Australia' },
+  { src: flagImages.uk, alt: 'United Kingdom' },
+  { src: flagImages.can, alt: 'Canada' },
+  { src: flagImages.nz, alt: 'New Zealand' },
+  { src: flagImages.usa, alt: 'United States' },
 ];
 
 const year = new Date().getFullYear();
@@ -31,14 +28,7 @@ const year = new Date().getFullYear();
           {
             flags.map((flag) => (
               <li>
-                <img
-                  src={flag.src.src}
-                  alt={flag.alt}
-                  width={flag.src.width}
-                  height={flag.src.height}
-                  class="h-6 w-auto rounded-sm"
-                  loading="lazy"
-                />
+                <Image src={flag.src} alt={flag.alt} class="h-6 w-auto rounded-sm" loading="lazy" />
               </li>
             ))
           }

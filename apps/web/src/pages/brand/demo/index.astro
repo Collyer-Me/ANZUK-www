@@ -1,36 +1,168 @@
 ---
+import { beGreatValues, personas, taglines } from '@anzuk/brand';
+import heroPhoto from '@anzuk/brand/assets/images/hero-home.png';
+import valuesPhoto from '@anzuk/brand/assets/images/values.jpg';
+import type { RegionGridBlock } from '../../../lib/strapi/types';
 import DemoLayout from '../../../layouts/DemoLayout.astro';
-import DemoCtaBand from '../../../components/demo/DemoCtaBand.astro';
-import DemoHero from '../../../components/demo/DemoHero.astro';
-import DemoLogoMarquee from '../../../components/demo/DemoLogoMarquee.astro';
-import DemoPersonaCards from '../../../components/demo/DemoPersonaCards.astro';
-import DemoRegions from '../../../components/demo/DemoRegions.astro';
-import DemoStats from '../../../components/demo/DemoStats.astro';
-import DemoSteps from '../../../components/demo/DemoSteps.astro';
-import DemoTestimonials from '../../../components/demo/DemoTestimonials.astro';
-import DemoValues from '../../../components/demo/DemoValues.astro';
+import BlobHero from '../../../components/marketing/BlobHero.astro';
+import CtaBand from '../../../components/marketing/CtaBand.astro';
+import LogoMarquee from '../../../components/marketing/LogoMarquee.astro';
+import PersonaCard from '../../../components/marketing/PersonaCard.astro';
+import RegionGrid from '../../../components/marketing/RegionGrid.astro';
+import StatsBand from '../../../components/marketing/StatsBand.astro';
+import StepsRow from '../../../components/marketing/StepsRow.astro';
+import TestimonialGrid from '../../../components/marketing/TestimonialGrid.astro';
+import ValueTabs from '../../../components/marketing/ValueTabs.astro';
+import Button from '../../../components/ui/Button.astro';
+import Container from '../../../components/ui/Container.astro';
+import DuotoneImage from '../../../components/ui/DuotoneImage.astro';
+import HeroHighlight from '../../../components/ui/HeroHighlight.astro';
+import Section from '../../../components/ui/Section.astro';
+import SectionHeading from '../../../components/ui/SectionHeading.astro';
+import { demoStats, demoSteps, demoTestimonials } from '../../../data/demo-content';
+import { partnerLogos } from '../../../lib/partner-logos';
+import { valueIcons, type ValueIconKey } from '../../../lib/value-icons';
 import { withBase } from '../../../lib/url';
+
+const eoiHref = withBase('/brand/demo/educators') + '#eoi';
+
+const personaMeta = {
+  schools: {
+    icon: valueIcons.relationships,
+    accent: 'blue',
+    cta: 'Schools enquiry',
+    href: 'mailto:hello@anzuk.education?subject=Schools%20enquiry',
+    featured: false,
+  },
+  educators: {
+    icon: valueIcons.growth,
+    accent: 'green',
+    cta: 'Expression of interest',
+    href: eoiHref,
+    featured: true,
+  },
+  leadership: {
+    icon: valueIcons.empower,
+    accent: 'purple',
+    cta: 'Leadership search',
+    href: 'mailto:hello@anzuk.education?subject=Leadership%20search',
+    featured: false,
+  },
+} as const;
+
+const valueTabs = beGreatValues.map((value) => ({
+  letter: value.letter,
+  word: value.word,
+  summary: value.summary,
+  icon: valueIcons[value.word.toLowerCase() as ValueIconKey],
+}));
+
+/* Shaped like the Strapi block so the demo exercises the production RegionGrid. */
+const regionBlock: RegionGridBlock = {
+  __component: 'blocks.region-grid',
+  id: 0,
+  heading: 'Local teams, global reach',
+  subheading: taglines.regional,
+  regions: [
+    { id: 1, name: 'Australia', description: 'Casual relief, contract, and permanent roles across every state.', url: '/au', flagKey: 'aus' },
+    { id: 2, name: 'United Kingdom', description: 'Daily supply through to leadership roles in London and beyond.', url: '/uk', flagKey: 'uk' },
+    { id: 3, name: 'Canada', description: 'Opportunities in early years, schools, and specialist settings.', url: '/ca', flagKey: 'can' },
+    { id: 4, name: 'New Zealand', description: 'Relief and long-term teaching roles across Aotearoa.', url: '/nz', flagKey: 'nz' },
+    { id: 5, name: 'United States', description: 'Served by our US affiliate, Scoot Education.', url: 'https://scoot.education/', flagKey: 'usa', external: true },
+  ],
+};
 ---
 
 <DemoLayout title="Home" description="Concept demo of a refreshed anzuk.education homepage.">
-  <DemoHero />
-  <DemoPersonaCards />
-  <DemoStats />
-  <DemoSteps
-    variant="home"
-    eyebrow="How it works"
+  <BlobHero image={heroPhoto} imageAlt="Educators and students in an international classroom" eyebrow="Teacher recruitment, worldwide">
+    <Fragment slot="title">Experience <HeroHighlight>exceptional</HeroHighlight></Fragment>
+    <Fragment slot="subtitle">{taglines.secondary}</Fragment>
+    <Fragment slot="actions">
+      <Button variant="primary" href={eoiHref}>Expression of interest</Button>
+      <Button variant="bordered" href={withBase('/brand/demo/jobs')}>Browse jobs</Button>
+    </Fragment>
+    <Fragment slot="note">
+      Local teams in Australia, the United Kingdom, Canada and New Zealand — and the United States via Scoot
+      Education.
+    </Fragment>
+  </BlobHero>
+
+  <Section variant="white" id="who-we-help" class="scroll-mt-24" aria-labelledby="personas-heading">
+    <Container>
+      <SectionHeading
+        id="personas-heading"
+        eyebrow="One team, three journeys"
+        title="Who we help"
+        description="Schools, educators, and boards each get a dedicated specialist — one relationship from first conversation to long after placement."
+      />
+      <div class="mt-14 grid gap-6 md:grid-cols-3">
+        {
+          personas.map((persona, index) => {
+            const meta = personaMeta[persona.id];
+            return (
+              <div data-reveal="up" data-reveal-delay={String(index * 120)} class="h-full">
+                <PersonaCard
+                  title={persona.name}
+                  description={persona.description}
+                  needs={persona.needs}
+                  icon={meta.icon}
+                  accent={meta.accent}
+                  ctaLabel={meta.cta}
+                  ctaHref={meta.href}
+                  featured={meta.featured}
+                />
+              </div>
+            );
+          })
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <StatsBand stats={demoStats} heading="ANZUK by the numbers" footnote="Illustrative figures for demo purposes." />
+
+  <StepsRow
+    steps={demoSteps.home}
     title="Three steps to your next classroom"
     description="No portals, no guesswork — a consultant who knows your region guides every step."
   />
-  <DemoValues />
-  <DemoTestimonials />
-  <DemoLogoMarquee />
-  <DemoRegions />
-  <DemoCtaBand
+
+  <Section variant="lightGreen" aria-labelledby="values-heading">
+    <Container>
+      <div class="grid items-center gap-12 lg:grid-cols-[1fr_1.15fr]">
+        <div data-reveal="left">
+          <DuotoneImage
+            src={valuesPhoto}
+            alt="The ANZUK team celebrating together"
+            tone="purple"
+            class="rounded-anzuk-card"
+          />
+        </div>
+        <div data-reveal="right">
+          <SectionHeading
+            id="values-heading"
+            align="left"
+            eyebrow="Our values"
+            title="We live BE GREAT"
+            description="Seven values guide every conversation, shortlist, and placement we make."
+          />
+          <ValueTabs values={valueTabs} class="mt-8" />
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <TestimonialGrid testimonials={demoTestimonials} title="Educators and schools on working with ANZUK" />
+
+  <LogoMarquee logos={partnerLogos} />
+
+  <RegionGrid block={regionBlock} />
+
+  <CtaBand
     heading="Ready to experience exceptional?"
     body="Whether you're a school searching for educators or a teacher planning your next move, our local teams are ready to help."
     primaryLabel="Expression of interest"
-    primaryHref={withBase('/brand/demo/educators') + '#eoi'}
+    primaryHref={eoiHref}
     secondaryLabel="Browse jobs"
     secondaryHref={withBase('/brand/demo/jobs')}
   />

@@ -43,6 +43,21 @@ npm run build
 # Output: apps/web/dist/
 ```
 
+## Type checking
+
+```bash
+npm run check:web   # astro check — also runs in CI on pull requests
+```
+
+## URL routing (dev)
+
+The site uses a **hybrid URL model** ([ADR 007](../decisions/007-as-is-ia-markets.md)):
+
+- **Unprefixed:** international hub (`/`), brand guide (`/brand/*`), international marketing slugs
+- **Locale-prefixed:** regional subsites (`/au/`, `/uk/`, `/ca/`, `/nz/`)
+
+Astro i18n uses `prefixDefaultLocale: false` because regional routes are explicit via `pages/[region]/`. Unprefixed routes must return HTTP 200 in dev — do not set `prefixDefaultLocale: true` without also switching to manual i18n routing.
+
 For production builds, set `STRAPI_URL` and `STRAPI_API_TOKEN` in `apps/web/.env` to point at Strapi Cloud.
 
 ## Monorepo structure

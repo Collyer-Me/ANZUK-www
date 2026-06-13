@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "sections",
+  "info": {
+    "singularName": "section",
+    "pluralName": "sections",
+    "displayName": "Section",
+    "description": "Reusable shared content section"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "region": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::region.region",
+      "pluginOptions": {
+        "i18n": { "localized": false }
+      }
+    },
+    "body": {
+      "type": "dynamiczone",
+      "components": [
+        "blocks.hero",
+        "blocks.feature-grid",
+        "blocks.cta",
+        "blocks.cta-band",
+        "blocks.testimonial",
+        "blocks.testimonials",
+        "blocks.region-grid",
+        "blocks.values-grid",
+        "blocks.value-tabs",
+        "blocks.form-embed",
+        "blocks.rich-text",
+        "blocks.stats-row",
+        "blocks.stats-band",
+        "blocks.persona-cards",
+        "blocks.steps-row",
+        "blocks.logo-marquee"
+      ],
+      "pluginOptions": {
+        "i18n": { "localized": true }
+      }
+    }
+  }
+}

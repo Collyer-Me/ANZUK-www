@@ -1,12 +1,12 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import type { RegionPath } from '../../config/regions';
-import type { SiteSettings } from '../../lib/strapi/types';
+import type { GlobalSettings } from '../../lib/strapi/types';
 import { withBase } from '../../lib/url';
 
 interface Props {
   region?: RegionPath;
-  settings: SiteSettings;
+  settings: GlobalSettings;
 }
 
 const { region, settings } = Astro.props;
@@ -17,7 +17,7 @@ const homeHref = region ? getRelativeLocaleUrl(region, '/') : '/';
 <footer class="border-t border-anzuk-light-gray bg-anzuk-dark-purple px-6 py-10 text-anzuk-light-gray lg:px-[72px]">
   <div class="mx-auto flex max-w-anzuk-container flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <p class="text-sm">
-      &copy; {year} {settings.siteName}. All rights reserved.
+      &copy; {year} {settings.organizationName}. All rights reserved.
     </p>
     <nav aria-label="Footer">
       <ul class="flex flex-wrap gap-4 text-sm">

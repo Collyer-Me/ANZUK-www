@@ -25,7 +25,6 @@ const isDark = block.variant === 'dark';
       description={block.body}
       level="h2"
       dark={isDark}
-      class="[&_h2]:!text-[clamp(2rem,4vw,3.8rem)]"
     />
     <div class="mt-8">
       <Button variant={isDark ? 'light' : 'primary'} href={block.buttonUrl}>

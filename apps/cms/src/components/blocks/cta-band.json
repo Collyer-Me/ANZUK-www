@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_blocks_cta_bands",
+  "info": {
+    "displayName": "CTA Band",
+    "description": "Call-to-action band with primary and secondary actions"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string",
+      "required": true
+    },
+    "body": {
+      "type": "text"
+    },
+    "primary": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.link"
+    },
+    "secondary": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.link"
+    }
+  }
+}

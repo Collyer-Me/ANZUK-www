@@ -1,0 +1,47 @@
+---
+/**
+ * Dark stats band with scroll-triggered animated counters.
+ * Final values are server-rendered, so no-JS and reduced-motion visitors see
+ * correct numbers immediately (motion.ts animates from 0 when allowed).
+ */
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+
+export interface Stat {
+  value: number;
+  suffix: string;
+  label: string;
+}
+
+interface Props {
+  stats: readonly Stat[];
+  heading?: string;
+  footnote?: string;
+  class?: string;
+}
+
+const { stats, heading = 'By the numbers', footnote, class: className = '' } = Astro.props;
+
+const numberFormat = new Intl.NumberFormat('en-AU');
+---
+
+<Section variant="darkPurple" padding="compact" class={className} aria-labelledby="stats-heading">
+  <Container>
+    <h2 id="stats-heading" class="sr-only">{heading}</h2>
+    <div class="grid gap-10 text-center sm:grid-cols-2 lg:grid-cols-4">
+      {
+        stats.map((stat, index) => (
+          <div data-reveal="up" data-reveal-delay={String(index * 100)}>
+            <p class="text-5xl font-bold text-white">
+              <span data-counter={String(stat.value)} data-counter-suffix={stat.suffix}>
+                {numberFormat.format(stat.value)}{stat.suffix}
+              </span>
+            </p>
+            <p class="mt-2 text-sm text-anzuk-light-blue">{stat.label}</p>
+          </div>
+        ))
+      }
+    </div>
+    {footnote && <p class="mt-10 text-center text-xs text-anzuk-light-gray/70">{footnote}</p>}
+  </Container>
+</Section>

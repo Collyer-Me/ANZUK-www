@@ -1,0 +1,265 @@
+/*
+ * Form field styles for components/ui/forms/*.
+ * Imported by the field components themselves (Astro dedupes), so any page
+ * using a field gets exactly this CSS. State colours come from the
+ * @anzuk/brand semantic tokens; never communicate state with colour alone.
+ *
+ * Validation contract (set by the consuming page's script):
+ *   aria-invalid="true"  — invalid state (red border/fill, error text shown)
+ *   data-valid="true"    — confirmed-valid state (green border + tick)
+ */
+
+/* --- Floating-label field ------------------------------------------------ */
+.az-field {
+  position: relative;
+}
+
+.az-field input,
+.az-field textarea {
+  width: 100%;
+  border: 2px solid var(--anzuk-light-gray);
+  border-radius: var(--anzuk-button-radius);
+  background: var(--anzuk-white);
+  padding: 26px 16px 10px;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--anzuk-title);
+}
+
+.az-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.az-field label {
+  position: absolute;
+  left: 18px;
+  top: 19px;
+  font-size: 16px;
+  color: var(--anzuk-icon-muted);
+  pointer-events: none;
+  transform-origin: left top;
+}
+
+.az-field input:focus ~ label,
+.az-field input:not(:placeholder-shown) ~ label,
+.az-field textarea:focus ~ label,
+.az-field textarea:not(:placeholder-shown) ~ label {
+  transform: translateY(-11px) scale(0.72);
+  color: var(--anzuk-blue);
+}
+
+.az-field input:not(:placeholder-shown):not(:focus) ~ label,
+.az-field textarea:not(:placeholder-shown):not(:focus) ~ label {
+  color: var(--anzuk-icon-muted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .az-field label {
+    transition:
+      transform 0.15s ease,
+      color 0.15s ease;
+  }
+}
+
+/* --- Static-label controls (selects etc.) -------------------------------- */
+.az-static-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--anzuk-title);
+}
+
+.az-input {
+  width: 100%;
+  border: 2px solid var(--anzuk-light-gray);
+  border-radius: var(--anzuk-button-radius);
+  background: var(--anzuk-white);
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--anzuk-title);
+}
+
+/* --- Select: replace the native arrow with a token-coloured chevron -------- */
+.az-select {
+  position: relative;
+}
+
+.az-select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  /* Reserve room so the value text never runs under the chevron. */
+  padding-right: 44px;
+}
+
+/* Geometry inline (a down chevron); colour comes from the brand token via mask. */
+.az-select::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  width: 14px;
+  height: 14px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background-color: var(--anzuk-icon-muted);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 6l5 5 5-5' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* IE/legacy: hide the native arrow when our chevron is shown. */
+.az-select select::-ms-expand {
+  display: none;
+}
+
+/* --- Focus ---------------------------------------------------------------- */
+.az-input:focus,
+.az-field input:focus,
+.az-field textarea:focus {
+  outline: none;
+  border-color: var(--anzuk-blue);
+  box-shadow: 0 0 0 3px var(--anzuk-extra-light-blue);
+}
+
+/* --- Invalid state --------------------------------------------------------- */
+.az-field input[aria-invalid='true'],
+.az-field textarea[aria-invalid='true'],
+.az-input[aria-invalid='true'] {
+  border-color: var(--anzuk-error);
+  background-color: var(--anzuk-error-bg);
+}
+
+.az-field input[aria-invalid='true'] ~ label {
+  color: var(--anzuk-error);
+}
+
+.az-error-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--anzuk-error);
+}
+
+/* --- Confirmed-valid state (positive feedback) ----------------------------- */
+.az-field input[data-valid='true'],
+.az-field textarea[data-valid='true'],
+.az-input[data-valid='true'] {
+  border-color: var(--anzuk-success);
+}
+
+.az-field-tick {
+  position: absolute;
+  right: 16px;
+  top: 22px;
+  width: 18px;
+  height: 18px;
+  color: var(--anzuk-success);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.az-field input[data-valid='true'] ~ .az-field-tick {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .az-field-tick {
+    transition: opacity 0.2s ease;
+  }
+}
+
+/* --- Choice chips (radio / checkbox pills) ---------------------------------- */
+.az-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 2px solid var(--anzuk-light-gray);
+  border-radius: 9999px;
+  background: var(--anzuk-white);
+  padding: 8px 16px;
+  font-size: 14px;
+  color: var(--anzuk-content);
+}
+
+.az-chip:hover {
+  border-color: var(--anzuk-blue);
+}
+
+.az-chip:has(:checked) {
+  border-color: var(--anzuk-blue);
+  background-color: var(--anzuk-extra-light-blue);
+  font-weight: 600;
+}
+
+.az-chip:has(:focus-visible) {
+  outline: 2px solid var(--anzuk-blue);
+  outline-offset: 2px;
+}
+
+.az-chip[data-accent='green']:hover {
+  border-color: var(--anzuk-green);
+}
+
+.az-chip[data-accent='green']:has(:checked) {
+  border-color: var(--anzuk-green);
+  background-color: var(--anzuk-extra-light-green);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .az-chip {
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
+}
+
+/* --- Submission affordances -------------------------------------------------- */
+.az-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .az-spinner {
+    animation: az-spin 0.7s linear infinite;
+  }
+}
+
+@keyframes az-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Drawn success check (used by form success panels) */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .az-check-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: az-draw 0.6s 0.1s var(--demo-ease, ease) forwards;
+  }
+
+  html.js .az-check-mark {
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: az-draw 0.35s 0.6s var(--demo-ease, ease) forwards;
+  }
+}
+
+@keyframes az-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}

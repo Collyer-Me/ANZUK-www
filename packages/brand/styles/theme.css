@@ -24,9 +24,19 @@
   --color-anzuk-page-bg: var(--anzuk-page-bg);
   --color-anzuk-icon-neutral: var(--anzuk-icon-neutral);
   --color-anzuk-icon-muted: var(--anzuk-icon-muted);
+  --color-anzuk-error: var(--anzuk-error);
+  --color-anzuk-error-bg: var(--anzuk-error-bg);
+  --color-anzuk-success: var(--anzuk-success);
+  --color-anzuk-success-bg: var(--anzuk-success-bg);
+  --color-anzuk-warning: var(--anzuk-warning);
+  --color-anzuk-warning-bg: var(--anzuk-warning-bg);
 
   --radius-anzuk-button: var(--anzuk-button-radius);
   --radius-anzuk-card: var(--anzuk-card-radius);
 
   --max-width-anzuk-container: 1376px;
+
+  --text-anzuk-h1-fluid: var(--anzuk-font-h1-fluid);
+  --text-anzuk-h2-fluid: var(--anzuk-font-h2-fluid);
+  --text-anzuk-h3-fluid: var(--anzuk-font-h3-fluid);
 }

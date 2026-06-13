@@ -3,7 +3,8 @@ import RegionalLayout from '../../../layouts/RegionalLayout.astro';
 import { getRegionByPath, isValidRegion, REGIONS, type RegionPath } from '../../../config/regions';
 import { getArticlesByMarket } from '../../../lib/strapi/queries/articles';
 import { getPageByMarketAndSlug } from '../../../lib/strapi/queries/pages';
-import { getSiteSettings } from '../../../lib/strapi/queries/site-settings';
+import { getGlobalSettings } from '../../../lib/strapi/queries/global-settings';
+import type { CmsPage } from '../../../lib/strapi/types';
 
 export async function getStaticPaths() {
   return REGIONS.map((region) => ({
@@ -12,34 +13,30 @@ export async function getStaticPaths() {
   }));
 }
 
-interface Props {
-  region: RegionPath;
-}
-
-const { region } = Astro.props;
+const { region } = Astro.props as { region: RegionPath };
 
 if (!isValidRegion(region)) {
   return Astro.redirect('/404');
 }
 
-const regionConfig = getRegionByPath(region)!;
-const page =
+const page: CmsPage =
   (await getPageByMarketAndSlug(region, 'blog')) ??
   ({
     documentId: `mock-${region}-blog`,
     title: 'Blog',
     slug: 'blog',
-    market: region,
-    pageTemplate: 'blog-listing' as const,
+    path: 'blog',
+    regionCode: region,
+    pageType: 'blog-listing',
     seo: { metaTitle: `Blog - ANZUK Education`, metaDescription: null, ogImage: null },
     body: [],
   });
 
 const articles = await getArticlesByMarket(region);
-const settings = await getSiteSettings(regionConfig.strapiLocale);
+const settings = await getGlobalSettings();
 ---
 
-<RegionalLayout {region} page={page} {settings}>
+<RegionalLayout {region} {page} {settings}>
   <article class="mx-auto max-w-anzuk-container px-6 py-10 lg:px-[72px]">
     <h1 class="!mt-0">Blog</h1>
     <ul class="mt-8 space-y-4" role="list">

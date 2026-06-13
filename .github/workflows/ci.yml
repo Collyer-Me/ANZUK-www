@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Astro type check
+        run: npm run check -w @anzuk/web
+
+      - name: Build Astro site
+        run: npm run build -w @anzuk/web
+        env:
+          SITE_URL: http://localhost:4321
+          USE_MOCK_DATA: 'true'

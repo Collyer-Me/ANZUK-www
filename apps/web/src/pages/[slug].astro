@@ -8,17 +8,17 @@ import {
   getAllInternationalPages,
   getPageByMarketAndSlug,
 } from '../lib/strapi/queries/pages';
-import { getSiteSettings } from '../lib/strapi/queries/site-settings';
+import { getGlobalSettings } from '../lib/strapi/queries/global-settings';
 
 export async function getStaticPaths() {
   const pages = await getAllInternationalPages();
   const reserved = new Set([...REGION_PATHS, 'brand']);
 
   return pages
-    .filter((p) => p.slug !== 'home' && !reserved.has(p.slug))
+    .filter((p) => p.path !== 'home' && !reserved.has(p.path.split('/')[0]!))
     .map((p) => ({
-      params: { slug: p.slug },
-      props: { slug: p.slug },
+      params: { slug: p.path },
+      props: { slug: p.path },
     }));
 }
 
@@ -33,12 +33,12 @@ if (!page) {
   return Astro.redirect('/404');
 }
 
-const settings = await getSiteSettings('en-AU');
+const settings = await getGlobalSettings();
 ---
 
 <InternationalLayout {page} {settings}>
   <article>
-    <BlockRenderer blocks={page.body} />
-    {page.pageTemplate === 'job-listing' && <JobListingPlaceholder config={page.jobBoardConfig} />}
+    <BlockRenderer blocks={page.body} regionCode="international" />
+    {page.pageType === 'job-listing' && <JobListingPlaceholder config={page.jobBoardConfig} />}
   </article>
 </InternationalLayout>

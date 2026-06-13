@@ -24,32 +24,32 @@
   }
 
   h1 {
-    font-size: 80px;
+    font-size: var(--anzuk-font-h1-fluid);
     line-height: 1.25;
   }
 
   h2 {
-    font-size: 61px;
+    font-size: var(--anzuk-font-h2-fluid);
     line-height: 1.25;
   }
 
   h3 {
-    font-size: 47px;
+    font-size: var(--anzuk-font-h3-fluid);
     line-height: 1.25;
   }
 
   h4 {
-    font-size: 36px;
+    font-size: var(--anzuk-font-h4);
     line-height: 1.25;
   }
 
   h5 {
-    font-size: 27px;
+    font-size: var(--anzuk-font-h5);
     line-height: 1.4;
   }
 
   h6 {
-    font-size: 21px;
+    font-size: var(--anzuk-font-h6);
     line-height: 1.4;
   }
 

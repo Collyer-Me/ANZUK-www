@@ -15,7 +15,7 @@ export const REGIONS: readonly Region[] = [
   {
     path: 'au',
     hreflang: 'en-AU',
-    strapiLocale: 'en-AU',
+    strapiLocale: 'en',
     htmlLang: 'en-AU',
     label: 'Australia',
     flag: '🇦🇺',
@@ -23,7 +23,7 @@ export const REGIONS: readonly Region[] = [
   {
     path: 'uk',
     hreflang: 'en-GB',
-    strapiLocale: 'en-GB',
+    strapiLocale: 'en',
     htmlLang: 'en-GB',
     label: 'United Kingdom',
     flag: '🇬🇧',
@@ -31,7 +31,7 @@ export const REGIONS: readonly Region[] = [
   {
     path: 'ca',
     hreflang: 'en-CA',
-    strapiLocale: 'en-CA',
+    strapiLocale: 'en',
     htmlLang: 'en-CA',
     label: 'Canada',
     flag: '🇨🇦',
@@ -39,7 +39,7 @@ export const REGIONS: readonly Region[] = [
   {
     path: 'nz',
     hreflang: 'en-NZ',
-    strapiLocale: 'en-NZ',
+    strapiLocale: 'en',
     htmlLang: 'en-NZ',
     label: 'New Zealand',
     flag: '🇳🇿',

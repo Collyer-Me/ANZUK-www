@@ -32,7 +32,7 @@ URL segment `au` maps to BCP 47 `en-AU` and Strapi locale `en-AU`.
 
 ### Neutral
 
-- All four regions remain equal in routing structure (`prefixDefaultLocale: true`)
+- All four regions remain equal in routing structure; regional URLs use explicit `/au/`, `/uk/`, etc. via `pages/[region]/` (see ADR 007 hybrid URL model). Astro `prefixDefaultLocale` is `false` so unprefixed routes (`/`, `/brand/*`, international hub slugs) return correct HTTP status in dev.
 
 ## References
 

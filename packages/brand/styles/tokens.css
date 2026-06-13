@@ -44,6 +44,13 @@
   --anzuk-font-primary: 'Poppins', system-ui, sans-serif;
   --anzuk-font-secondary: 'Roboto', system-ui, sans-serif;
 
+  --anzuk-font-h1-fluid: clamp(2.75rem, 6vw, 5rem);
+  --anzuk-font-h2-fluid: clamp(1.9rem, 4vw, 3.25rem);
+  --anzuk-font-h3-fluid: clamp(1.4rem, 2.6vw, 1.9rem);
+  --anzuk-font-h4: 36px;
+  --anzuk-font-h5: 27px;
+  --anzuk-font-h6: 21px;
+
   --anzuk-blue: #00adef;
   --anzuk-green: #3fac49;
   --anzuk-yellow: #f6b419;
@@ -67,6 +74,14 @@
   --anzuk-black: #000000;
   --anzuk-icon-neutral: #333132;
   --anzuk-icon-muted: #9e9995;
+
+  /* Semantic state colours — text variants are WCAG AA on white */
+  --anzuk-error: #b3261e;
+  --anzuk-error-bg: #fcebea;
+  --anzuk-success: #2e7d32;
+  --anzuk-success-bg: #ecf7ed;
+  --anzuk-warning: #a16207;
+  --anzuk-warning-bg: #fdf3dc;
 
   --anzuk-section-space: 112px;
   --anzuk-content-space: 64px;

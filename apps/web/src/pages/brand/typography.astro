@@ -1,7 +1,7 @@
 ---
 import BrandLayout from '../../layouts/BrandLayout.astro';
 import TypeSpecimen from '../../components/brand/TypeSpecimen.astro';
-import { fontFamilies, fontSizes, capitalization } from '@anzuk/brand';
+import { fontFamilies, fontSizes, fluidFontSizes, capitalization } from '@anzuk/brand';
 import { withBase } from '../../lib/url';
 ---
 
@@ -48,9 +48,13 @@ import { withBase } from '../../lib/url';
 
   <section class="mt-12 space-y-4">
     <h2 class="!text-2xl">Heading scale</h2>
-    <TypeSpecimen label="H1" sample="Experience exceptional" meta={`${fontSizes.h1.size} / ${fontSizes.h1.lineHeight} / weight 600`} class="text-[80px] leading-[1.25] font-semibold tracking-[-0.02em]" />
-    <TypeSpecimen label="H2" sample="Local recruitment teams" meta={`${fontSizes.h2.size} / ${fontSizes.h2.lineHeight}`} class="text-[61px] leading-[1.25] font-semibold tracking-[-0.02em]" />
-    <TypeSpecimen label="H3" sample="Exceptional educators" meta={`${fontSizes.h3.size} / ${fontSizes.h3.lineHeight}`} class="text-[47px] leading-[1.25] font-semibold tracking-[-0.02em]" />
+    <p class="text-anzuk-content">
+      H1–H3 use a fluid clamp scale in production ({fluidFontSizes.h1.size}). H4–H6 stay fixed.
+      Maxima align with the legacy fixed scale ({fontSizes.h1.size} / {fontSizes.h2.size} / {fontSizes.h3.size}).
+    </p>
+    <TypeSpecimen label="H1" sample="Experience exceptional" meta={`${fluidFontSizes.h1.size} / ${fluidFontSizes.h1.lineHeight} / weight 600`} class="text-anzuk-h1-fluid font-semibold" />
+    <TypeSpecimen label="H2" sample="Local recruitment teams" meta={`${fluidFontSizes.h2.size} / ${fluidFontSizes.h2.lineHeight}`} class="text-anzuk-h2-fluid font-semibold" />
+    <TypeSpecimen label="H3" sample="Exceptional educators" meta={`${fluidFontSizes.h3.size} / ${fluidFontSizes.h3.lineHeight}`} class="text-anzuk-h3-fluid font-semibold" />
     <TypeSpecimen label="H4" sample="Supporting international educators" meta={`${fontSizes.h4.size} / ${fontSizes.h4.lineHeight}`} class="text-4xl leading-[1.25] font-semibold tracking-[-0.02em]" />
     <TypeSpecimen label="H5" sample="International expertise in education." meta={`${fontSizes.h5.size} / ${fontSizes.h5.lineHeight}`} class="text-[27px] leading-[1.4] font-semibold tracking-[-0.02em]" />
     <TypeSpecimen label="H6" sample="Our BE GREAT values" meta={`${fontSizes.h6.size} / ${fontSizes.h6.lineHeight}`} class="text-[21px] leading-[1.4] font-semibold tracking-[-0.02em]" />

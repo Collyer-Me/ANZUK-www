@@ -1,15 +1,16 @@
 ---
 import { absoluteInternationalPageUrl } from '../../lib/seo/urls';
-import type { LocalizedPage } from '../../lib/strapi/types';
+import { assetWithBase } from '../../lib/url';
+import type { CmsPage } from '../../lib/strapi/types';
 
 interface Props {
-  page: LocalizedPage;
+  page: CmsPage;
 }
 
 const { page } = Astro.props;
 const title = page.seo?.metaTitle ?? page.title;
 const description = page.seo?.metaDescription ?? '';
-const canonical = page.canonicalUrl ?? absoluteInternationalPageUrl(page.slug);
+const canonical = absoluteInternationalPageUrl(page.path);
 ---
 
 <meta charset="UTF-8" />
@@ -17,7 +18,7 @@ const canonical = page.canonicalUrl ?? absoluteInternationalPageUrl(page.slug);
 <title>{title}</title>
 {description && <meta name="description" content={description} />}
 {page.noIndex && <meta name="robots" content="noindex, nofollow" />}
-<link rel="icon" href="/favicon.ico" />
+<link rel="icon" href={assetWithBase('/favicon.svg')} type="image/svg+xml" />
 <link rel="canonical" href={canonical} />
 <link rel="alternate" hreflang="x-default" href={canonical} />
 <meta property="og:title" content={title} />

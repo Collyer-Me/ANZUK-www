@@ -11,6 +11,7 @@
     "dev:cms": "npm run dev --prefix apps/cms",
     "build": "npm run build -w @anzuk/web",
     "build:web": "npm run build -w @anzuk/web",
+    "check:web": "npm run check -w @anzuk/web",
     "seed:strapi": "tsx scripts/seed-strapi.ts",
     "probe:strapi": "tsx scripts/probe-strapi.ts"
   },

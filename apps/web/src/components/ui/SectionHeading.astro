@@ -4,7 +4,7 @@ type Level = 'h1' | 'h2' | 'h3' | 'h4';
 interface Props {
   title: string;
   eyebrow?: string;
-  description?: string;
+  description?: string | null;
   align?: 'left' | 'center';
   level?: Level;
   id?: string;

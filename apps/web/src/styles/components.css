@@ -1,0 +1,180 @@
+/*
+ * Shared styles for the az-* component library (FilterPill, LogoMarquee,
+ * ValueTabs, DuotoneImage, jobs explorer card animation).
+ *
+ * Deliberately one shared file — imported by the components themselves AND by
+ * DemoLayout — so every demo page carries an identical stylesheet. Astro's
+ * <ClientRouter /> head-diff then preserves the node across view transitions
+ * instead of re-inserting per-page styles (which can skip style recalc).
+ * Colours come exclusively from @anzuk/brand tokens.
+ */
+
+/* --- FilterPill -------------------------------------------------------------- */
+.az-filter-pill[aria-pressed='true'] {
+  border-color: var(--anzuk-blue);
+  background-color: var(--anzuk-blue);
+  color: var(--anzuk-white);
+}
+
+.az-filter-pill-check {
+  width: 0;
+  height: 14px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.az-filter-pill[aria-pressed='true'] .az-filter-pill-check {
+  width: 14px;
+  margin-right: 6px;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .az-filter-pill-check {
+    transition:
+      width 0.15s ease,
+      margin 0.15s ease,
+      opacity 0.15s ease;
+  }
+}
+
+/* --- LogoMarquee --------------------------------------------------------------
+ * Default (no JS, or reduced motion): static, wrapped, centred logo wall.
+ * With JS + motion: seamless scroll, hover-pause, explicit pause control.
+ * ----------------------------------------------------------------------------- */
+.az-marquee-track {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+}
+
+.az-marquee-copy {
+  display: contents;
+}
+
+.az-marquee-copy[data-marquee-duplicate] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .az-marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+
+  html.js .az-marquee-track {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: max-content;
+    gap: 0;
+    animation: az-marquee 36s linear infinite;
+  }
+
+  html.js .az-marquee-copy,
+  html.js .az-marquee-copy[data-marquee-duplicate] {
+    display: flex;
+    align-items: center;
+    gap: 64px;
+    padding-right: 64px;
+  }
+
+  html.js .az-marquee:hover .az-marquee-track,
+  html.js .az-marquee[data-paused] .az-marquee-track {
+    animation-play-state: paused;
+  }
+
+  /* The pause control only matters when something is actually moving. */
+  html.js .az-marquee-toggle {
+    display: inline-flex;
+  }
+}
+
+@keyframes az-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* --- ValueTabs ----------------------------------------------------------------
+ * Panels all render server-side; only hide the inactive ones when JS runs.
+ * ----------------------------------------------------------------------------- */
+html.js .az-value-panel:not([data-active='true']) {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .az-value-panel[data-active='true'] {
+    animation: az-panel-in 0.3s var(--demo-ease, ease) both;
+  }
+}
+
+@keyframes az-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* --- Jobs explorer card re-entry (script re-triggers .az-card-enter) --------- */
+@media (prefers-reduced-motion: no-preference) {
+  .az-card-enter {
+    animation: az-card-in 0.22s var(--demo-ease, ease) both;
+    animation-delay: calc(var(--stagger, 0) * 30ms);
+  }
+}
+
+@keyframes az-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* --- DuotoneImage -------------------------------------------------------------
+ * Greyscale + multiply tint + colourise = brand-colour duotone treatment.
+ * ----------------------------------------------------------------------------- */
+.az-duotone {
+  position: relative;
+  overflow: hidden;
+}
+
+.az-duotone[data-tone='blue'] {
+  --az-duotone-tone: var(--anzuk-blue);
+}
+
+.az-duotone[data-tone='green'] {
+  --az-duotone-tone: var(--anzuk-green);
+}
+
+.az-duotone[data-tone='purple'] {
+  --az-duotone-tone: var(--anzuk-purple);
+}
+
+.az-duotone-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: grayscale(1) contrast(1.05);
+}
+
+.az-duotone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--az-duotone-tone);
+  mix-blend-mode: multiply;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.az-duotone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--az-duotone-tone);
+  mix-blend-mode: color;
+  pointer-events: none;
+}

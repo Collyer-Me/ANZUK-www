@@ -29,11 +29,11 @@ const eoiHref = withBase('/brand/demo/educators') + '#eoi';
         <ul class="flex items-center gap-1" role="list">
           {
             demoNavItems.map((item) => {
-              const active = currentRoute === routeKey(item.path);
+              const active = !item.hash && currentRoute === routeKey(item.path);
               return (
                 <li>
                   <a
-                    href={withBase(item.path)}
+                    href={withBase(item.path) + (item.hash ?? '')}
                     aria-current={active ? 'page' : undefined}
                     class:list={[
                       'rounded-full px-4 py-2 text-sm font-semibold no-underline transition-colors hover:no-underline',
@@ -78,11 +78,11 @@ const eoiHref = withBase('/brand/demo/educators') + '#eoi';
       <ul class="flex flex-col gap-1 px-6 py-4" role="list">
         {
           demoNavItems.map((item) => {
-            const active = currentRoute === routeKey(item.path);
+            const active = !item.hash && currentRoute === routeKey(item.path);
             return (
               <li>
                 <a
-                  href={withBase(item.path)}
+                  href={withBase(item.path) + (item.hash ?? '')}
                   aria-current={active ? 'page' : undefined}
                   class:list={[
                     'block rounded-anzuk-button px-4 py-3 font-semibold no-underline hover:no-underline',

@@ -1,7 +1,7 @@
 ---
 import BrandLayout from '../../layouts/BrandLayout.astro';
 import ColorSwatch from '../../components/brand/ColorSwatch.astro';
-import { brandColorSwatches } from '../../data/brand-colors';
+import { brandColorSwatches, stateColorSwatches } from '../../data/brand-colors';
 ---
 
 <BrandLayout title="Colours" description="ANZUK Education colour palette and design tokens.">
@@ -35,6 +35,28 @@ import { brandColorSwatches } from '../../data/brand-colors';
     <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {
         brandColorSwatches.slice(4).map((swatch) => (
+          <ColorSwatch
+            name={swatch.name}
+            hex={swatch.hex}
+            cssVar={swatch.cssVar}
+            tailwindClass={swatch.tailwindClass}
+            description={swatch.description}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <h2 class="!text-2xl">State colours</h2>
+    <p class="mt-2 max-w-2xl text-sm text-anzuk-content">
+      Semantic colours for form validation, alerts, and status messaging. Text variants meet WCAG AA on white;
+      background variants are their pale companions. Never communicate state with colour alone — pair with an icon
+      or text.
+    </p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        stateColorSwatches.map((swatch) => (
           <ColorSwatch
             name={swatch.name}
             hex={swatch.hex}

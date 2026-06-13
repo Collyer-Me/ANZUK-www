@@ -1,0 +1,116 @@
+---
+import type { GlobalSettings } from '../../lib/strapi/types';
+import { ketchConfigFromSettings } from '../../lib/strapi/queries/global-settings';
+
+interface Props {
+  settings: GlobalSettings;
+  cookiePolicyUrl?: string | null;
+}
+
+const { settings, cookiePolicyUrl } = Astro.props;
+const ketch = ketchConfigFromSettings(settings);
+const ketchBootUrl =
+  ketch.organizationCode && ketch.propertyCode
+    ? `https://global.ketchcdn.com/web/v3/config/${ketch.organizationCode}/${ketch.propertyCode}/boot.js`
+    : null;
+---
+
+{
+  ketch.enabled && ketchBootUrl && (
+    <>
+      <script is:inline define:vars={{ ketchBootUrl }}>
+        window.__anzukConsentRequired = true;
+        (function () {
+          window.semaphore = window.semaphore || [];
+          window.ketch = function () {
+            window.semaphore.push(arguments);
+          };
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = ketchBootUrl;
+          script.defer = script.async = true;
+          document.getElementsByTagName('head')[0].appendChild(script);
+        })();
+      </script>
+      <script is:inline>
+        (function registerKetchConsentBridge() {
+          function mapPurposes(purposes) {
+            return {
+              essential: true,
+              functional: !!purposes.functional || !!purposes.preferences,
+              analytics: !!purposes.analytics || !!purposes.analytics_storage,
+              marketing:
+                !!purposes.marketing ||
+                !!purposes.ad_storage ||
+                !!purposes.advertising,
+            };
+          }
+
+          function publish(state) {
+            try {
+              sessionStorage.setItem('anzuk_consent_state', JSON.stringify(state));
+            } catch (e) {}
+            window.dispatchEvent(new CustomEvent('anzuk:consent-updated', { detail: state }));
+          }
+
+          function attach() {
+            if (typeof window.ketch !== 'function') {
+              setTimeout(attach, 100);
+              return;
+            }
+            window.ketch('on', 'consent', function (consent) {
+              var purposes = consent && consent.purposes ? consent.purposes : {};
+              publish(mapPurposes(purposes));
+            });
+          }
+
+          attach();
+        })();
+      </script>
+    </>
+  )
+}
+
+{
+  (!ketch.enabled || !ketchBootUrl) && (
+    <script is:inline define:vars={{ cookiePolicyUrl }}>
+      window.__anzukConsentRequired = true;
+      (function () {
+        if (sessionStorage.getItem('anzuk_consent_state')) return;
+        var banner = document.createElement('div');
+        banner.id = 'anzuk-consent-banner';
+        banner.setAttribute('role', 'dialog');
+        banner.setAttribute('aria-label', 'Privacy preferences');
+        banner.style.cssText =
+          'position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1a1a2e;color:#fff;padding:1rem 1.5rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:center;font-size:0.95rem;';
+        banner.innerHTML =
+          '<p style="margin:0;max-width:48rem">We use cookies and similar technologies for analytics and marketing. ' +
+          (cookiePolicyUrl ? '<a href="' + cookiePolicyUrl + '" style="color:#7dd3fc">Privacy policy</a>. ' : '') +
+          'Set PUBLIC_KETCH_ORG and PUBLIC_KETCH_PROPERTY in .env to load Ketch.</p>' +
+          '<div style="display:flex;gap:0.5rem;flex-wrap:wrap">' +
+          '<button type="button" id="anzuk-consent-all" style="background:#0066cc;color:#fff;border:none;padding:0.5rem 1.25rem;border-radius:9999px;cursor:pointer;font-weight:600">Accept all</button>' +
+          '<button type="button" id="anzuk-consent-essential" style="background:transparent;color:#fff;border:1px solid #fff;padding:0.5rem 1.25rem;border-radius:9999px;cursor:pointer">Essential only</button>' +
+          '</div>';
+        function save(state) {
+          sessionStorage.setItem('anzuk_consent_state', JSON.stringify(state));
+          banner.remove();
+          window.dispatchEvent(new CustomEvent('anzuk:consent-updated', { detail: state }));
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+          document.body.appendChild(banner);
+          document.getElementById('anzuk-consent-all')?.addEventListener('click', function () {
+            save({ essential: true, functional: true, analytics: true, marketing: true });
+          });
+          document.getElementById('anzuk-consent-essential')?.addEventListener('click', function () {
+            save({ essential: true, functional: false, analytics: false, marketing: false });
+          });
+        });
+      })();
+    </script>
+  )
+}
+
+<script>
+  import { captureCampaignParams } from '../../lib/marketing-identity';
+  captureCampaignParams(window.location.search);
+</script>

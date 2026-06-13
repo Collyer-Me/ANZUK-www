@@ -2,19 +2,51 @@
 import Hero from '../marketing/Hero.astro';
 import FeatureGrid from '../marketing/FeatureGrid.astro';
 import CTA from '../marketing/CTA.astro';
+import CtaBand from '../marketing/CtaBand.astro';
 import Testimonial from '../marketing/Testimonial.astro';
+import TestimonialGrid from '../marketing/TestimonialGrid.astro';
 import RegionGrid from '../marketing/RegionGrid.astro';
 import ValuesGrid from '../marketing/ValuesGrid.astro';
 import FormEmbed from '../marketing/FormEmbed.astro';
 import RichText from '../marketing/RichText.astro';
 import StatsRow from '../marketing/StatsRow.astro';
-import type { ContentBlock } from '../../lib/strapi/types';
+import StatsBand from '../marketing/StatsBand.astro';
+import StepsRow from '../marketing/StepsRow.astro';
+import type { ContentBlock, CtaBandBlock, StatsBandBlock } from '../../lib/strapi/types';
+import type { Market } from '../../config/markets';
+import { buildTrackedUrl, buildMarketingContext } from '../../lib/marketing-identity';
 
 interface Props {
   blocks?: ContentBlock[];
+  regionCode?: Market;
 }
 
-const { blocks = [] } = Astro.props;
+const { blocks = [], regionCode = 'au' } = Astro.props;
+
+const trackingContext = buildMarketingContext({
+  region: regionCode,
+  locale: 'en',
+  pageType: 'page',
+  pagePath: Astro.url.pathname,
+});
+
+function trackedExternalUrl(url: string): string {
+  if (!url.startsWith('http')) return url;
+  return buildTrackedUrl(url, trackingContext);
+}
+
+function parseStatValue(value: string): { value: number; suffix: string } {
+  const match = value.match(/^(\d+)(.*)$/);
+  if (match) return { value: Number(match[1]), suffix: match[2] ?? '' };
+  return { value: 0, suffix: value };
+}
+
+function linkHref(link: { url?: string | null; label: string } | null | undefined): string {
+  if (!link?.url) return '#';
+  if (link.url.startsWith('http')) return trackedExternalUrl(link.url);
+  if (link.url.startsWith('/')) return link.url;
+  return regionCode === 'international' ? `/${link.url}/` : `/${regionCode}/${link.url}/`;
+}
 ---
 
 {
@@ -26,18 +58,77 @@ const { blocks = [] } = Astro.props;
         return <FeatureGrid block={block} />;
       case 'blocks.cta':
         return <CTA block={block} />;
+      case 'blocks.cta-band': {
+        const b = block as CtaBandBlock;
+        return (
+          <CtaBand
+            heading={b.heading}
+            body={b.body ?? undefined}
+            primaryLabel={b.primary?.label ?? 'Learn more'}
+            primaryHref={linkHref(b.primary)}
+            secondaryLabel={b.secondary?.label}
+            secondaryHref={b.secondary ? linkHref(b.secondary) : undefined}
+          />
+        );
+      }
       case 'blocks.testimonial':
         return <Testimonial block={block} />;
+      case 'blocks.testimonials':
+        return (
+          <TestimonialGrid
+            eyebrow={block.eyebrow ?? undefined}
+            title={block.title ?? undefined}
+            testimonials={(block.items ?? []).map((item) => ({
+              quote: item.quote,
+              name: item.name,
+              role: item.role ?? '',
+            }))}
+          />
+        );
       case 'blocks.region-grid':
         return <RegionGrid block={block} />;
       case 'blocks.values-grid':
         return <ValuesGrid block={block} />;
+      case 'blocks.value-tabs':
+        return (
+          <ValuesGrid
+            block={{
+              __component: 'blocks.values-grid',
+              id: block.id,
+              heading: block.heading,
+              description: block.description,
+              values: block.values,
+            }}
+          />
+        );
       case 'blocks.form-embed':
-        return <FormEmbed block={block} />;
+        return <FormEmbed block={block} regionCode={regionCode} pagePath={Astro.url.pathname} />;
       case 'blocks.rich-text':
         return <RichText block={block} />;
       case 'blocks.stats-row':
         return <StatsRow block={block} />;
+      case 'blocks.stats-band': {
+        const b = block as StatsBandBlock;
+        const stats = (b.stats ?? []).map((s) => {
+          const parsed = parseStatValue(s.value);
+          return { value: parsed.value, suffix: s.suffix ?? parsed.suffix, label: s.label };
+        });
+        return <StatsBand stats={stats} heading={b.heading ?? undefined} footnote={b.footnote ?? undefined} />;
+      }
+      case 'blocks.steps-row':
+        return (
+          <StepsRow
+            eyebrow={block.eyebrow ?? undefined}
+            title={block.title ?? 'How it works'}
+            description={block.description ?? undefined}
+            steps={(block.steps ?? []).map((step) => ({
+              title: step.title,
+              description: step.description ?? '',
+            }))}
+          />
+        );
+      case 'blocks.logo-marquee':
+        return null;
       default:
         return null;
     }

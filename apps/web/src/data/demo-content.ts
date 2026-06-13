@@ -16,11 +16,14 @@ export type DemoValueIconKey =
 export interface DemoNavItem {
   path: string;
   label: string;
+  /** Optional fragment appended after withBase(path) — e.g. '#who-we-help'. */
+  hash?: string;
 }
 
 export const demoNavItems: DemoNavItem[] = [
   { path: '/brand/demo', label: 'Home' },
   { path: '/brand/demo/educators', label: 'For educators' },
+  { path: '/brand/demo', hash: '#who-we-help', label: 'For schools' },
   { path: '/brand/demo/jobs', label: 'Browse jobs' },
 ];
 

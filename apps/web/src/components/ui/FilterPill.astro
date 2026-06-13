@@ -1,0 +1,42 @@
+---
+/**
+ * Toggleable filter pill. The consuming script drives aria-pressed; the
+ * pressed state shows a check glyph so it never relies on colour alone.
+ */
+import '../../styles/components.css';
+
+interface Props {
+  group: string;
+  value: string;
+  label: string;
+  pressed?: boolean;
+  class?: string;
+}
+
+const { group, value, label, pressed = false, class: className = '' } = Astro.props;
+---
+
+<button
+  type="button"
+  data-filter-group={group}
+  data-filter-value={value}
+  aria-pressed={pressed ? 'true' : 'false'}
+  class:list={[
+    'az-filter-pill inline-flex items-center rounded-full border-2 border-anzuk-light-gray bg-white px-4 py-1.5 text-sm font-semibold text-anzuk-content transition-colors hover:border-anzuk-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-anzuk-blue',
+    className,
+  ]}
+>
+  <svg
+    class="az-filter-pill-check"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M2.5 8.5 6 12l7.5-8" />
+  </svg>
+  {label}
+</button>

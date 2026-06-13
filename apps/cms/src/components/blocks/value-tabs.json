@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_value_tabs",
+  "info": {
+    "displayName": "Value Tabs",
+    "description": "BE GREAT values tabbed display"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "autoAdvance": {
+      "type": "boolean",
+      "default": true
+    },
+    "values": {
+      "type": "component",
+      "repeatable": true,
+      "component": "blocks.value-item"
+    }
+  }
+}

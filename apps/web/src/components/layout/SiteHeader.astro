@@ -2,7 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import Logo from '../ui/Logo.astro';
 import MainNav from './MainNav.astro';
-import { getNavigationForMarket } from '../../lib/strapi/queries/market-navigations';
+import { getNavigationForRegion } from '../../lib/strapi/queries/regions';
 import { REGIONS, type RegionPath } from '../../config/regions';
 import { SCOOT_US } from '../../config/markets';
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { region } = Astro.props;
-const navItems = await getNavigationForMarket(region);
+const navItems = await getNavigationForRegion(region);
 ---
 
 <header class="border-b border-anzuk-light-gray bg-white">

@@ -3,14 +3,18 @@ import Container from '../ui/Container.astro';
 import Section from '../ui/Section.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import type { FormEmbedBlock } from '../../lib/strapi/types';
+import type { Market } from '../../config/markets';
 
 interface Props {
   block: FormEmbedBlock;
+  regionCode?: Market;
+  pagePath?: string;
 }
 
-const { block } = Astro.props;
-const embedUrl = `https://form.jotform.com/${block.jotformId}`;
+const { block, regionCode = 'au', pagePath = '' } = Astro.props;
+const baseUrl = `https://form.jotform.com/${block.jotformId}`;
 const height = block.height ?? 600;
+const iframeId = `form-embed-${block.id}`;
 ---
 
 <Section variant="white" aria-labelledby={`form-${block.id}`}>
@@ -22,17 +26,56 @@ const height = block.height ?? 600;
           title={block.heading ?? 'Get in touch'}
           description={block.description}
           level="h2"
-          class="mb-8 [&_h2]:!text-[clamp(2rem,4vw,3.8rem)]"
+          class="mb-8"
         />
       )
     }
     <iframe
+      id={iframeId}
       title={block.heading ?? 'Contact form'}
-      src={embedUrl}
+      src={baseUrl}
       width="100%"
       height={height}
       class="rounded-anzuk-card border border-anzuk-light-gray"
       loading="lazy"
+      data-jotform-id={block.jotformId}
+      data-region={regionCode}
+      data-page-path={pagePath}
+      data-tracking-params={block.trackingParams ? JSON.stringify(block.trackingParams) : undefined}
     />
   </Container>
 </Section>
+
+<script>
+  import { buildJotformEmbedUrl, buildMarketingContext, trackMarketingEvent, readStoredCampaign } from '../../lib/marketing-identity';
+import { AnalyticsEvents } from '../../lib/analytics/events';
+
+  function initFormEmbeds() {
+    document.querySelectorAll<HTMLIFrameElement>('iframe[data-jotform-id]').forEach((iframe) => {
+      const jotformId = iframe.dataset.jotformId!;
+      const region = iframe.dataset.region ?? 'au';
+      const pagePath = iframe.dataset.pagePath ?? window.location.pathname;
+      const customParams = iframe.dataset.trackingParams
+        ? JSON.parse(iframe.dataset.trackingParams)
+        : null;
+
+      const context = buildMarketingContext({
+        region,
+        locale: 'en',
+        pageType: 'form-embed',
+        pagePath,
+        ...readStoredCampaign(),
+      });
+
+      iframe.src = buildJotformEmbedUrl(jotformId, context, customParams);
+      trackMarketingEvent(AnalyticsEvents.FORM_VIEWED, {
+        region,
+        pagePath,
+        jotformId,
+      });
+    });
+  }
+
+  initFormEmbeds();
+  document.addEventListener('astro:page-load', initFormEmbeds);
+</script>

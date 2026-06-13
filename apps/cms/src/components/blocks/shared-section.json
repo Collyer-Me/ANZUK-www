@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_blocks_shared_sections",
+  "info": {
+    "displayName": "Shared Section",
+    "description": "Reference to a reusable section"
+  },
+  "options": {},
+  "attributes": {
+    "section": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::section.section"
+    }
+  }
+}

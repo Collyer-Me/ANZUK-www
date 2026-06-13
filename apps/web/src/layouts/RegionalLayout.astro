@@ -1,22 +1,28 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
+import '../styles/motion.css';
 import SiteHeader from '../components/layout/SiteHeader.astro';
 import SiteFooter from '../components/layout/SiteFooter.astro';
 import RegionalHead from '../components/seo/RegionalHead.astro';
 import WebPageJsonLd from '../components/seo/WebPageJsonLd.astro';
 import JsonLd from '../components/seo/JsonLd.astro';
+import KetchConsent from '../components/seo/KetchConsent.astro';
+import RudderStackHead from '../components/seo/RudderStackHead.astro';
 import { getRegionByPath, type RegionPath } from '../config/regions';
 import { getSiteUrl, siteConfig } from '../config/site';
-import type { LocalizedPage, SiteSettings } from '../lib/strapi/types';
+import { getRegionByCode } from '../lib/strapi/queries/regions';
+import type { CmsPage, GlobalSettings } from '../lib/strapi/types';
 
 interface Props {
   region: RegionPath;
-  page: LocalizedPage;
-  settings: SiteSettings;
+  page: CmsPage;
+  settings: GlobalSettings;
 }
 
 const { region, page, settings } = Astro.props;
 const regionConfig = getRegionByPath(region)!;
+const regionEntity = await getRegionByCode(region);
 const siteUrl = getSiteUrl();
 ---
 
@@ -24,6 +30,15 @@ const siteUrl = getSiteUrl();
 <html lang={regionConfig.htmlLang}>
   <head>
     <RegionalHead region={region} page={page} />
+    <KetchConsent settings={settings} cookiePolicyUrl={regionEntity?.cookiePolicyUrl} />
+    <RudderStackHead
+      settings={settings}
+      regionCode={region}
+      locale="en"
+      pageType={page.pageType}
+      pagePath={Astro.url.pathname}
+    />
+    <ClientRouter />
     <JsonLd
       schema={{
         '@context': 'https://schema.org',
@@ -31,15 +46,15 @@ const siteUrl = getSiteUrl();
           {
             '@type': 'Organization',
             '@id': `${siteUrl}/${siteConfig.organizationId}`,
-            name: settings.siteName,
+            name: settings.organizationName,
             url: settings.organizationUrl ?? siteUrl,
-            ...(settings.contactEmail && { email: settings.contactEmail }),
+            ...(regionEntity?.contactEmail && { email: regionEntity.contactEmail }),
           },
           {
             '@type': 'WebSite',
             '@id': `${siteUrl}/${siteConfig.websiteId}`,
             url: siteUrl,
-            name: settings.siteName,
+            name: settings.organizationName,
             publisher: { '@id': `${siteUrl}/${siteConfig.organizationId}` },
           },
         ],
@@ -48,10 +63,23 @@ const siteUrl = getSiteUrl();
     <WebPageJsonLd region={region} page={page} />
   </head>
   <body>
+    <script is:inline data-astro-rerun>document.documentElement.classList.add('js');</script>
+
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[60] focus:rounded-anzuk-button focus:bg-anzuk-blue focus:px-4 focus:py-2 focus:font-semibold focus:text-white"
+    >
+      Skip to content
+    </a>
+
     <SiteHeader {region} />
-    <main>
+    <main id="main">
       <slot />
     </main>
     <SiteFooter region={region} {settings} />
+
+    <script>
+      import '../scripts/motion.ts';
+    </script>
   </body>
 </html>

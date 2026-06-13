@@ -1,0 +1,112 @@
+---
+/**
+ * Brand hero: text column + blob-masked photo composition with parallax
+ * doodle accents. The photo is optimised through astro:assets.
+ *
+ * Slots: `title` (rendered inside the h1 — combine with HeroHighlight),
+ * `subtitle`, `actions`, `note`.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import heroBlob from '@anzuk/brand/assets/illustrations/hero-blob-light-blue.svg';
+import heroDoodlePurple from '@anzuk/brand/assets/illustrations/hero-doodle-purple.svg';
+import heroDoodleYellow from '@anzuk/brand/assets/illustrations/hero-doodle-yellow.svg';
+import heroMask from '@anzuk/brand/assets/illustrations/hero-photo-mask.svg';
+import Container from '../ui/Container.astro';
+
+interface Props {
+  image: ImageMetadata;
+  imageAlt: string;
+  eyebrow?: string;
+  class?: string;
+}
+
+const { image, imageAlt, eyebrow, class: className = '' } = Astro.props;
+
+const maskStyle = [
+  `-webkit-mask-image: url(${heroMask.src})`,
+  `mask-image: url(${heroMask.src})`,
+  '-webkit-mask-size: contain',
+  'mask-size: contain',
+  '-webkit-mask-repeat: no-repeat',
+  'mask-repeat: no-repeat',
+  '-webkit-mask-position: center',
+  'mask-position: center',
+].join('; ');
+---
+
+<section class:list={['relative overflow-hidden bg-anzuk-page-bg', className]}>
+  <Container class="relative py-20 lg:py-28">
+    <div class="grid items-center gap-14 lg:grid-cols-[1.05fr_1fr]">
+      <div>
+        {
+          eyebrow && (
+            <p data-reveal="up" class="text-sm font-semibold uppercase tracking-wide text-anzuk-blue">
+              {eyebrow}
+            </p>
+          )
+        }
+        <h1 data-reveal="up" data-reveal-delay="100" class="mt-4">
+          <slot name="title" />
+        </h1>
+        <p data-reveal="up" data-reveal-delay="200" class="mt-6 max-w-xl text-xl text-anzuk-content">
+          <slot name="subtitle" />
+        </p>
+        <div data-reveal="up" data-reveal-delay="300" class="mt-9 flex flex-wrap gap-4">
+          <slot name="actions" />
+        </div>
+        {
+          Astro.slots.has('note') && (
+            <p data-reveal="up" data-reveal-delay="400" class="mt-8 text-sm text-anzuk-content">
+              <slot name="note" />
+            </p>
+          )
+        }
+      </div>
+
+      <div class="relative mx-auto w-full max-w-[560px]">
+        <img
+          src={heroBlob.src}
+          alt=""
+          width={heroBlob.width}
+          height={heroBlob.height}
+          class="pointer-events-none absolute -left-10 -top-12 w-[115%] max-w-none"
+          data-parallax="0.05"
+          aria-hidden="true"
+        />
+        <div data-reveal="zoom" class="relative">
+          <Image
+            src={image}
+            alt={imageAlt}
+            widths={[480, 760, 1120]}
+            sizes="(min-width: 1024px) 45vw, 92vw"
+            class="relative h-auto w-full"
+            style={maskStyle}
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+        <div data-reveal="zoom" data-reveal-delay="350" class="absolute -left-4 top-4 w-16 lg:-left-8 lg:w-20">
+          <img
+            src={heroDoodleYellow.src}
+            alt=""
+            width={heroDoodleYellow.width}
+            height={heroDoodleYellow.height}
+            data-parallax="0.12"
+            aria-hidden="true"
+          />
+        </div>
+        <div data-reveal="zoom" data-reveal-delay="450" class="absolute -bottom-2 -right-2 w-16 lg:w-20">
+          <img
+            src={heroDoodlePurple.src}
+            alt=""
+            width={heroDoodlePurple.width}
+            height={heroDoodlePurple.height}
+            data-parallax="0.16"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+    </div>
+  </Container>
+</section>

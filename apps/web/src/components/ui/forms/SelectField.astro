@@ -1,0 +1,48 @@
+---
+/**
+ * Static-label select field.
+ * Validation state driven by the consuming page via aria-invalid and the
+ * `${id}-error` element.
+ */
+import '../../../styles/forms.css';
+
+interface Props {
+  id: string;
+  label: string;
+  options: readonly string[];
+  name?: string;
+  required?: boolean;
+  placeholder?: string;
+  class?: string;
+}
+
+const {
+  id,
+  label,
+  options,
+  name = id,
+  required = false,
+  placeholder = 'Choose an option',
+  class: className = '',
+} = Astro.props;
+
+const errorId = `${id}-error`;
+---
+
+<div class={className}>
+  <label for={id} class="az-static-label">{label}{required && ' *'}</label>
+  <div class="az-select">
+    <select
+      id={id}
+      name={name}
+      class="az-input"
+      required={required || undefined}
+      aria-required={required ? 'true' : undefined}
+      aria-describedby={required ? errorId : undefined}
+    >
+      <option value="">{placeholder}</option>
+      {options.map((option) => <option value={option}>{option}</option>)}
+    </select>
+  </div>
+  {required && <p class="az-error-text" id={errorId} hidden></p>}
+</div>

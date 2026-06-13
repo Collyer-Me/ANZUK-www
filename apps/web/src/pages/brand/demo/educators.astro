@@ -2,17 +2,17 @@
 import { personas } from '@anzuk/brand';
 import heroDoodleYellow from '@anzuk/brand/assets/illustrations/hero-doodle-yellow.svg';
 import DemoLayout from '../../../layouts/DemoLayout.astro';
-import DemoCtaBand from '../../../components/demo/DemoCtaBand.astro';
+import CtaBand from '../../../components/marketing/CtaBand.astro';
+import StepsRow from '../../../components/marketing/StepsRow.astro';
 import DemoEoiForm from '../../../components/demo/DemoEoiForm.astro';
-import DemoSteps from '../../../components/demo/DemoSteps.astro';
 import Button from '../../../components/ui/Button.astro';
 import Card from '../../../components/ui/Card.astro';
 import Container from '../../../components/ui/Container.astro';
 import HeroHighlight from '../../../components/ui/HeroHighlight.astro';
 import Section from '../../../components/ui/Section.astro';
 import SectionHeading from '../../../components/ui/SectionHeading.astro';
-import { demoBenefits, demoTestimonials } from '../../../data/demo-content';
-import { valueIcons } from '../../../components/demo/value-icons';
+import { demoBenefits, demoSteps, demoTestimonials } from '../../../data/demo-content';
+import { valueIcons } from '../../../lib/value-icons';
 import { withBase } from '../../../lib/url';
 
 const educatorPersona = personas.find((persona) => persona.id === 'educators')!;
@@ -78,9 +78,8 @@ const testimonial = demoTestimonials[0];
     </Container>
   </Section>
 
-  <DemoSteps
-    variant="educators"
-    background="page"
+  <StepsRow
+    steps={demoSteps.educators}
     eyebrow="Your journey"
     title="From hello to your new classroom"
     description="Three steps, one consultant, zero guesswork."
@@ -102,7 +101,7 @@ const testimonial = demoTestimonials[0];
     </Container>
   </Section>
 
-  <DemoCtaBand
+  <CtaBand
     heading="See where you could teach next"
     body="Browse live-style demo roles across our five regions, or head back to the concept homepage."
     primaryLabel="Browse demo jobs"

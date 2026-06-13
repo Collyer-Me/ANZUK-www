@@ -4,7 +4,7 @@ import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
 import JobListingPlaceholder from '../../components/jobs/JobListingPlaceholder.astro';
 import { getRegionByPath, isValidRegion, type RegionPath } from '../../config/regions';
 import { getAllRegionalPages, getPageByMarketAndSlug } from '../../lib/strapi/queries/pages';
-import { getSiteSettings } from '../../lib/strapi/queries/site-settings';
+import { getGlobalSettings } from '../../lib/strapi/queries/global-settings';
 
 export async function getStaticPaths() {
   const allPages = await getAllRegionalPages();
@@ -36,12 +36,12 @@ if (!page) {
   return Astro.redirect('/404');
 }
 
-const settings = await getSiteSettings(regionConfig.strapiLocale);
+const settings = await getGlobalSettings();
 ---
 
 <RegionalLayout {region} {page} {settings}>
   <article>
-    <BlockRenderer blocks={page.body} />
-    {page.pageTemplate === 'job-listing' && <JobListingPlaceholder config={page.jobBoardConfig} />}
+    <BlockRenderer blocks={page.body} regionCode={region} />
+    {page.pageType === 'job-listing' && <JobListingPlaceholder config={page.jobBoardConfig} />}
   </article>
 </RegionalLayout>
