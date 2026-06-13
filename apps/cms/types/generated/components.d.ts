@@ -293,7 +293,7 @@ export interface BlocksTestimonialItem extends Struct.ComponentSchema {
 }
 
 export interface BlocksTestimonials extends Struct.ComponentSchema {
-  collectionName: 'components_blocks_testimonials';
+  collectionName: 'components_blocks_testimonial_grids';
   info: {
     description: 'Testimonial grid section';
     displayName: 'Testimonials';
