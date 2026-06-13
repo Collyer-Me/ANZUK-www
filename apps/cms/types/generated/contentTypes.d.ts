@@ -980,7 +980,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiRegionRegion extends Struct.CollectionTypeSchema {
-  collectionName: 'regions';
+  collectionName: 'site_regions';
   info: {
     description: 'Site boundary and regional configuration';
     displayName: 'Region';
@@ -1014,7 +1014,6 @@ export interface ApiRegionRegion extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    pages: Schema.Attribute.Relation<'oneToMany', 'api::page.page'>;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

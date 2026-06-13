@@ -101,15 +101,19 @@ export class StrapiAdminClient {
     collection: string,
     filters: Record<string, string>,
     locale?: string,
+    options: { draftAndPublish?: boolean } = {},
   ): Promise<StrapiDocument | null> {
     const filterParams = Object.fromEntries(
       Object.entries(filters).map(([key, value]) => [`filters[${key}][$eq]`, value]),
     );
 
-    for (const status of ['published', 'draft'] as const) {
+    const statuses =
+      options.draftAndPublish === false ? ([''] as const) : (['published', 'draft'] as const);
+
+    for (const status of statuses) {
       const probe = await this.probeEndpoint(collection, {
         ...(locale ? { locale } : {}),
-        status,
+        ...(status ? { status } : {}),
         'pagination[pageSize]': '1',
         ...filterParams,
       });
@@ -139,12 +143,14 @@ export class StrapiAdminClient {
     locale: string | undefined,
     filters: Record<string, string>,
     data: Record<string, unknown>,
+    options: { draftAndPublish?: boolean } = {},
   ): Promise<StrapiDocument> {
-    const existing = await this.findOne(collection, filters, locale);
+    const existing = await this.findOne(collection, filters, locale, options);
 
-    const writeParams: Record<string, string> = locale
-      ? { locale, status: 'published' }
-      : { status: 'published' };
+    const writeParams: Record<string, string> = {
+      ...(locale ? { locale } : {}),
+      ...(options.draftAndPublish === false ? {} : { status: 'published' }),
+    };
 
     if (existing) {
       const updated = await this.request<{ data: StrapiDocument }>(

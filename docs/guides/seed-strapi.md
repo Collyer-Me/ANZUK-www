@@ -23,7 +23,7 @@ Use a **separate** Full access token for seeding (`STRAPI_API_CURSOR`). Keep the
 
 ```bash
 npm install
-npm run probe:strapi   # optional — check which endpoints are healthy
+npm run probe:strapi   # optional — check V2 + legacy Strapi endpoints
 npm run seed:strapi
 ```
 

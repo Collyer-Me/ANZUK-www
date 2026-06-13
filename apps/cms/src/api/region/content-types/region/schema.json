@@ -1,6 +1,6 @@
 {
   "kind": "collectionType",
-  "collectionName": "regions",
+  "collectionName": "site_regions",
   "info": {
     "singularName": "region",
     "pluralName": "regions",
@@ -62,12 +62,6 @@
       "type": "component",
       "repeatable": false,
       "component": "shared.seo"
-    },
-    "pages": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::page.page",
-      "mappedBy": "region"
     }
   }
 }

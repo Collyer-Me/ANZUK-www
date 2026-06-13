@@ -10,13 +10,6 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Market } from '../apps/web/src/config/markets';
-import {
-  MOCK_ARTICLES,
-  MOCK_GLOBAL_SETTINGS,
-  MOCK_PAGES,
-} from '../apps/web/src/lib/strapi/mock-data';
-import { MOCK_REGIONS } from '../apps/web/src/lib/strapi/mock-regions';
-import { MOCK_MARKET_NAVIGATIONS } from '../apps/web/src/lib/strapi/mock-navigation';
 import type { Article, CmsPage, ContentBlock, NavItem, NavLink } from '../apps/web/src/lib/strapi/types';
 import { StrapiAdminClient } from './lib/strapi-admin';
 
@@ -98,6 +91,12 @@ function shortError(error: unknown): string {
 async function main(): Promise<void> {
   loadEnvFile(resolve(process.cwd(), 'apps/web/.env'));
 
+  const { MOCK_ARTICLES, MOCK_GLOBAL_SETTINGS, MOCK_PAGES } = await import(
+    '../apps/web/src/lib/strapi/mock-data'
+  );
+  const { MOCK_REGIONS } = await import('../apps/web/src/lib/strapi/mock-regions');
+  const { MOCK_MARKET_NAVIGATIONS } = await import('../apps/web/src/lib/strapi/mock-navigation');
+
   const baseUrl = process.env.STRAPI_URL;
   const token =
     process.env.STRAPI_API_CURSOR ??
@@ -137,6 +136,7 @@ async function main(): Promise<void> {
             ? { header: { items: nav.items.map(serializeNavItem) } }
             : {}),
         },
+        { draftAndPublish: false },
       );
       regionIds.set(region.code, doc.documentId);
       console.log(`  ✓ region/${region.code}`);

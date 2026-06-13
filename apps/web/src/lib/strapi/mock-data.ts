@@ -4,6 +4,12 @@ import { REGIONS } from '../../config/regions';
 import { beGreatValues } from '@anzuk/brand';
 import type { Article, CmsPage, ContentBlock, GlobalSettings } from './types';
 
+/** Works in Astro (import.meta.env) and Node scripts e.g. seed:strapi (process.env). */
+function mockEnv(key: string): string | undefined {
+  const viteEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
+  return viteEnv?.[key] ?? process.env[key];
+}
+
 function seo(title: string, description: string) {
   return { metaTitle: title, metaDescription: description, ogImage: null };
 }
@@ -400,12 +406,12 @@ export const MOCK_GLOBAL_SETTINGS: GlobalSettings = {
   scootUrl: 'https://scoot.education',
   executiveUrl: 'https://www.anzukexecutive.com',
   ketchEnabled: true,
-  ketchOrganizationCode: import.meta.env.PUBLIC_KETCH_ORG ?? 'anzuk',
-  ketchPropertyCode: import.meta.env.PUBLIC_KETCH_PROPERTY ?? 'website_smart_tag',
-  rudderStackEnabled: Boolean(import.meta.env.PUBLIC_RUDDERSTACK_WRITE_KEY),
-  rudderStackWriteKey: import.meta.env.PUBLIC_RUDDERSTACK_WRITE_KEY ?? null,
-  rudderStackDataPlaneUrl: import.meta.env.PUBLIC_RUDDERSTACK_DATA_PLANE_URL ?? null,
-  optionalGtmContainerId: import.meta.env.PUBLIC_GTM_ID ?? null,
+  ketchOrganizationCode: mockEnv('PUBLIC_KETCH_ORG') ?? 'anzuk',
+  ketchPropertyCode: mockEnv('PUBLIC_KETCH_PROPERTY') ?? 'website_smart_tag',
+  rudderStackEnabled: Boolean(mockEnv('PUBLIC_RUDDERSTACK_WRITE_KEY')),
+  rudderStackWriteKey: mockEnv('PUBLIC_RUDDERSTACK_WRITE_KEY') ?? null,
+  rudderStackDataPlaneUrl: mockEnv('PUBLIC_RUDDERSTACK_DATA_PLANE_URL') ?? null,
+  optionalGtmContainerId: mockEnv('PUBLIC_GTM_ID') ?? null,
   affiliateBrands: [
     { name: 'Scoot Education', url: 'https://scoot.education', logo: null },
     { name: 'ANZUK Executive', url: 'https://www.anzukexecutive.com', logo: null },
