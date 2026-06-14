@@ -10,6 +10,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Market } from '../apps/web/src/config/markets';
+import { toStrapiSlug } from '../apps/web/src/lib/strapi/slugs';
 import type { Article, CmsPage, ContentBlock, NavItem, NavLink } from '../apps/web/src/lib/strapi/types';
 import { StrapiAdminClient } from './lib/strapi-admin';
 
@@ -86,6 +87,67 @@ function serializeNavItem(item: NavItem): Record<string, unknown> {
 function shortError(error: unknown): string {
   if (!(error instanceof Error)) return String(error);
   return error.message.split('\n')[0];
+}
+
+function pageSeedData(
+  page: CmsPage,
+  regionId: string,
+  strapiSlug: string,
+  extras: Record<string, unknown> = {},
+): Record<string, unknown> {
+  return {
+    title: page.title,
+    slug: strapiSlug,
+    pageType: page.pageType,
+    region: regionId,
+    noIndex: page.noIndex ?? false,
+    seo: serializeSeo(page.seo),
+    body: serializeBlocks(page.body),
+    ...(page.jobBoardConfig
+      ? {
+          jobBoardConfig: {
+            jobAdderBoardId: page.jobBoardConfig.jobAdderBoardId,
+            featuredOnly: page.jobBoardConfig.featuredOnly ?? false,
+            externalApply: page.jobBoardConfig.externalApply ?? true,
+          },
+        }
+      : {}),
+    ...extras,
+  };
+}
+
+async function upsertPage(
+  client: StrapiAdminClient,
+  page: CmsPage,
+  regionId: string,
+  extras: Record<string, unknown> = {},
+) {
+  const strapiSlug = toStrapiSlug(page.regionCode, page.slug);
+  const filterSets: Array<Record<string, string>> = [
+    { slug: strapiSlug, 'region.code': page.regionCode },
+  ];
+  if (strapiSlug !== page.slug) {
+    filterSets.push({ slug: page.slug, 'region.code': page.regionCode });
+  }
+
+  let existing = null;
+  for (const filters of filterSets) {
+    existing = await client.findOne('pages', filters, DEFAULT_LOCALE);
+    if (existing) break;
+  }
+
+  const data = pageSeedData(page, regionId, strapiSlug, extras);
+
+  if (existing) {
+    return client.updateDocument('pages', existing.documentId, DEFAULT_LOCALE, data);
+  }
+
+  return client.upsertCollection(
+    'pages',
+    DEFAULT_LOCALE,
+    { slug: strapiSlug, 'region.code': page.regionCode },
+    data,
+  );
 }
 
 async function main(): Promise<void> {
@@ -176,29 +238,7 @@ async function main(): Promise<void> {
     const regionId = regionIds.get(page.regionCode);
     if (!regionId) continue;
     try {
-      const doc = await client.upsertCollection(
-        'pages',
-        DEFAULT_LOCALE,
-        { slug: page.slug, 'region.code': page.regionCode },
-        {
-          title: page.title,
-          slug: page.slug,
-          pageType: page.pageType,
-          region: regionId,
-          noIndex: page.noIndex ?? false,
-          seo: serializeSeo(page.seo),
-          body: serializeBlocks(page.body),
-          ...(page.jobBoardConfig
-            ? {
-                jobBoardConfig: {
-                  jobAdderBoardId: page.jobBoardConfig.jobAdderBoardId,
-                  featuredOnly: page.jobBoardConfig.featuredOnly ?? false,
-                  externalApply: page.jobBoardConfig.externalApply ?? true,
-                },
-              }
-            : {}),
-        },
-      );
+      const doc = await upsertPage(client, page, regionId);
       pageIds.set(`${page.regionCode}:${page.path}`, doc.documentId);
       console.log(`  ✓ ${page.regionCode}/${page.path}`);
     } catch (error) {
@@ -215,21 +255,7 @@ async function main(): Promise<void> {
     const parentPath = page.path.split('/').slice(0, -1).join('/');
     const parentId = pageIds.get(`${page.regionCode}:${parentPath}`);
     try {
-      const doc = await client.upsertCollection(
-        'pages',
-        DEFAULT_LOCALE,
-        { slug: page.slug, 'region.code': page.regionCode },
-        {
-          title: page.title,
-          slug: page.slug,
-          pageType: page.pageType,
-          region: regionId,
-          ...(parentId ? { parent: parentId } : {}),
-          noIndex: page.noIndex ?? false,
-          seo: serializeSeo(page.seo),
-          body: serializeBlocks(page.body),
-        },
-      );
+      const doc = await upsertPage(client, page, regionId, parentId ? { parent: parentId } : {});
       pageIds.set(`${page.regionCode}:${page.path}`, doc.documentId);
       console.log(`  ✓ ${page.regionCode}/${page.path}`);
     } catch (error) {

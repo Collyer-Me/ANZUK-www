@@ -1,4 +1,5 @@
 import { INTERNATIONAL_MARKET, marketUrlPrefix, type Market } from '../../config/markets';
+import { fromStrapiSlug } from './slugs';
 import type { CmsPage, RegionEntity } from './types';
 
 export interface PageTreeNode {
@@ -19,16 +20,20 @@ export function buildPagePath(
 export function resolvePathFromTree(
   page: PageTreeNode,
   allPages: PageTreeNode[],
+  regionCode?: Market,
 ): string {
-  if (page.slug === 'home') return 'home';
+  const logicalSlug = regionCode ? fromStrapiSlug(regionCode, page.slug) : page.slug;
+  if (logicalSlug === 'home') return 'home';
 
-  const segments: string[] = [page.slug];
+  const segments: string[] = [logicalSlug];
   let current = page;
 
   while (current.parentDocumentId) {
     const parent = allPages.find((p) => p.documentId === current.parentDocumentId);
-    if (!parent || parent.slug === 'home') break;
-    segments.unshift(parent.slug);
+    if (!parent) break;
+    const parentSlug = regionCode ? fromStrapiSlug(regionCode, parent.slug) : parent.slug;
+    if (parentSlug === 'home') break;
+    segments.unshift(parentSlug);
     current = parent;
   }
 

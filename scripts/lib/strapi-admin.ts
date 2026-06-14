@@ -14,6 +14,20 @@ export interface StrapiDocument {
 
 export type EndpointStatus = 'ok' | 'not_found' | 'error';
 
+/** Strapi v5 nested filters: `region.code` → `filters[region][code][$eq]`. */
+function buildFilterParams(filters: Record<string, string>): Record<string, string> {
+  const params: Record<string, string> = {};
+  for (const [key, value] of Object.entries(filters)) {
+    if (key.includes('.')) {
+      const path = key.split('.').join('][');
+      params[`filters[${path}][$eq]`] = value;
+    } else {
+      params[`filters[${key}][$eq]`] = value;
+    }
+  }
+  return params;
+}
+
 export class StrapiAdminClient {
   constructor(
     private readonly baseUrl: string,
@@ -103,9 +117,7 @@ export class StrapiAdminClient {
     locale?: string,
     options: { draftAndPublish?: boolean } = {},
   ): Promise<StrapiDocument | null> {
-    const filterParams = Object.fromEntries(
-      Object.entries(filters).map(([key, value]) => [`filters[${key}][$eq]`, value]),
-    );
+    const filterParams = buildFilterParams(filters);
 
     const statuses =
       options.draftAndPublish === false ? ([''] as const) : (['published', 'draft'] as const);
@@ -147,25 +159,40 @@ export class StrapiAdminClient {
   ): Promise<StrapiDocument> {
     const existing = await this.findOne(collection, filters, locale, options);
 
+    if (existing) {
+      return this.updateDocument(collection, existing.documentId, locale, data, options);
+    }
+
     const writeParams: Record<string, string> = {
       ...(locale ? { locale } : {}),
       ...(options.draftAndPublish === false ? {} : { status: 'published' }),
     };
-
-    if (existing) {
-      const updated = await this.request<{ data: StrapiDocument }>(
-        'PUT',
-        `${collection}/${existing.documentId}`,
-        { params: writeParams, body: { data } },
-      );
-      return updated.data;
-    }
 
     const created = await this.request<{ data: StrapiDocument }>('POST', collection, {
       params: writeParams,
       body: { data },
     });
     return created.data;
+  }
+
+  async updateDocument(
+    collection: string,
+    documentId: string,
+    locale: string | undefined,
+    data: Record<string, unknown>,
+    options: { draftAndPublish?: boolean } = {},
+  ): Promise<StrapiDocument> {
+    const writeParams: Record<string, string> = {
+      ...(locale ? { locale } : {}),
+      ...(options.draftAndPublish === false ? {} : { status: 'published' }),
+    };
+
+    const updated = await this.request<{ data: StrapiDocument }>(
+      'PUT',
+      `${collection}/${documentId}`,
+      { params: writeParams, body: { data } },
+    );
+    return updated.data;
   }
 
   async upsertSingleType(

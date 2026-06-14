@@ -72,11 +72,13 @@ function normalizePage(raw: Record<string, unknown>, allRaw: Record<string, unkn
       parentDocumentId: parentRaw?.documentId ? String(parentRaw.documentId) : null,
     },
     treeNodes,
+    regionCode,
   );
 
   const equivalents: PageEquivalent[] = Array.isArray(raw.equivalents)
     ? raw.equivalents.map((eq: Record<string, unknown>) => {
         const eqRegion = eq.region as Record<string, unknown> | undefined;
+        const eqRegionCode = String(eqRegion?.code ?? 'au') as Market;
         const eqPath = resolvePathFromTree(
           {
             documentId: String(eq.documentId),
@@ -92,6 +94,7 @@ function normalizePage(raw: Record<string, unknown>, allRaw: Record<string, unkn
               ? String((p.parent as Record<string, unknown>).documentId)
               : null,
           })),
+          eqRegionCode,
         );
         return {
           documentId: String(eq.documentId),
