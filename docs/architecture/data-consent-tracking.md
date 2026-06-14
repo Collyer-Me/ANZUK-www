@@ -10,7 +10,7 @@ Astro (frontend) + Strapi (CMS) with a consent-first, event-driven data pipeline
 | CMS | Strapi V2 | Content, global tracking config |
 | Consent | **Ketch** | Banner, preferences, regional compliance, audit trail |
 | Tracking | **RudderStack** | Event SDK, routing, transformations, destinations |
-| Forms | JotForm | Submission backend (POC) |
+| Forms | Native Strapi (`form-submission`) + legacy JotForm embed | Lead capture; RudderStack events on view/submit |
 | Optional | GTM | Marketing widgets only — **not** primary tracking |
 
 ## Architecture diagram

@@ -26,6 +26,7 @@ const PAGE_POPULATE = {
   'populate[body][on][blocks.values-grid][populate][values]': '*',
   'populate[body][on][blocks.value-tabs][populate][values]': '*',
   'populate[body][on][blocks.form-embed][populate]': '*',
+  'populate[body][on][blocks.lead-form][populate]': '*',
   'populate[body][on][blocks.rich-text][populate]': '*',
   'populate[body][on][blocks.stats-row][populate][stats]': '*',
   'populate[body][on][blocks.stats-band][populate][stats]': '*',

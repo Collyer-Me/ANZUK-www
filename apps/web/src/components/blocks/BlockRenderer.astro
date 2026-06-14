@@ -8,6 +8,7 @@ import TestimonialGrid from '../marketing/TestimonialGrid.astro';
 import RegionGrid from '../marketing/RegionGrid.astro';
 import ValuesGrid from '../marketing/ValuesGrid.astro';
 import FormEmbed from '../marketing/FormEmbed.astro';
+import LeadForm from '../marketing/LeadForm.astro';
 import RichText from '../marketing/RichText.astro';
 import StatsRow from '../marketing/StatsRow.astro';
 import StatsBand from '../marketing/StatsBand.astro';
@@ -103,6 +104,8 @@ function linkHref(link: { url?: string | null; label: string } | null | undefine
         );
       case 'blocks.form-embed':
         return <FormEmbed block={block} regionCode={regionCode} pagePath={Astro.url.pathname} />;
+      case 'blocks.lead-form':
+        return <LeadForm block={block} regionCode={regionCode} pagePath={Astro.url.pathname} />;
       case 'blocks.rich-text':
         return <RichText block={block} />;
       case 'blocks.stats-row':

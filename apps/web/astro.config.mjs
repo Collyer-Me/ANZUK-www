@@ -44,5 +44,10 @@ export default defineConfig({
         '@anzuk/brand': path.resolve(__dirname, '../../packages/brand'),
       },
     },
+    define: {
+      'import.meta.env.PUBLIC_STRAPI_URL': JSON.stringify(
+        process.env.PUBLIC_STRAPI_URL ?? process.env.STRAPI_URL ?? '',
+      ),
+    },
   },
 });

@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocks_lead_forms",
+  "info": {
+    "displayName": "Lead Form",
+    "description": "Native first-party lead capture form stored in Strapi"
+  },
+  "options": {},
+  "attributes": {
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "formType": {
+      "type": "enumeration",
+      "enum": ["expression-of-interest"],
+      "default": "expression-of-interest",
+      "required": true
+    },
+    "successMessage": {
+      "type": "text"
+    }
+  }
+}

@@ -44,6 +44,7 @@
         "blocks.values-grid",
         "blocks.value-tabs",
         "blocks.form-embed",
+        "blocks.lead-form",
         "blocks.rich-text",
         "blocks.stats-row",
         "blocks.stats-band",

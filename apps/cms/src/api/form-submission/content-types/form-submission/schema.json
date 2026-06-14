@@ -1,0 +1,81 @@
+{
+  "kind": "collectionType",
+  "collectionName": "form_submissions",
+  "info": {
+    "singularName": "form-submission",
+    "pluralName": "form-submissions",
+    "displayName": "Form Submission",
+    "description": "Lead capture submissions from native marketing forms"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "formType": {
+      "type": "enumeration",
+      "enum": ["expression-of-interest"],
+      "required": true
+    },
+    "regionCode": {
+      "type": "string",
+      "required": true
+    },
+    "pagePath": {
+      "type": "string",
+      "required": true
+    },
+    "firstName": {
+      "type": "string",
+      "required": true
+    },
+    "lastName": {
+      "type": "string",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string"
+    },
+    "currentLocation": {
+      "type": "string"
+    },
+    "roleType": {
+      "type": "string"
+    },
+    "experienceLevel": {
+      "type": "string"
+    },
+    "preferredDestinations": {
+      "type": "json"
+    },
+    "message": {
+      "type": "text"
+    },
+    "consentContact": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "utmSource": {
+      "type": "string"
+    },
+    "utmMedium": {
+      "type": "string"
+    },
+    "utmCampaign": {
+      "type": "string"
+    },
+    "utmTerm": {
+      "type": "string"
+    },
+    "utmContent": {
+      "type": "string"
+    },
+    "landingPage": {
+      "type": "string"
+    }
+  }
+}

@@ -49,7 +49,8 @@ Do not include the market prefix (`au/`) in the slug — Strapi adds that automa
 | **Stats Row** | Headline numbers on regional home pages |
 | **CTA** | Call-to-action band with button |
 | **Rich Text** | About pages, policies, process steps |
-| **Form Embed** | JotForm registration/enquiry forms |
+| **Lead Form** | Native expression-of-interest form (submissions in Strapi) |
+| **Form Embed** | Legacy JotForm iframe (being phased out) |
 | **Testimonial** | Quote with author name |
 
 Recommended block order for **regional home**: Hero → Stats Row → Feature Grid → CTA.
@@ -68,7 +69,9 @@ Job content itself comes from JobAdder — not entered in Strapi.
 
 ## Form pages
 
-For register, refer, and partner pages, add a **Form Embed** block with the JotForm ID (numbers only, e.g. `251698770470871`). See [`docs/ia/external-integrations.md`](../ia/external-integrations.md).
+For **Teach with us** and similar pages, add a **Lead Form** block (native — submissions appear under **Form Submissions** in the admin).
+
+Legacy register, refer, and partner pages may still use **Form Embed** with a JotForm ID. See [`docs/ia/external-integrations.md`](../ia/external-integrations.md).
 
 ## Navigation
 

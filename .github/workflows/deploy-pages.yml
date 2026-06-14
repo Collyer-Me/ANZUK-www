@@ -40,6 +40,7 @@ jobs:
           BASE_PATH: ${{ secrets.BASE_PATH }}
           STRAPI_URL: ${{ secrets.STRAPI_URL }}
           STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+          PUBLIC_STRAPI_URL: ${{ secrets.PUBLIC_STRAPI_URL || secrets.STRAPI_URL }}
           USE_MOCK_DATA: ${{ secrets.USE_MOCK_DATA || 'false' }}
           PUBLIC_KETCH_ORG: ${{ secrets.PUBLIC_KETCH_ORG }}
           PUBLIC_KETCH_PROPERTY: ${{ secrets.PUBLIC_KETCH_PROPERTY }}

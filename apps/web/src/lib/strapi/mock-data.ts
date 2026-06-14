@@ -194,6 +194,21 @@ function formPageBlocks(
   ];
 }
 
+function leadFormPageBlocks(heading: string, subheading: string): ContentBlock[] {
+  return [
+    hero(1, heading, subheading),
+    {
+      __component: 'blocks.lead-form',
+      id: 2,
+      heading: 'Complete the form',
+      description: 'Our team will be in touch shortly.',
+      formType: 'expression-of-interest',
+      successMessage:
+        'A consultant who knows your region will be in touch within one business day.',
+    },
+  ];
+}
+
 function buildMockPages(): CmsPage[] {
   const pages: CmsPage[] = [];
 
@@ -269,7 +284,7 @@ function buildMockPages(): CmsPage[] {
     { market: 'au', path: 'browse-jobs', title: 'Browse Jobs', pageType: 'job-listing', heading: 'Browse education jobs', subheading: 'Roles sourced from JobAdder.' },
     { market: 'au', path: 'casual-opportunities', title: 'Casual Educator Jobs', pageType: 'service-educators', heading: 'Teach your way', subheading: 'Casual relief teaching opportunities.' },
     { market: 'uk', path: 'home', title: 'ANZUK Education — United Kingdom', pageType: 'home-regional', heading: '', subheading: '' },
-    { market: 'uk', path: 'teach-with-us', title: 'Teach with us', pageType: 'service-educators', heading: 'Teach with us', subheading: 'Start your UK teaching journey with ANZUK.', blocks: formPageBlocks('Teach with us', 'Start your UK teaching journey with ANZUK.', '251698770470871') },
+    { market: 'uk', path: 'teach-with-us', title: 'Teach with us', pageType: 'service-educators', heading: 'Teach with us', subheading: 'Start your UK teaching journey with ANZUK.', blocks: leadFormPageBlocks('Teach with us', 'Start your UK teaching journey with ANZUK.') },
     { market: 'uk', path: 'featured-jobs', title: 'Featured jobs', pageType: 'job-listing', heading: 'Featured jobs', subheading: 'Curated UK roles from JobAdder.' },
     { market: 'ca', path: 'home', title: 'ANZUK Education — Canada', pageType: 'home-regional', heading: '', subheading: '' },
     { market: 'ca', path: 'teach-in-australia', title: 'Teach in Australia', pageType: 'cross-market', heading: 'Teach in Australia', subheading: 'Plan your move from Canada to Australia.' },

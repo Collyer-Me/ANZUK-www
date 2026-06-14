@@ -25,8 +25,16 @@ export interface PageViewedProperties {
 
 export interface FormViewedProperties {
   region: string;
-  jotformId: string;
   pagePath: string;
+  jotformId?: string;
+  formType?: string;
+}
+
+export interface FormSubmittedProperties {
+  region: string;
+  pagePath: string;
+  formType: string;
+  documentId?: string;
 }
 
 export interface JobEventProperties {

@@ -76,6 +76,7 @@ async function main() {
     }),
     probe('sections', 'sections', { 'pagination[pageSize]': '1' }),
     probe('articles (V2)', 'articles', { locale: 'en', 'pagination[pageSize]': '1' }),
+    probe('form-submissions', 'form-submissions', { 'pagination[pageSize]': '1' }),
   ]);
 
   const v1 = await Promise.all([

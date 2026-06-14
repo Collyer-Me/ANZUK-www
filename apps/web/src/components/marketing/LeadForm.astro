@@ -1,0 +1,455 @@
+---
+import Button from '../ui/Button.astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import ChoiceChipGroup from '../ui/forms/ChoiceChipGroup.astro';
+import FloatingField from '../ui/forms/FloatingField.astro';
+import SelectField from '../ui/forms/SelectField.astro';
+import type { LeadFormBlock } from '../../lib/strapi/types';
+import type { Market } from '../../config/markets';
+
+interface Props {
+  block: LeadFormBlock;
+  regionCode?: Market;
+  pagePath?: string;
+}
+
+const { block, regionCode = 'au', pagePath = '' } = Astro.props;
+const formId = `lead-form-${block.id}`;
+const locations = ['Australia', 'United Kingdom', 'Canada', 'New Zealand', 'Other / international'];
+const roleTypes = ['Casual relief', 'Contract', 'Permanent', 'Leadership'];
+const experienceLevels = ['0–2 years', '3–7 years', '8+ years'];
+const destinations = ['Australia', 'United Kingdom', 'Canada', 'New Zealand', 'International schools'];
+const successMessage =
+  block.successMessage ??
+  'A consultant who knows your region will be in touch within one business day.';
+---
+
+<Section variant="white" aria-labelledby={`${formId}-heading`}>
+  <Container>
+    {
+      (block.heading || block.description) && (
+        <SectionHeading
+          id={`${formId}-heading`}
+          title={block.heading ?? 'Get in touch'}
+          description={block.description}
+          level="h2"
+          class="mb-8"
+        />
+      )
+    }
+
+    <div class="mx-auto max-w-3xl rounded-anzuk-card border border-anzuk-light-gray bg-white p-6 shadow-sm sm:p-8">
+      <form
+        novalidate
+        data-lead-form
+        data-form-type={block.formType}
+        data-region={regionCode}
+        data-page-path={pagePath}
+        id={formId}
+      >
+        <div
+          data-lead-summary
+          role="alert"
+          tabindex="-1"
+          hidden
+          class="mb-6 rounded-anzuk-button border-2 border-anzuk-error bg-anzuk-error-bg p-4"
+        >
+          <p class="font-semibold text-anzuk-error">Please fix the following to continue:</p>
+          <ul class="mt-2 list-inside list-disc space-y-1 text-sm" data-lead-summary-list></ul>
+        </div>
+
+        <div
+          data-lead-submit-error
+          role="alert"
+          tabindex="-1"
+          hidden
+          class="mb-6 rounded-anzuk-button border-2 border-anzuk-error bg-anzuk-error-bg p-4 text-sm text-anzuk-error"
+        ></div>
+
+        <div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+          <label for={`${formId}-website`}>Website</label>
+          <input id={`${formId}-website`} type="text" name="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2">
+          <FloatingField
+            id={`${formId}-first-name`}
+            name="firstName"
+            label="First name"
+            required
+            autocomplete="given-name"
+          />
+          <FloatingField
+            id={`${formId}-last-name`}
+            name="lastName"
+            label="Last name"
+            required
+            autocomplete="family-name"
+          />
+        </div>
+
+        <FloatingField
+          id={`${formId}-email`}
+          name="email"
+          label="Email address"
+          type="email"
+          required
+          autocomplete="email"
+          class="mt-5"
+        />
+
+        <FloatingField
+          id={`${formId}-phone`}
+          name="phone"
+          label="Phone (optional)"
+          type="tel"
+          autocomplete="tel"
+          class="mt-5"
+        />
+
+        <div class="mt-5 grid gap-5 sm:grid-cols-2">
+          <SelectField
+            id={`${formId}-location`}
+            name="currentLocation"
+            label="Current location"
+            options={locations}
+            required
+            placeholder="Choose a location"
+          />
+          <SelectField
+            id={`${formId}-role-type`}
+            name="roleType"
+            label="Role type"
+            options={roleTypes}
+            required
+            placeholder="Choose a role type"
+          />
+        </div>
+
+        <ChoiceChipGroup
+          legend="Teaching experience"
+          name="experienceLevel"
+          idPrefix={`${formId}-experience`}
+          options={experienceLevels}
+          required
+          class="mt-7"
+        />
+
+        <ChoiceChipGroup
+          legend="Preferred destinations (optional)"
+          name="preferredDestinations"
+          idPrefix={`${formId}-destination`}
+          options={destinations}
+          type="checkbox"
+          accent="green"
+          class="mt-7"
+        />
+
+        <FloatingField
+          id={`${formId}-message`}
+          name="message"
+          label="Tell us about you (optional)"
+          multiline
+          class="mt-7"
+        />
+
+        <div class="mt-7">
+          <label class="flex cursor-pointer items-start gap-3 text-sm text-anzuk-content">
+            <input
+              type="checkbox"
+              id={`${formId}-consent`}
+              name="consentContact"
+              required
+              aria-required="true"
+              aria-describedby={`${formId}-consent-error`}
+              class="mt-1 h-4 w-4 accent-anzuk-blue"
+            />
+            <span>I'm happy to be contacted about teaching opportunities.</span>
+          </label>
+          <p class="az-error-text" id={`${formId}-consent-error`} hidden></p>
+        </div>
+
+        <Button type="submit" variant="primary" class="mt-8 w-full">
+          <span data-submit-idle>Submit expression of interest</span>
+          <span data-submit-busy hidden class="inline-flex items-center gap-2.5">
+            <span class="az-spinner" aria-hidden="true"></span>
+            Submitting…
+          </span>
+        </Button>
+      </form>
+
+      <div data-lead-success role="status" tabindex="-1" hidden class="py-6 text-center">
+        <svg viewBox="0 0 56 56" class="mx-auto h-20 w-20 text-anzuk-success" fill="none" aria-hidden="true">
+          <circle class="az-check-circle" cx="28" cy="28" r="26" stroke="currentColor" stroke-width="3"></circle>
+          <path
+            class="az-check-mark"
+            d="M16 29.5 24.5 38 40 20"
+            stroke="currentColor"
+            stroke-width="3.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+        <h3 class="mt-6 !text-2xl">
+          Thanks<span data-success-name></span> — talk soon!
+        </h3>
+        <p class="mx-auto mt-3 max-w-sm text-anzuk-content" data-success-message>{successMessage}</p>
+        <button
+          type="button"
+          data-lead-reset
+          class="mt-7 inline-flex min-h-12 items-center justify-center rounded-anzuk-button px-5 font-semibold text-anzuk-blue underline-offset-4 hover:underline"
+        >
+          Submit another response
+        </button>
+      </div>
+    </div>
+  </Container>
+</Section>
+
+<script>
+  import {
+    buildLeadPayload,
+    leadFormMarketingContext,
+    submitLeadForm,
+    trackLeadFormSubmitted,
+    trackLeadFormViewed,
+  } from '../../lib/forms/submit-lead';
+
+  type RuleType = 'text' | 'email' | 'select' | 'radio' | 'checkbox';
+
+  interface FieldRule {
+    id: string;
+    type: RuleType;
+    message: string;
+    label: string;
+    name?: string;
+  }
+
+  function initLeadForms(): void {
+    document.querySelectorAll<HTMLFormElement>('[data-lead-form]').forEach((form) => {
+      if (form.dataset.bound === 'true') return;
+      form.dataset.bound = 'true';
+
+      const region = form.dataset.region ?? 'au';
+      const pagePath = form.dataset.pagePath ?? window.location.pathname;
+      const formType = form.dataset.formType ?? 'expression-of-interest';
+      const formId = form.id;
+      const summary = form.querySelector<HTMLElement>('[data-lead-summary]')!;
+      const summaryList = form.querySelector<HTMLElement>('[data-lead-summary-list]')!;
+      const submitError = form.parentElement?.querySelector<HTMLElement>('[data-lead-submit-error]')!;
+      const success = form.parentElement?.querySelector<HTMLElement>('[data-lead-success]')!;
+      const successName = success?.querySelector<HTMLElement>('[data-success-name]');
+      const submitButton = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      const idleLabel = submitButton.querySelector<HTMLElement>('[data-submit-idle]')!;
+      const busyLabel = submitButton.querySelector<HTMLElement>('[data-submit-busy]')!;
+      const dirty = new Set<string>();
+      let submitting = false;
+
+      trackLeadFormViewed({ region, pagePath, formType });
+
+      const rules: FieldRule[] = [
+        { id: `${formId}-first-name`, type: 'text', message: 'Enter your first name', label: 'First name' },
+        { id: `${formId}-last-name`, type: 'text', message: 'Enter your last name', label: 'Last name' },
+        {
+          id: `${formId}-email`,
+          type: 'email',
+          message: 'Enter a valid email address',
+          label: 'Email address',
+        },
+        {
+          id: `${formId}-location`,
+          type: 'select',
+          message: 'Choose your current location',
+          label: 'Current location',
+        },
+        {
+          id: `${formId}-role-type`,
+          type: 'select',
+          message: 'Choose the type of role you’re after',
+          label: 'Role type',
+        },
+        {
+          id: `${formId}-experience-0`,
+          type: 'radio',
+          name: 'experienceLevel',
+          message: 'Select your teaching experience',
+          label: 'Teaching experience',
+        },
+        {
+          id: `${formId}-consent`,
+          type: 'checkbox',
+          message: 'Confirm you’re happy to be contacted',
+          label: 'Contact consent',
+        },
+      ];
+
+      const positiveTypes: RuleType[] = ['text', 'email', 'select'];
+
+      const controlsFor = (rule: FieldRule): HTMLInputElement[] => {
+        if (rule.type === 'radio' && rule.name) {
+          return Array.from(form.querySelectorAll<HTMLInputElement>(`input[name="${rule.name}"]`));
+        }
+        const control = form.querySelector<HTMLInputElement>(`#${rule.id}`);
+        return control ? [control] : [];
+      };
+
+      const isValid = (rule: FieldRule): boolean => {
+        const controls = controlsFor(rule);
+        if (controls.length === 0) return true;
+        switch (rule.type) {
+          case 'text':
+            return controls[0].value.trim() !== '';
+          case 'email':
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(controls[0].value.trim());
+          case 'select':
+            return controls[0].value !== '';
+          case 'radio':
+            return controls.some((control) => control.checked);
+          case 'checkbox':
+            return controls[0].checked;
+        }
+      };
+
+      const errorFor = (rule: FieldRule): HTMLElement | null =>
+        document.getElementById(
+          rule.type === 'radio' ? `${formId}-experience-error` : `${rule.id}-error`,
+        );
+
+      const applyState = (rule: FieldRule, valid: boolean) => {
+        const error = errorFor(rule);
+        const showPositive = positiveTypes.includes(rule.type);
+        controlsFor(rule).forEach((control) => {
+          if (valid) {
+            control.removeAttribute('aria-invalid');
+            if (showPositive && dirty.has(rule.id)) control.setAttribute('data-valid', 'true');
+          } else {
+            control.setAttribute('aria-invalid', 'true');
+            control.removeAttribute('data-valid');
+          }
+        });
+        if (error) {
+          error.hidden = valid;
+          if (!valid) error.textContent = `⚠ ${rule.message}`;
+        }
+      };
+
+      const ruleForControl = (control: Element): FieldRule | undefined =>
+        rules.find((rule) => controlsFor(rule).includes(control as HTMLInputElement));
+
+      form.addEventListener('focusout', (event) => {
+        const rule = ruleForControl(event.target as Element);
+        if (!rule) return;
+        dirty.add(rule.id);
+        applyState(rule, isValid(rule));
+      });
+
+      form.addEventListener('input', (event) => {
+        const rule = ruleForControl(event.target as Element);
+        if (!rule || !dirty.has(rule.id)) return;
+        applyState(rule, isValid(rule));
+      });
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (submitting) return;
+
+        if (submitError) {
+          submitError.hidden = true;
+          submitError.textContent = '';
+        }
+
+        const invalid = rules.filter((rule) => {
+          dirty.add(rule.id);
+          const valid = isValid(rule);
+          applyState(rule, valid);
+          return !valid;
+        });
+
+        if (invalid.length > 0) {
+          summaryList.innerHTML = '';
+          invalid.forEach((rule) => {
+            const item = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = `#${rule.id}`;
+            link.textContent = `${rule.label}: ${rule.message}`;
+            link.addEventListener('click', (clickEvent) => {
+              clickEvent.preventDefault();
+              controlsFor(rule)[0]?.focus();
+            });
+            item.appendChild(link);
+            summaryList.appendChild(item);
+          });
+          summary.hidden = false;
+          summary.focus();
+          return;
+        }
+
+        summary.hidden = true;
+        submitting = true;
+        submitButton.setAttribute('aria-busy', 'true');
+        idleLabel.hidden = true;
+        busyLabel.hidden = false;
+
+        try {
+          const context = leadFormMarketingContext(region as import('../../config/markets').Market, pagePath);
+          const payload = buildLeadPayload(
+            form,
+            context,
+            formType as 'expression-of-interest',
+          );
+          const result = await submitLeadForm(payload);
+
+          trackLeadFormSubmitted({
+            region,
+            pagePath,
+            formType,
+            documentId: result.documentId,
+          });
+
+          const firstName = payload.firstName;
+          if (successName) successName.textContent = firstName ? ` ${firstName}` : '';
+          form.hidden = true;
+          if (success) {
+            success.hidden = false;
+            success.focus();
+          }
+        } catch (error) {
+          if (submitError) {
+            submitError.textContent =
+              error instanceof Error ? error.message : 'Submission failed. Please try again.';
+            submitError.hidden = false;
+            submitError.focus();
+          }
+        } finally {
+          submitting = false;
+          submitButton.removeAttribute('aria-busy');
+          idleLabel.hidden = false;
+          busyLabel.hidden = true;
+        }
+      });
+
+      const reset = success?.querySelector<HTMLElement>('[data-lead-reset]');
+      reset?.addEventListener('click', () => {
+        form.reset();
+        dirty.clear();
+        rules.forEach((rule) => {
+          controlsFor(rule).forEach((control) => {
+            control.removeAttribute('aria-invalid');
+            control.removeAttribute('data-valid');
+          });
+          const error = errorFor(rule);
+          if (error) error.hidden = true;
+        });
+        summary.hidden = true;
+        if (submitError) submitError.hidden = true;
+        if (success) success.hidden = true;
+        form.hidden = false;
+        form.querySelector<HTMLInputElement>(`#${formId}-first-name`)?.focus();
+      });
+    });
+  }
+
+  initLeadForms();
+  document.addEventListener('astro:page-load', initLeadForms);
+</script>

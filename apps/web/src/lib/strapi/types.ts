@@ -188,6 +188,15 @@ export interface FormEmbedBlock {
   trackingParams?: Record<string, string> | null;
 }
 
+export interface LeadFormBlock {
+  __component: 'blocks.lead-form';
+  id: number;
+  heading?: string | null;
+  description?: string | null;
+  formType: 'expression-of-interest';
+  successMessage?: string | null;
+}
+
 export interface RichTextBlock {
   __component: 'blocks.rich-text';
   id: number;
@@ -263,6 +272,7 @@ export type ContentBlock =
   | ValuesGridBlock
   | ValueTabsBlock
   | FormEmbedBlock
+  | LeadFormBlock
   | RichTextBlock
   | StatsRowBlock
   | StatsBandBlock

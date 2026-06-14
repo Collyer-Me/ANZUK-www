@@ -52,7 +52,22 @@ GTM is **not** used for GA4/Meta pixels. Optional GTM loads marketing widgets on
 - Frontend stub at `apps/web/src/lib/jobadder/` (POC)
 - **Tracking:** `Job Viewed`, `Application Started`, `Application Submitted` events via RudderStack → JobAdder destination (next step)
 
-## JotForm (forms)
+## Native lead forms (Strapi)
+
+**Role:** First-party expression-of-interest and enquiry forms. Submissions stored in Strapi `form-submission` collection.
+
+| Piece | Implementation |
+|-------|----------------|
+| CMS block | `blocks.lead-form` — heading, description, form type |
+| Frontend | `LeadForm.astro` — validates client-side, POSTs to Strapi |
+| API | `POST /api/leads/submit` (public, honeypot-protected) |
+| Admin | **Content Manager → Form Submissions** |
+
+**Tracking:** `Form Viewed` and `Form Submitted` via RudderStack with `formType`, `region`, `pagePath`. UTM context from `marketing-identity.ts`.
+
+**Legacy:** `blocks.form-embed` (JotForm iframe) remains for NZ refer/partner pages until migrated.
+
+## JotForm (forms — legacy)
 
 **Role:** Registration, school enquiries, referrals.
 

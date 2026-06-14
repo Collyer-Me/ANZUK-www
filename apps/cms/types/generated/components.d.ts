@@ -97,6 +97,22 @@ export interface BlocksHero extends Struct.ComponentSchema {
   };
 }
 
+export interface BlocksLeadForm extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_lead_forms';
+  info: {
+    description: 'Native first-party lead capture form stored in Strapi';
+    displayName: 'Lead Form';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    formType: Schema.Attribute.Enumeration<['expression-of-interest']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'expression-of-interest'>;
+    heading: Schema.Attribute.String;
+    successMessage: Schema.Attribute.Text;
+  };
+}
+
 export interface BlocksLogoItem extends Struct.ComponentSchema {
   collectionName: 'components_blocks_logo_items';
   info: {
@@ -531,6 +547,7 @@ declare module '@strapi/strapi' {
       'blocks.feature-item': BlocksFeatureItem;
       'blocks.form-embed': BlocksFormEmbed;
       'blocks.hero': BlocksHero;
+      'blocks.lead-form': BlocksLeadForm;
       'blocks.logo-item': BlocksLogoItem;
       'blocks.logo-marquee': BlocksLogoMarquee;
       'blocks.persona-card-item': BlocksPersonaCardItem;

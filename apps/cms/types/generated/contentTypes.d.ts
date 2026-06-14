@@ -517,6 +517,57 @@ export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiFormSubmissionFormSubmission
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'form_submissions';
+  info: {
+    description: 'Lead capture submissions from native marketing forms';
+    displayName: 'Form Submission';
+    pluralName: 'form-submissions';
+    singularName: 'form-submission';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    consentContact: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currentLocation: Schema.Attribute.String;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    experienceLevel: Schema.Attribute.String;
+    firstName: Schema.Attribute.String & Schema.Attribute.Required;
+    formType: Schema.Attribute.Enumeration<['expression-of-interest']> &
+      Schema.Attribute.Required;
+    landingPage: Schema.Attribute.String;
+    lastName: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::form-submission.form-submission'
+    > &
+      Schema.Attribute.Private;
+    message: Schema.Attribute.Text;
+    pagePath: Schema.Attribute.String & Schema.Attribute.Required;
+    phone: Schema.Attribute.String;
+    preferredDestinations: Schema.Attribute.JSON;
+    publishedAt: Schema.Attribute.DateTime;
+    regionCode: Schema.Attribute.String & Schema.Attribute.Required;
+    roleType: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    utmCampaign: Schema.Attribute.String;
+    utmContent: Schema.Attribute.String;
+    utmMedium: Schema.Attribute.String;
+    utmSource: Schema.Attribute.String;
+    utmTerm: Schema.Attribute.String;
+  };
+}
+
 export interface ApiGlobalSettingGlobalSetting extends Struct.SingleTypeSchema {
   collectionName: 'global_settings';
   info: {
@@ -862,6 +913,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
         'blocks.values-grid',
         'blocks.value-tabs',
         'blocks.form-embed',
+        'blocks.lead-form',
         'blocks.rich-text',
         'blocks.stats-row',
         'blocks.stats-band',
@@ -1047,6 +1099,7 @@ export interface ApiSectionSection extends Struct.CollectionTypeSchema {
         'blocks.values-grid',
         'blocks.value-tabs',
         'blocks.form-embed',
+        'blocks.lead-form',
         'blocks.rich-text',
         'blocks.stats-row',
         'blocks.stats-band',
@@ -1661,6 +1714,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::article.article': ApiArticleArticle;
+      'api::form-submission.form-submission': ApiFormSubmissionFormSubmission;
       'api::global-setting.global-setting': ApiGlobalSettingGlobalSetting;
       'api::localized-page.localized-page': ApiLocalizedPageLocalizedPage;
       'api::market-navigation.market-navigation': ApiMarketNavigationMarketNavigation;
