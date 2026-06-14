@@ -26,7 +26,7 @@ function normalizeRegion(raw: Record<string, unknown>): RegionEntity {
 export async function getAllRegions(): Promise<RegionEntity[]> {
   if (shouldUseMockData()) return MOCK_REGIONS;
 
-  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>('site-regions', {
+  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>('regions', {
     'pagination[pageSize]': '20',
   });
 
@@ -39,7 +39,7 @@ export async function getRegionByCode(code: Market): Promise<RegionEntity | unde
     return MOCK_REGIONS.find((r) => r.code === code);
   }
 
-  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>('site-regions', {
+  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>('regions', {
     'filters[code][$eq]': code,
   });
 

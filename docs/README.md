@@ -30,6 +30,7 @@ Central index for architecture decisions, setup guides, and production migration
 
 - [Local development](guides/local-development.md)
 - [Strapi Cloud setup](guides/strapi-cloud-setup.md)
+- [Region model (stability rules)](guides/strapi-region-model.md)
 - [Seed Strapi content](guides/seed-strapi.md)
 - [GitHub Pages deploy](guides/github-pages-deploy.md)
 - [POC demo script](guides/poc-demo-script.md)

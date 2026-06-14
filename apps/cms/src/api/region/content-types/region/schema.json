@@ -1,20 +1,20 @@
 {
   "kind": "collectionType",
-  "collectionName": "anzuk_regions",
+  "collectionName": "regions",
   "info": {
     "singularName": "region",
-    "pluralName": "site-regions",
-    "displayName": "Site Region",
-    "description": "Site boundary and regional configuration (AU, UK, CA, NZ, international)"
+    "pluralName": "regions",
+    "displayName": "Region",
+    "description": "Site boundary and regional configuration (au, uk, ca, nz, international). Do not rename collectionName — see docs/guides/strapi-region-model.md"
   },
   "options": {
     "draftAndPublish": false
   },
   "attributes": {
     "code": {
-      "type": "string",
-      "required": true,
-      "unique": true
+      "type": "uid",
+      "targetField": "name",
+      "required": true
     },
     "name": {
       "type": "string",

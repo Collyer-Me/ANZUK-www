@@ -114,11 +114,11 @@ async function main(): Promise<void> {
   const regionIds = new Map<Market, string>();
   let failures = 0;
 
-  console.log('→ Site regions');
+  console.log('→ Regions');
   for (const region of MOCK_REGIONS) {
     try {
       const doc = await client.upsertCollection(
-        'site-regions',
+        'regions',
         undefined,
         { code: region.code },
         {

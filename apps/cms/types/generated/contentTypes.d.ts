@@ -980,20 +980,18 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiRegionRegion extends Struct.CollectionTypeSchema {
-  collectionName: 'anzuk_regions';
+  collectionName: 'regions';
   info: {
-    description: 'Site boundary and regional configuration (AU, UK, CA, NZ, international)';
-    displayName: 'Site Region';
-    pluralName: 'site-regions';
+    description: 'Site boundary and regional configuration (au, uk, ca, nz, international). Do not rename collectionName \u2014 see docs/guides/strapi-region-model.md';
+    displayName: 'Region';
+    pluralName: 'regions';
     singularName: 'region';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
-    code: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    code: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
     contactEmail: Schema.Attribute.Email;
     contactPhone: Schema.Attribute.String;
     cookiePolicyUrl: Schema.Attribute.String;
