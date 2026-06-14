@@ -114,12 +114,11 @@ async function main(): Promise<void> {
   const regionIds = new Map<Market, string>();
   let failures = 0;
 
-  console.log('→ Regions');
+  console.log('→ Site regions');
   for (const region of MOCK_REGIONS) {
-    const nav = MOCK_MARKET_NAVIGATIONS.find((n) => n.market === region.code);
     try {
       const doc = await client.upsertCollection(
-        'regions',
+        'site-regions',
         undefined,
         { code: region.code },
         {
@@ -132,9 +131,6 @@ async function main(): Promise<void> {
           geoSuggestEnabled: region.geoSuggestEnabled,
           cookiePolicyUrl: region.cookiePolicyUrl,
           jobAdderBoardId: region.jobAdderBoardId,
-          ...(nav?.items?.length
-            ? { header: { items: nav.items.map(serializeNavItem) } }
-            : {}),
         },
         { draftAndPublish: false },
       );

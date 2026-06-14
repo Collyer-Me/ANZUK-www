@@ -1,20 +1,20 @@
 {
   "kind": "collectionType",
-  "collectionName": "site_regions",
+  "collectionName": "anzuk_regions",
   "info": {
     "singularName": "region",
-    "pluralName": "regions",
-    "displayName": "Region",
-    "description": "Site boundary and regional configuration"
+    "pluralName": "site-regions",
+    "displayName": "Site Region",
+    "description": "Site boundary and regional configuration (AU, UK, CA, NZ, international)"
   },
   "options": {
     "draftAndPublish": false
   },
   "attributes": {
     "code": {
-      "type": "uid",
-      "targetField": "name",
-      "required": true
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "name": {
       "type": "string",
@@ -47,21 +47,6 @@
     },
     "cookiePolicyUrl": {
       "type": "string"
-    },
-    "header": {
-      "type": "component",
-      "repeatable": false,
-      "component": "nav.menu"
-    },
-    "footer": {
-      "type": "component",
-      "repeatable": false,
-      "component": "nav.footer"
-    },
-    "defaultSeo": {
-      "type": "component",
-      "repeatable": false,
-      "component": "shared.seo"
     }
   }
 }

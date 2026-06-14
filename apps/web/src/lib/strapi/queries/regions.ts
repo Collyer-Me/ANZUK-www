@@ -4,13 +4,6 @@ import { MOCK_REGIONS } from '../mock-regions';
 import type { NavItem, RegionEntity, StrapiListResponse } from '../types';
 import { resolveLinkUrl } from '../urls';
 
-const REGION_POPULATE = {
-  'populate[header][populate][items][populate][link][populate]': 'page',
-  'populate[header][populate][items][populate][children][populate][link][populate]': 'page',
-  'populate[footer][populate][columns][populate][links][populate]': 'page',
-  'populate[defaultSeo][populate]': '*',
-};
-
 function normalizeRegion(raw: Record<string, unknown>): RegionEntity {
   return {
     documentId: String(raw.documentId),
@@ -33,9 +26,8 @@ function normalizeRegion(raw: Record<string, unknown>): RegionEntity {
 export async function getAllRegions(): Promise<RegionEntity[]> {
   if (shouldUseMockData()) return MOCK_REGIONS;
 
-  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>('regions', {
+  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>('site-regions', {
     'pagination[pageSize]': '20',
-    ...REGION_POPULATE,
   });
 
   if (!response?.data) return MOCK_REGIONS;
@@ -47,9 +39,8 @@ export async function getRegionByCode(code: Market): Promise<RegionEntity | unde
     return MOCK_REGIONS.find((r) => r.code === code);
   }
 
-  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>('regions', {
+  const response = await fetchStrapiOptional<StrapiListResponse<Record<string, unknown>>>('site-regions', {
     'filters[code][$eq]': code,
-    ...REGION_POPULATE,
   });
 
   if (!response?.data[0]) {

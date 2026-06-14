@@ -980,29 +980,28 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
 }
 
 export interface ApiRegionRegion extends Struct.CollectionTypeSchema {
-  collectionName: 'site_regions';
+  collectionName: 'anzuk_regions';
   info: {
-    description: 'Site boundary and regional configuration';
-    displayName: 'Region';
-    pluralName: 'regions';
+    description: 'Site boundary and regional configuration (AU, UK, CA, NZ, international)';
+    displayName: 'Site Region';
+    pluralName: 'site-regions';
     singularName: 'region';
   };
   options: {
     draftAndPublish: false;
   };
   attributes: {
-    code: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
+    code: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     contactEmail: Schema.Attribute.Email;
     contactPhone: Schema.Attribute.String;
     cookiePolicyUrl: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    defaultSeo: Schema.Attribute.Component<'shared.seo', false>;
-    footer: Schema.Attribute.Component<'nav.footer', false>;
     geoSuggestEnabled: Schema.Attribute.Boolean &
       Schema.Attribute.DefaultTo<true>;
-    header: Schema.Attribute.Component<'nav.menu', false>;
     hreflang: Schema.Attribute.String & Schema.Attribute.Required;
     isDefault: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     isGlobalHub: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;

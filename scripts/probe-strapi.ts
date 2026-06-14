@@ -68,7 +68,7 @@ async function main() {
 
   const v2 = await Promise.all([
     probe('global-setting', 'global-setting', { locale: 'en' }),
-    probe('regions', 'regions', { 'pagination[pageSize]': '5' }),
+    probe('site-regions', 'site-regions', { 'pagination[pageSize]': '5' }),
     probe('pages', 'pages', {
       locale: 'en',
       'pagination[pageSize]': '1',
