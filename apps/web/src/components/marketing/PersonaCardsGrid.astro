@@ -1,0 +1,64 @@
+---
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import PersonaCard from './PersonaCard.astro';
+import type { PersonaCardsBlock } from '../../lib/strapi/types';
+import type { Market } from '../../config/markets';
+import { personaIconForKey } from '../../lib/persona-icons';
+import { resolveLinkUrl } from '../../lib/strapi/urls';
+
+interface Props {
+  block: PersonaCardsBlock;
+  regionCode: Market;
+}
+
+const { block, regionCode } = Astro.props;
+const cards = block.cards ?? [];
+
+type PersonaAccent = 'blue' | 'green' | 'purple';
+
+function accentFor(value?: string | null): PersonaAccent {
+  if (value === 'green') return 'green';
+  if (value === 'purple' || value === 'pink') return 'purple';
+  return 'blue';
+}
+
+function needsList(needs: unknown): string[] {
+  if (!Array.isArray(needs)) return [];
+  return needs.filter((item): item is string => typeof item === 'string');
+}
+---
+
+<Section variant="white" id="who-we-help" class="scroll-mt-24" aria-labelledby={`personas-${block.id}`}>
+  <Container>
+    {
+      (block.eyebrow || block.heading || block.description) && (
+        <SectionHeading
+          id={`personas-${block.id}`}
+          eyebrow={block.eyebrow ?? undefined}
+          title={block.heading ?? 'Who we help'}
+          description={block.description ?? undefined}
+        />
+      )
+    }
+    <div class="mt-14 grid gap-6 md:grid-cols-3">
+      {
+        cards.map((card, index) => (
+          <div data-reveal="up" data-reveal-delay={String(index * 120)} class="h-full">
+            <PersonaCard
+              title={card.title}
+              description={card.description ?? ''}
+              needs={needsList(card.needs)}
+              icon={personaIconForKey(card.iconKey)}
+              accent={accentFor(card.accent)}
+              ctaLabel={card.cta?.label ?? 'Learn more'}
+              ctaHref={card.cta ? resolveLinkUrl(card.cta, regionCode) : '#'}
+              featured={card.featured ?? false}
+            />
+          </div>
+        ))
+      }
+    </div>
+  </Container>
+</Section>

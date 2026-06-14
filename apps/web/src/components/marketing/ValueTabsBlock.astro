@@ -1,0 +1,58 @@
+---
+import valuesPhoto from '@anzuk/brand/assets/images/values.jpg';
+import DuotoneImage from '../ui/DuotoneImage.astro';
+import Container from '../ui/Container.astro';
+import Section from '../ui/Section.astro';
+import SectionHeading from '../ui/SectionHeading.astro';
+import ValueTabs from './ValueTabs.astro';
+import type { ValueTabsBlock } from '../../lib/strapi/types';
+import { valueIcons, type ValueIconKey } from '../../lib/value-icons';
+
+interface Props {
+  block: ValueTabsBlock;
+}
+
+const { block } = Astro.props;
+
+function iconForWord(word: string) {
+  const key = word.toLowerCase() as ValueIconKey;
+  return valueIcons[key] ?? valueIcons.belief;
+}
+
+const tabs = (block.values ?? []).map((value) => ({
+  letter: value.letter,
+  word: value.word,
+  summary: value.summary,
+  icon: iconForWord(value.word),
+}));
+---
+
+<Section variant="lightGreen" aria-labelledby={`values-tabs-${block.id}`}>
+  <Container>
+    <div class="grid items-center gap-12 lg:grid-cols-[1fr_1.15fr]">
+      <div data-reveal="left">
+        <DuotoneImage
+          src={valuesPhoto}
+          alt="The ANZUK team celebrating together"
+          tone="purple"
+          class="rounded-anzuk-card"
+        />
+      </div>
+      <div data-reveal="right">
+        {
+          (block.heading || block.description) && (
+            <SectionHeading
+              id={`values-tabs-${block.id}`}
+              align="left"
+              eyebrow="Our values"
+              title={block.heading ?? 'We live BE GREAT'}
+              description={block.description ?? undefined}
+              level="h2"
+            />
+          )
+        }
+        <ValueTabs values={tabs} autoAdvance={block.autoAdvance ?? true} class="mt-8" />
+      </div>
+    </div>
+  </Container>
+</Section>

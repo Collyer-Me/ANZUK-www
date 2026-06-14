@@ -3,6 +3,7 @@ import type { Market, PageTemplate, RegionalMarket } from '../../config/markets'
 import { REGIONS } from '../../config/regions';
 import { beGreatValues } from '@anzuk/brand';
 import type { Article, CmsPage, ContentBlock, GlobalSettings } from './types';
+import { buildUkHomeBlocks } from './uk-home-blocks';
 
 /** Works in Astro (import.meta.env) and Node scripts e.g. seed:strapi (process.env). */
 function mockEnv(key: string): string | undefined {
@@ -326,9 +327,11 @@ function buildMockPages(): CmsPage[] {
   for (const sample of regionalSamples) {
     const blocks =
       sample.blocks ??
-      (sample.path === 'home'
-        ? homeBlocks(REGIONS.find((r) => r.path === sample.market)!.label)
-        : innerPageBlocks(sample.heading, sample.subheading));
+      (sample.path === 'home' && sample.market === 'uk'
+        ? buildUkHomeBlocks()
+        : sample.path === 'home'
+          ? homeBlocks(REGIONS.find((r) => r.path === sample.market)!.label)
+          : innerPageBlocks(sample.heading, sample.subheading));
 
     const extras: Partial<CmsPage> = {};
     if (sample.pageType === 'job-listing') {

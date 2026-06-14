@@ -1,5 +1,24 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface BlocksBlobHero extends Struct.ComponentSchema {
+  collectionName: 'components_blocks_blob_heroes';
+  info: {
+    description: 'Brand homepage hero with blob-masked photo and dual CTAs';
+    displayName: 'Blob Hero';
+  };
+  attributes: {
+    eyebrow: Schema.Attribute.String;
+    heading: Schema.Attribute.String & Schema.Attribute.Required;
+    highlightWord: Schema.Attribute.String;
+    image: Schema.Attribute.Media<'images'>;
+    imageAlt: Schema.Attribute.String;
+    note: Schema.Attribute.Text;
+    primary: Schema.Attribute.Component<'shared.link', false>;
+    secondary: Schema.Attribute.Component<'shared.link', false>;
+    subheading: Schema.Attribute.Text;
+  };
+}
+
 export interface BlocksCta extends Struct.ComponentSchema {
   collectionName: 'components_blocks_ctas';
   info: {
@@ -166,6 +185,9 @@ export interface BlocksPersonaCards extends Struct.ComponentSchema {
   };
   attributes: {
     cards: Schema.Attribute.Component<'blocks.persona-card-item', true>;
+    description: Schema.Attribute.Text;
+    eyebrow: Schema.Attribute.String;
+    heading: Schema.Attribute.String;
   };
 }
 
@@ -541,6 +563,7 @@ export interface SharedSocialLink extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'blocks.blob-hero': BlocksBlobHero;
       'blocks.cta': BlocksCta;
       'blocks.cta-band': BlocksCtaBand;
       'blocks.feature-grid': BlocksFeatureGrid;

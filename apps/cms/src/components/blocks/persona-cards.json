@@ -6,6 +6,15 @@
   },
   "options": {},
   "attributes": {
+    "eyebrow": {
+      "type": "string"
+    },
+    "heading": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
     "cards": {
       "type": "component",
       "repeatable": true,

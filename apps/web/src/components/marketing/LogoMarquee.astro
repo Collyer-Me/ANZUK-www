@@ -11,8 +11,9 @@ import Section from '../ui/Section.astro';
 import '../../styles/components.css';
 
 export interface MarqueeLogo {
-  src: ImageMetadata;
+  src: ImageMetadata | string;
   alt: string;
+  remote?: boolean;
 }
 
 interface Props {
@@ -55,7 +56,13 @@ const logoClass =
         {
           logos.map((logo) => (
             <li class="shrink-0">
-              <Image src={logo.src} alt={logo.alt} class={logoClass} loading="lazy" />
+              {
+                logo.remote || typeof logo.src === 'string' ? (
+                  <img src={String(logo.src)} alt={logo.alt} class={logoClass} loading="lazy" />
+                ) : (
+                  <Image src={logo.src} alt={logo.alt} class={logoClass} loading="lazy" />
+                )
+              }
             </li>
           ))
         }
@@ -64,7 +71,13 @@ const logoClass =
         {
           logos.map((logo) => (
             <li class="shrink-0">
-              <Image src={logo.src} alt="" class={logoClass} loading="lazy" />
+              {
+                logo.remote || typeof logo.src === 'string' ? (
+                  <img src={String(logo.src)} alt="" class={logoClass} loading="lazy" />
+                ) : (
+                  <Image src={logo.src} alt="" class={logoClass} loading="lazy" />
+                )
+              }
             </li>
           ))
         }

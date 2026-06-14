@@ -1,5 +1,6 @@
 ---
 import Hero from '../marketing/Hero.astro';
+import BlobHeroBlock from '../marketing/BlobHeroBlock.astro';
 import FeatureGrid from '../marketing/FeatureGrid.astro';
 import CTA from '../marketing/CTA.astro';
 import CtaBand from '../marketing/CtaBand.astro';
@@ -7,8 +8,11 @@ import Testimonial from '../marketing/Testimonial.astro';
 import TestimonialGrid from '../marketing/TestimonialGrid.astro';
 import RegionGrid from '../marketing/RegionGrid.astro';
 import ValuesGrid from '../marketing/ValuesGrid.astro';
+import ValueTabsBlock from '../marketing/ValueTabsBlock.astro';
+import PersonaCardsGrid from '../marketing/PersonaCardsGrid.astro';
 import FormEmbed from '../marketing/FormEmbed.astro';
 import LeadForm from '../marketing/LeadForm.astro';
+import LogoMarqueeBlock from '../marketing/LogoMarqueeBlock.astro';
 import RichText from '../marketing/RichText.astro';
 import StatsRow from '../marketing/StatsRow.astro';
 import StatsBand from '../marketing/StatsBand.astro';
@@ -44,7 +48,7 @@ function parseStatValue(value: string): { value: number; suffix: string } {
 
 function linkHref(link: { url?: string | null; label: string } | null | undefined): string {
   if (!link?.url) return '#';
-  if (link.url.startsWith('http')) return trackedExternalUrl(link.url);
+  if (link.url.startsWith('http') || link.url.startsWith('mailto:')) return trackedExternalUrl(link.url);
   if (link.url.startsWith('/')) return link.url;
   return regionCode === 'international' ? `/${link.url}/` : `/${regionCode}/${link.url}/`;
 }
@@ -53,6 +57,8 @@ function linkHref(link: { url?: string | null; label: string } | null | undefine
 {
   blocks.map((block) => {
     switch (block.__component) {
+      case 'blocks.blob-hero':
+        return <BlobHeroBlock block={block} regionCode={regionCode} />;
       case 'blocks.hero':
         return <Hero block={block} />;
       case 'blocks.feature-grid':
@@ -72,6 +78,8 @@ function linkHref(link: { url?: string | null; label: string } | null | undefine
           />
         );
       }
+      case 'blocks.persona-cards':
+        return <PersonaCardsGrid block={block} regionCode={regionCode} />;
       case 'blocks.testimonial':
         return <Testimonial block={block} />;
       case 'blocks.testimonials':
@@ -91,17 +99,7 @@ function linkHref(link: { url?: string | null; label: string } | null | undefine
       case 'blocks.values-grid':
         return <ValuesGrid block={block} />;
       case 'blocks.value-tabs':
-        return (
-          <ValuesGrid
-            block={{
-              __component: 'blocks.values-grid',
-              id: block.id,
-              heading: block.heading,
-              description: block.description,
-              values: block.values,
-            }}
-          />
-        );
+        return <ValueTabsBlock block={block} />;
       case 'blocks.form-embed':
         return <FormEmbed block={block} regionCode={regionCode} pagePath={Astro.url.pathname} />;
       case 'blocks.lead-form':
@@ -131,7 +129,7 @@ function linkHref(link: { url?: string | null; label: string } | null | undefine
           />
         );
       case 'blocks.logo-marquee':
-        return null;
+        return <LogoMarqueeBlock block={block} />;
       default:
         return null;
     }

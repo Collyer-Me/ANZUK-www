@@ -1,0 +1,79 @@
+---
+import heroPhoto from '@anzuk/brand/assets/images/hero-home.png';
+import { taglines } from '@anzuk/brand';
+import BlobHero from './BlobHero.astro';
+import Button from '../ui/Button.astro';
+import HeroHighlight from '../ui/HeroHighlight.astro';
+import type { BlobHeroBlock } from '../../lib/strapi/types';
+import type { Market } from '../../config/markets';
+import { strapiMediaUrl } from '../../lib/strapi/media-url';
+import { resolveLinkUrl } from '../../lib/strapi/urls';
+
+interface Props {
+  block: BlobHeroBlock;
+  regionCode: Market;
+}
+
+const { block, regionCode } = Astro.props;
+
+const imageSrc = strapiMediaUrl(block.image) ?? heroPhoto.src;
+const useLocalImage = !block.image?.url;
+const imageAlt = block.imageAlt ?? 'Educators and students in a classroom';
+
+function linkHref(link: BlobHeroBlock['primary']): string {
+  if (!link) return '#';
+  return resolveLinkUrl(link, regionCode);
+}
+
+function buttonVariant(variant?: string | null): 'primary' | 'bordered' | 'light' {
+  if (variant === 'outline' || variant === 'secondary') return 'bordered';
+  if (variant === 'light') return 'light';
+  return 'primary';
+}
+
+const heading = block.heading;
+const highlight = block.highlightWord?.trim();
+const headingParts =
+  highlight && heading.includes(highlight)
+    ? heading.split(highlight)
+    : null;
+---
+
+<BlobHero
+  image={useLocalImage ? heroPhoto : undefined}
+  imageSrc={useLocalImage ? undefined : imageSrc}
+  imageAlt={imageAlt}
+  eyebrow={block.eyebrow ?? undefined}
+>
+  <Fragment slot="title">
+    {
+      headingParts ? (
+        <>
+          {headingParts[0]}
+          <HeroHighlight>{highlight}</HeroHighlight>
+          {headingParts.slice(1).join(highlight)}
+        </>
+      ) : (
+        heading
+      )
+    }
+  </Fragment>
+  <Fragment slot="subtitle">{block.subheading ?? taglines.secondary}</Fragment>
+  <Fragment slot="actions">
+    {
+      block.primary?.label && (
+        <Button variant={buttonVariant(block.primary.variant)} href={linkHref(block.primary)}>
+          {block.primary.label}
+        </Button>
+      )
+    }
+    {
+      block.secondary?.label && (
+        <Button variant={buttonVariant(block.secondary.variant)} href={linkHref(block.secondary)}>
+          {block.secondary.label}
+        </Button>
+      )
+    }
+  </Fragment>
+  {block.note && <Fragment slot="note">{block.note}</Fragment>}
+</BlobHero>

@@ -904,6 +904,7 @@ export interface ApiPagePage extends Struct.CollectionTypeSchema {
     body: Schema.Attribute.DynamicZone<
       [
         'blocks.hero',
+        'blocks.blob-hero',
         'blocks.feature-grid',
         'blocks.cta',
         'blocks.cta-band',
@@ -1090,6 +1091,7 @@ export interface ApiSectionSection extends Struct.CollectionTypeSchema {
     body: Schema.Attribute.DynamicZone<
       [
         'blocks.hero',
+        'blocks.blob-hero',
         'blocks.feature-grid',
         'blocks.cta',
         'blocks.cta-band',

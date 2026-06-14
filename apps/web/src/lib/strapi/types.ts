@@ -80,6 +80,20 @@ export interface HeroBlock {
   variant?: 'default' | 'dark';
 }
 
+export interface BlobHeroBlock {
+  __component: 'blocks.blob-hero';
+  id: number;
+  eyebrow?: string | null;
+  heading: string;
+  highlightWord?: string | null;
+  subheading?: string | null;
+  note?: string | null;
+  image?: StrapiMedia | null;
+  imageAlt?: string | null;
+  primary?: SharedLink | null;
+  secondary?: SharedLink | null;
+}
+
 export interface FeatureItem {
   id: number;
   title: string;
@@ -236,6 +250,9 @@ export interface StepsRowBlock {
 export interface PersonaCardsBlock {
   __component: 'blocks.persona-cards';
   id: number;
+  eyebrow?: string | null;
+  heading?: string | null;
+  description?: string | null;
   cards?: Array<{
     id: number;
     title: string;
@@ -263,6 +280,7 @@ export interface SharedSectionBlock {
 
 export type ContentBlock =
   | HeroBlock
+  | BlobHeroBlock
   | FeatureGridBlock
   | CtaBlock
   | CtaBandBlock

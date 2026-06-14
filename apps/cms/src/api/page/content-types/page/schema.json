@@ -130,6 +130,7 @@
       "type": "dynamiczone",
       "components": [
         "blocks.hero",
+        "blocks.blob-hero",
         "blocks.feature-grid",
         "blocks.cta",
         "blocks.cta-band",

@@ -15,13 +15,16 @@ import heroMask from '@anzuk/brand/assets/illustrations/hero-photo-mask.svg';
 import Container from '../ui/Container.astro';
 
 interface Props {
-  image: ImageMetadata;
+  image?: ImageMetadata;
+  imageSrc?: string;
   imageAlt: string;
   eyebrow?: string;
   class?: string;
 }
 
-const { image, imageAlt, eyebrow, class: className = '' } = Astro.props;
+const { image, imageSrc, imageAlt, eyebrow, class: className = '' } = Astro.props;
+const hasLocalImage = Boolean(image);
+const hasRemoteImage = Boolean(imageSrc);
 
 const maskStyle = [
   `-webkit-mask-image: url(${heroMask.src})`,
@@ -75,16 +78,31 @@ const maskStyle = [
           aria-hidden="true"
         />
         <div data-reveal="zoom" class="relative">
-          <Image
-            src={image}
-            alt={imageAlt}
-            widths={[480, 760, 1120]}
-            sizes="(min-width: 1024px) 45vw, 92vw"
-            class="relative h-auto w-full"
-            style={maskStyle}
-            loading="eager"
-            fetchpriority="high"
-          />
+          {
+            hasLocalImage && image ? (
+              <Image
+                src={image}
+                alt={imageAlt}
+                widths={[480, 760, 1120]}
+                sizes="(min-width: 1024px) 45vw, 92vw"
+                class="relative h-auto w-full"
+                style={maskStyle}
+                loading="eager"
+                fetchpriority="high"
+              />
+            ) : hasRemoteImage ? (
+              <img
+                src={imageSrc}
+                alt={imageAlt}
+                class="relative h-auto w-full"
+                style={maskStyle}
+                loading="eager"
+                fetchpriority="high"
+                width="560"
+                height="560"
+              />
+            ) : null
+          }
         </div>
         <div data-reveal="zoom" data-reveal-delay="350" class="absolute -left-4 top-4 w-16 lg:-left-8 lg:w-20">
           <img

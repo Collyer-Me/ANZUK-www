@@ -1,0 +1,27 @@
+---
+import LogoMarquee from './LogoMarquee.astro';
+import { partnerLogos } from '../../lib/partner-logos';
+import { strapiMediaUrl } from '../../lib/strapi/media-url';
+import type { LogoMarqueeBlock } from '../../lib/strapi/types';
+
+interface Props {
+  block: LogoMarqueeBlock;
+}
+
+const { block } = Astro.props;
+
+const cmsLogos = (block.logos ?? [])
+  .map((item) => {
+    const src = strapiMediaUrl(item.image);
+    if (!src) return null;
+    return { src, alt: item.alt ?? 'Partner school logo', remote: true as const };
+  })
+  .filter((item): item is { src: string; alt: string; remote: true } => item !== null);
+
+const logos =
+  cmsLogos.length > 0
+    ? cmsLogos
+    : partnerLogos.map((logo) => ({ src: logo.src, alt: logo.alt, remote: false as const }));
+---
+
+<LogoMarquee heading={block.heading ?? undefined} logos={logos} />
