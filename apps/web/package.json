@@ -10,17 +10,20 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "test:rudder": "node scripts/test-rudder.mjs",
     "astro": "astro"
   },
   "dependencies": {
     "@anzuk/brand": "*",
     "@astrojs/sitemap": "^3.7.3",
+    "@rudderstack/analytics-js": "^3.31.4",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.6",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "playwright": "^1.60.0",
     "typescript": "^5.4.5"
   }
 }

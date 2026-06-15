@@ -8,6 +8,7 @@ import FloatingField from '../ui/forms/FloatingField.astro';
 import SelectField from '../ui/forms/SelectField.astro';
 import type { LeadFormBlock } from '../../lib/strapi/types';
 import type { Market } from '../../config/markets';
+import { resolveStrapiPublicUrl } from '../../lib/strapi/public-url';
 
 interface Props {
   block: LeadFormBlock;
@@ -24,6 +25,7 @@ const destinations = ['Australia', 'United Kingdom', 'Canada', 'New Zealand', 'I
 const successMessage =
   block.successMessage ??
   'A consultant who knows your region will be in touch within one business day.';
+const strapiPublicUrl = resolveStrapiPublicUrl();
 ---
 
 <Section variant="white" aria-labelledby={`${formId}-heading`}>
@@ -47,6 +49,7 @@ const successMessage =
         data-form-type={block.formType}
         data-region={regionCode}
         data-page-path={pagePath}
+        data-strapi-url={strapiPublicUrl || undefined}
         id={formId}
       >
         <div
@@ -398,7 +401,7 @@ const successMessage =
             context,
             formType as 'expression-of-interest',
           );
-          const result = await submitLeadForm(payload);
+          const result = await submitLeadForm(payload, form.dataset.strapiUrl);
 
           trackLeadFormSubmitted({
             region,

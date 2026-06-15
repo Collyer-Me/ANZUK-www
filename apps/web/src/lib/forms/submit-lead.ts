@@ -26,7 +26,10 @@ export interface LeadFormPayload {
   landingPage?: string;
 }
 
-function strapiPublicUrl(): string {
+function strapiPublicUrl(override?: string): string {
+  if (typeof override === 'string' && override.trim()) {
+    return override.replace(/\/$/, '');
+  }
   const fromPublic = import.meta.env.PUBLIC_STRAPI_URL;
   if (typeof fromPublic === 'string' && fromPublic.trim()) {
     return fromPublic.replace(/\/$/, '');
@@ -34,8 +37,8 @@ function strapiPublicUrl(): string {
   return '';
 }
 
-export function isLeadFormConfigured(): boolean {
-  return Boolean(strapiPublicUrl());
+export function isLeadFormConfigured(baseUrl?: string): boolean {
+  return Boolean(strapiPublicUrl(baseUrl));
 }
 
 export function buildLeadPayload(
@@ -70,8 +73,11 @@ export function buildLeadPayload(
   };
 }
 
-export async function submitLeadForm(payload: LeadFormPayload): Promise<{ documentId?: string }> {
-  const baseUrl = strapiPublicUrl();
+export async function submitLeadForm(
+  payload: LeadFormPayload,
+  baseUrlOverride?: string,
+): Promise<{ documentId?: string }> {
+  const baseUrl = strapiPublicUrl(baseUrlOverride);
   if (!baseUrl) {
     throw new Error('Lead form backend is not configured (PUBLIC_STRAPI_URL).');
   }

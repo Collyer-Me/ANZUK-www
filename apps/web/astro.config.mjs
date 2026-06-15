@@ -49,5 +49,8 @@ export default defineConfig({
         process.env.PUBLIC_STRAPI_URL ?? process.env.STRAPI_URL ?? '',
       ),
     },
+    optimizeDeps: {
+      include: ['@rudderstack/analytics-js', '@rudderstack/analytics-js/bundled'],
+    },
   },
 });

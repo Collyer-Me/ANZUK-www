@@ -46,20 +46,19 @@ export function onConsentUpdated(callback: (state: ConsentState) => void): () =>
   return () => window.removeEventListener(CONSENT_EVENT, handler);
 }
 
-/** Map Ketch purpose codes to internal consent state (adjust when Ketch config is final). */
-export function mapKetchPurposes(purposes: Record<string, boolean>): ConsentState {
-  return {
-    essential: true,
-    functional: purposes.functional ?? purposes.preferences ?? false,
-    analytics: purposes.analytics ?? purposes.analytics_storage ?? false,
-    marketing:
-      purposes.marketing ?? purposes.ad_storage ?? purposes.advertising ?? false,
-  };
-}
+export {
+  consentStateFromKetch,
+  extractKetchPurposeMap,
+  isKetchPurposeGranted,
+  mapKetchPurposes,
+} from './ketch-purposes';
 
 declare global {
   interface Window {
     ketch?: (...args: unknown[]) => void;
     __anzukConsentRequired?: boolean;
+    __anzukRudderLoaded?: boolean;
+    __anzukRudderLoadStarted?: boolean;
+    __anzukTrackFlushRegistered?: boolean;
   }
 }

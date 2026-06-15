@@ -1,37 +1,56 @@
 import type { AnalyticsEventName } from './events';
 import { getStoredConsent, onConsentUpdated, type ConsentState } from './consent';
+import { getRudderSdk, loadRudderSdk } from './rudder-client';
 
-interface RudderAnalytics {
-  load: (writeKey: string, dataPlaneUrl: string, options?: Record<string, unknown>) => void;
-  page: (category?: string, name?: string, properties?: Record<string, unknown>) => void;
-  track: (event: string, properties?: Record<string, unknown>, options?: Record<string, unknown>) => void;
-  identify: (userId: string, traits?: Record<string, unknown>) => void;
-  ready: (callback: () => void) => void;
-  consent?: (options: Record<string, unknown>) => void;
-}
-
-function getRudder(): RudderAnalytics | undefined {
-  return window.rudderanalytics as unknown as RudderAnalytics | undefined;
+interface PendingTrack {
+  event: AnalyticsEventName;
+  properties: Record<string, unknown>;
 }
 
 let initAttempted = false;
+const pendingTracks: PendingTrack[] = [];
+const MAX_PENDING_TRACKS = 32;
 
 function canTrackAnalytics(consent: ConsentState | null): boolean {
-  return consent?.analytics === true || consent?.marketing === true;
+  return Boolean(consent?.analytics || consent?.marketing);
 }
 
-function applyConsentToRudder(consent: ConsentState): void {
-  getRudder()?.consent?.({
-    consentManagement: {
-      enabled: true,
-      provider: 'custom',
-    },
-    trackConsent: consent.analytics,
-    storage: {
-      strategy: consent.analytics ? 'persistent' : 'none',
-    },
+function isRudderReady(): boolean {
+  return window.__anzukRudderLoaded === true;
+}
+
+function sendTrack(event: AnalyticsEventName, properties: Record<string, unknown>): void {
+  const consent = getStoredConsent();
+  getRudderSdk()?.track(event, {
+    ...properties,
+    consent_analytics: consent?.analytics ?? false,
+    consent_marketing: consent?.marketing ?? false,
   });
 }
+
+function flushPendingTracks(): void {
+  if (!canTrackAnalytics(getStoredConsent()) || !isRudderReady()) return;
+
+  while (pendingTracks.length > 0) {
+    const next = pendingTracks.shift();
+    if (next) sendTrack(next.event, next.properties);
+  }
+}
+
+function queueTrack(event: AnalyticsEventName, properties: Record<string, unknown>): void {
+  if (pendingTracks.length >= MAX_PENDING_TRACKS) pendingTracks.shift();
+  pendingTracks.push({ event, properties });
+}
+
+function registerTrackFlushListeners(): void {
+  if (typeof window === 'undefined' || window.__anzukTrackFlushRegistered) return;
+  window.__anzukTrackFlushRegistered = true;
+
+  onConsentUpdated(() => flushPendingTracks());
+  window.addEventListener('anzuk:rudder-ready', flushPendingTracks);
+}
+
+registerTrackFlushListeners();
 
 export function initRudderStack(
   writeKey: string,
@@ -39,24 +58,20 @@ export function initRudderStack(
   consent: ConsentState,
 ): void {
   if (typeof window === 'undefined' || !writeKey || !dataPlaneUrl) return;
+  if (!canTrackAnalytics(consent)) return;
   if (window.__anzukRudderLoaded) {
-    applyConsentToRudder(consent);
+    flushPendingTracks();
     return;
   }
   if (initAttempted) return;
   initAttempted = true;
 
-  const rudder = getRudder();
-  if (!rudder?.load) {
-    console.warn('[rudderstack] SDK not loaded — check RudderStackHead snippet');
-    return;
-  }
-
-  rudder.load(writeKey, dataPlaneUrl, {
-    configUrl: 'https://api.rudderstack.com',
-  });
-  applyConsentToRudder(consent);
-  window.__anzukRudderLoaded = true;
+  void loadRudderSdk(writeKey, dataPlaneUrl)
+    .then(() => flushPendingTracks())
+    .catch((error) => {
+      initAttempted = false;
+      console.warn('[rudderstack] SDK failed to load', error);
+    });
 }
 
 export function trackEvent(
@@ -64,14 +79,14 @@ export function trackEvent(
   properties: Record<string, unknown> = {},
 ): void {
   if (typeof window === 'undefined') return;
-  const consent = getStoredConsent();
-  if (!canTrackAnalytics(consent)) return;
 
-  getRudder()?.track(event, {
-    ...properties,
-    consent_analytics: consent?.analytics ?? false,
-    consent_marketing: consent?.marketing ?? false,
-  });
+  const consent = getStoredConsent();
+  if (!canTrackAnalytics(consent) || !isRudderReady()) {
+    queueTrack(event, properties);
+    return;
+  }
+
+  sendTrack(event, properties);
 }
 
 export function trackPage(properties: Record<string, unknown>): void {
@@ -79,7 +94,7 @@ export function trackPage(properties: Record<string, unknown>): void {
   const consent = getStoredConsent();
   if (!canTrackAnalytics(consent)) return;
 
-  getRudder()?.page(undefined, undefined, {
+  getRudderSdk()?.page({
     ...properties,
     consent_analytics: consent?.analytics ?? false,
     consent_marketing: consent?.marketing ?? false,

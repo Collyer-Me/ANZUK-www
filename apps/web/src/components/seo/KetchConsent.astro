@@ -32,40 +32,28 @@ const ketchBootUrl =
           document.getElementsByTagName('head')[0].appendChild(script);
         })();
       </script>
-      <script is:inline>
-        (function registerKetchConsentBridge() {
-          function mapPurposes(purposes) {
-            return {
-              essential: true,
-              functional: !!purposes.functional || !!purposes.preferences,
-              analytics: !!purposes.analytics || !!purposes.analytics_storage,
-              marketing:
-                !!purposes.marketing ||
-                !!purposes.ad_storage ||
-                !!purposes.advertising,
-            };
-          }
+      <script>
+        import { consentStateFromKetch } from '../../lib/analytics/ketch-purposes';
+        import type { ConsentState } from '../../lib/analytics/consent';
 
-          function publish(state) {
-            try {
-              sessionStorage.setItem('anzuk_consent_state', JSON.stringify(state));
-            } catch (e) {}
-            window.dispatchEvent(new CustomEvent('anzuk:consent-updated', { detail: state }));
-          }
+        function publishConsentState(state: ConsentState): void {
+          try {
+            sessionStorage.setItem('anzuk_consent_state', JSON.stringify(state));
+          } catch (e) {}
+          window.dispatchEvent(new CustomEvent('anzuk:consent-updated', { detail: state }));
+        }
 
-          function attach() {
-            if (typeof window.ketch !== 'function') {
-              setTimeout(attach, 100);
-              return;
-            }
-            window.ketch('on', 'consent', function (consent) {
-              var purposes = consent && consent.purposes ? consent.purposes : {};
-              publish(mapPurposes(purposes));
-            });
+        function attachKetchConsentBridge(): void {
+          if (typeof window.ketch !== 'function') {
+            setTimeout(attachKetchConsentBridge, 100);
+            return;
           }
+          window.ketch('on', 'consent', (consent: unknown) => {
+            publishConsentState(consentStateFromKetch(consent));
+          });
+        }
 
-          attach();
-        })();
+        attachKetchConsentBridge();
       </script>
     </>
   )
