@@ -31,6 +31,9 @@ Triggers: `push` to `main`, `workflow_dispatch`
 2. Open the GitHub Pages URL
 3. Confirm `/`, `/au/`, `/uk/`, `/ca/`, `/nz/` render
 4. View source: verify canonical, hreflang, and JSON-LD use `SITE_URL`
+5. Test lead form at `/uk/teach-with-us/` (incognito → Ketch consent → submit → Strapi **Form Submissions**)
+
+CORS for form POSTs is configured in `apps/cms/config/env/production/middlewares.ts` — see [Strapi Cloud setup](strapi-cloud-setup.md#8-cors-browser-form-submissions).
 
 ## Update ADR 005
 

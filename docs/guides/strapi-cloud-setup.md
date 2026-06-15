@@ -65,9 +65,27 @@ SITE_URL=http://localhost:4321
 
 Ensure the **Public** role can `find` and `findOne` on `localized-page` and `site-setting`.
 
-### 8. CORS (if needed)
+### 8. CORS (browser form submissions)
 
-Strapi Cloud typically allows build-time fetches from GitHub Actions. For local dev, localhost is usually permitted. Adjust in Strapi admin if requests fail.
+CORS is **not** in the Strapi admin UI. On Strapi Cloud it is configured in code:
+
+`apps/cms/config/env/production/middlewares.ts`
+
+That file must list every middleware (it replaces the global `config/middlewares.ts` on Cloud). The repo includes `https://collyer-me.github.io` for GitHub Pages lead-form POSTs.
+
+After changing CORS, push to `main` — Strapi Cloud redeploys from `apps/cms` automatically.
+
+Optional: add more origins by editing the `origin` array in that file and pushing again.
+
+To verify CORS after deploy:
+
+```bash
+curl -i -X OPTIONS "https://your-project.strapiapp.com/api/leads/submit" \
+  -H "Origin: https://collyer-me.github.io" \
+  -H "Access-Control-Request-Method: POST"
+```
+
+Expect `Access-Control-Allow-Origin: https://collyer-me.github.io` in the response.
 
 ## Webhook (optional)
 
