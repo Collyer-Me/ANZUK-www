@@ -4,10 +4,10 @@ import { taglines } from '@anzuk/brand';
 import BlobHero from './BlobHero.astro';
 import Button from '../ui/Button.astro';
 import HeroHighlight from '../ui/HeroHighlight.astro';
-import type { BlobHeroBlock } from '../../lib/strapi/types';
+import type { BlobHeroBlock } from '../../lib/cms/types';
 import type { Market } from '../../config/markets';
-import { strapiMediaUrl } from '../../lib/strapi/media-url';
-import { resolveLinkUrl } from '../../lib/strapi/urls';
+import { strapiMediaUrl } from '../../lib/cms/media-url';
+import { resolveLinkUrl } from '../../lib/cms/urls';
 
 interface Props {
   block: BlobHeroBlock;

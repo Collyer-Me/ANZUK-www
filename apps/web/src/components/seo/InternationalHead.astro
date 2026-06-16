@@ -1,16 +1,21 @@
 ---
 import { absoluteInternationalPageUrl } from '../../lib/seo/urls';
+import { resolvePageOgImageAlt, resolvePageOgImageUrl } from '../../lib/seo/og-image';
 import { assetWithBase } from '../../lib/url';
-import type { CmsPage } from '../../lib/strapi/types';
+import type { CmsPage, GlobalSettings, StrapiMedia } from '../../lib/cms/types';
 
 interface Props {
   page: CmsPage;
+  settings?: GlobalSettings;
+  ogImageFallback?: StrapiMedia | null;
 }
 
-const { page } = Astro.props;
+const { page, settings, ogImageFallback } = Astro.props;
 const title = page.seo?.metaTitle ?? page.title;
 const description = page.seo?.metaDescription ?? '';
 const canonical = absoluteInternationalPageUrl(page.path);
+const ogImageUrl = resolvePageOgImageUrl(page, settings, ogImageFallback);
+const ogImageAlt = resolvePageOgImageAlt(page, settings, ogImageFallback);
 ---
 
 <meta charset="UTF-8" />
@@ -26,3 +31,7 @@ const canonical = absoluteInternationalPageUrl(page.path);
 <meta property="og:url" content={canonical} />
 <meta property="og:locale" content="en" />
 <meta property="og:type" content="website" />
+{ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+{ogImageUrl && ogImageAlt && <meta property="og:image:alt" content={ogImageAlt} />}
+{ogImageUrl && <meta name="twitter:card" content="summary_large_image" />}
+{ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}

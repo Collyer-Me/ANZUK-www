@@ -1,10 +1,14 @@
 ---
 import RegionalLayout from '../../../layouts/RegionalLayout.astro';
-import { getRegionByPath, isValidRegion, REGIONS, type RegionPath } from '../../../config/regions';
-import { getArticlesByMarket } from '../../../lib/strapi/queries/articles';
-import { getPageByMarketAndSlug } from '../../../lib/strapi/queries/pages';
-import { getGlobalSettings } from '../../../lib/strapi/queries/global-settings';
-import type { CmsPage } from '../../../lib/strapi/types';
+import { isValidRegion, REGIONS } from '../../../config/regions';
+import { routeParam } from '../../../lib/astro/route-params';
+import { getArticlesByMarket } from '../../../lib/cms/articles';
+import { getPageByMarketAndSlug } from '../../../lib/cms/pages';
+import { getGlobalSettings } from '../../../lib/cms/settings';
+import { strapiMediaUrl } from '../../../lib/cms/media-url';
+import type { CmsPage } from '../../../lib/cms/types';
+
+export const prerender = true;
 
 export async function getStaticPaths() {
   return REGIONS.map((region) => ({
@@ -13,9 +17,9 @@ export async function getStaticPaths() {
   }));
 }
 
-const { region } = Astro.props as { region: RegionPath };
+const region = routeParam(Astro.params, Astro.props, 'region');
 
-if (!isValidRegion(region)) {
+if (!region || !isValidRegion(region)) {
   return Astro.redirect('/404');
 }
 
@@ -41,17 +45,35 @@ const settings = await getGlobalSettings();
     <h1 class="!mt-0">Blog</h1>
     <ul class="mt-8 space-y-4" role="list">
       {
-        articles.map((article) => (
-          <li>
-            <a
-              href={`/${region}/blog/${article.slug}/`}
-              class="block rounded-2xl border border-anzuk-light-gray p-5 no-underline hover:shadow-md"
-            >
-              <h2 class="!mt-0 !text-xl text-anzuk-title">{article.title}</h2>
-              {article.excerpt && <p class="mt-2 text-anzuk-content">{article.excerpt}</p>}
-            </a>
-          </li>
-        ))
+        articles.map((article) => {
+          const imageUrl = strapiMediaUrl(article.featuredImage);
+          const imageAlt = article.featuredImage?.alternativeText ?? article.title;
+          return (
+            <li>
+              <a
+                href={`/${region}/blog/${article.slug}/`}
+                class="flex gap-5 rounded-2xl border border-anzuk-light-gray p-5 no-underline hover:shadow-md"
+              >
+                {
+                  imageUrl && (
+                    <img
+                      src={imageUrl}
+                      alt={imageAlt}
+                      width={120}
+                      height={80}
+                      class="h-20 w-[7.5rem] shrink-0 rounded-xl object-cover"
+                      loading="lazy"
+                    />
+                  )
+                }
+                <div class="min-w-0">
+                  <h2 class="!mt-0 !text-xl text-anzuk-title">{article.title}</h2>
+                  {article.excerpt && <p class="mt-2 text-anzuk-content">{article.excerpt}</p>}
+                </div>
+              </a>
+            </li>
+          );
+        })
       }
     </ul>
   </article>

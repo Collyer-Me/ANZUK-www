@@ -6,17 +6,15 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently -n web,cms -c blue,green \"npm run dev -w @anzuk/web\" \"npm run dev --prefix apps/cms\"",
+    "dev": "npm run dev -w @anzuk/web",
     "dev:web": "npm run dev -w @anzuk/web",
-    "dev:cms": "npm run dev --prefix apps/cms",
     "build": "npm run build -w @anzuk/web",
     "build:web": "npm run build -w @anzuk/web",
     "check:web": "npm run check -w @anzuk/web",
-    "seed:strapi": "tsx scripts/seed-strapi.ts",
-    "probe:strapi": "tsx scripts/probe-strapi.ts"
+    "seed:storyblok": "tsx scripts/seed-storyblok.ts",
+    "configure:storyblok-deploy": "tsx scripts/configure-storyblok-deploy.ts"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2",
     "tsx": "^4.19.4"
   }
 }

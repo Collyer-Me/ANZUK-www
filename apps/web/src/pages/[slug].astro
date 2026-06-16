@@ -3,12 +3,16 @@ import InternationalLayout from '../layouts/InternationalLayout.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import JobListingPlaceholder from '../components/jobs/JobListingPlaceholder.astro';
 import { INTERNATIONAL_MARKET } from '../config/markets';
-import { REGION_PATHS } from '../config/regions';
+import { REGION_PATHS, isValidRegion } from '../config/regions';
+import { routeParam } from '../lib/astro/route-params';
 import {
   getAllInternationalPages,
   getPageByMarketAndSlug,
-} from '../lib/strapi/queries/pages';
-import { getGlobalSettings } from '../lib/strapi/queries/global-settings';
+} from '../lib/cms/pages';
+import { getGlobalSettings } from '../lib/cms/settings';
+
+/** Only match explicit international slugs — not /au/, /uk/, etc. */
+export const prerender = true;
 
 export async function getStaticPaths() {
   const pages = await getAllInternationalPages();
@@ -22,11 +26,13 @@ export async function getStaticPaths() {
     }));
 }
 
-interface Props {
-  slug: string;
+const slug = routeParam(Astro.params, Astro.props, 'slug');
+
+// Avoid collision with regional home routes (/au/, /uk/, …) in SSR dev.
+if (!slug || isValidRegion(slug) || slug === 'brand') {
+  return Astro.redirect('/404');
 }
 
-const { slug } = Astro.props;
 const page = await getPageByMarketAndSlug(INTERNATIONAL_MARKET, slug);
 
 if (!page) {

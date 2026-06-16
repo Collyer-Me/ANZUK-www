@@ -1,0 +1,22 @@
+---
+import { storyblokEditable } from '@storyblok/astro';
+import CTA from '../components/marketing/CTA.astro';
+import { regionHref, uidToId } from '../lib/storyblok';
+
+const { blok } = Astro.props;
+const regionCode = 'au';
+
+const block = {
+  __component: 'blocks.cta' as const,
+  id: uidToId(blok._uid),
+  heading: String(blok.heading ?? ''),
+  body: blok.body ? String(blok.body) : null,
+  buttonLabel: String(blok.button_label ?? 'Learn more'),
+  buttonUrl: regionHref(String(blok.button_url ?? '#'), regionCode),
+  variant: (blok.variant === 'dark' ? 'dark' : 'primary') as 'primary' | 'dark',
+};
+---
+
+<div {...storyblokEditable(blok)}>
+  <CTA {block} />
+</div>

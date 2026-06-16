@@ -1,9 +1,8 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import Logo from '../ui/Logo.astro';
 import MainNav from './MainNav.astro';
-import { getNavigationForRegion } from '../../lib/strapi/queries/regions';
-import { INTERNATIONAL_MARKET, SCOOT_US } from '../../config/markets';
+import { getNavigationForRegion } from '../../lib/cms/regions';
+import { INTERNATIONAL_MARKET, pageUrl, SCOOT_US } from '../../config/markets';
 import { REGIONS } from '../../config/regions';
 
 const navItems = await getNavigationForRegion(INTERNATIONAL_MARKET);
@@ -23,7 +22,7 @@ const navItems = await getNavigationForRegion(INTERNATIONAL_MARKET);
           REGIONS.map((r) => (
             <li>
               <a
-                href={getRelativeLocaleUrl(r.path, '/')}
+                href={pageUrl(r.path, 'home')}
                 class="rounded-full px-3 py-1 text-anzuk-content no-underline hover:bg-anzuk-extra-light-blue"
                 hreflang={r.hreflang}
                 lang={r.htmlLang}

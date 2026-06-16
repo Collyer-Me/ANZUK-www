@@ -1,0 +1,24 @@
+---
+import { renderRichText, storyblokEditable } from '@storyblok/astro';
+import RichText from '../components/marketing/RichText.astro';
+import { uidToId } from '../lib/storyblok';
+
+const { blok } = Astro.props;
+
+let html = '';
+if (typeof blok.content === 'string') {
+  html = blok.content;
+} else if (blok.content) {
+  html = String(renderRichText(blok.content as Parameters<typeof renderRichText>[0]));
+}
+
+const block = {
+  __component: 'blocks.rich-text' as const,
+  id: uidToId(blok._uid),
+  content: html,
+};
+---
+
+<div {...storyblokEditable(blok)}>
+  <RichText {block} />
+</div>

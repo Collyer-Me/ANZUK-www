@@ -2,8 +2,8 @@
 import InternationalLayout from '../layouts/InternationalLayout.astro';
 import BlockRenderer from '../components/blocks/BlockRenderer.astro';
 import { INTERNATIONAL_MARKET } from '../config/markets';
-import { getPageByMarketAndSlug } from '../lib/strapi/queries/pages';
-import { getGlobalSettings } from '../lib/strapi/queries/global-settings';
+import { getPageByMarketAndSlug } from '../lib/cms/pages';
+import { getGlobalSettings } from '../lib/cms/settings';
 
 const page = await getPageByMarketAndSlug(INTERNATIONAL_MARKET, 'home');
 

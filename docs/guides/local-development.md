@@ -11,13 +11,12 @@
 # From repository root
 npm install
 
-# Copy environment files
+# Copy environment file
 cp apps/web/.env.example apps/web/.env
-cp apps/cms/.env.example apps/cms/.env
-# Edit apps/cms/.env with generated secrets on first Strapi run
+# Optional: add STORYBLOK_DELIVERY_API_TOKEN for pilot pages (see storyblok-pilot.md)
 ```
 
-## Run everything
+## Run
 
 ```bash
 npm run dev
@@ -25,16 +24,8 @@ npm run dev
 
 | Service | URL |
 |---------|-----|
-| Marketing site | http://localhost:4321 |
-| Brand guide (noindex) | http://localhost:4321/brand |
-| Strapi admin | http://localhost:1337/admin |
-
-## Run individually
-
-```bash
-npm run dev:web   # Astro only
-npm run dev:cms   # Strapi only
-```
+| Marketing site | https://localhost:4321 (HTTPS — accept mkcert cert on first visit) |
+| Brand guide (noindex) | https://localhost:4321/brand |
 
 ## Build
 
@@ -56,9 +47,11 @@ The site uses a **hybrid URL model** ([ADR 007](../decisions/007-as-is-ia-market
 - **Unprefixed:** international hub (`/`), brand guide (`/brand/*`), international marketing slugs
 - **Locale-prefixed:** regional subsites (`/au/`, `/uk/`, `/ca/`, `/nz/`)
 
-Astro i18n uses `prefixDefaultLocale: false` because regional routes are explicit via `pages/[region]/`. Unprefixed routes must return HTTP 200 in dev — do not set `prefixDefaultLocale: true` without also switching to manual i18n routing.
+Astro regional routes use explicit `pages/[region]/` paths (`/au/`, `/uk/`, etc.) — not Astro's built-in i18n locale folders. Regional URLs are built with `pageUrl()` from `config/markets.ts`.
 
-For production builds, set `STRAPI_URL` and `STRAPI_API_TOKEN` in `apps/web/.env` to point at Strapi Cloud.
+## Storyblok
+
+Pilot pages (`/au/`, `/au/who-we-are/`) load from Storyblok when `STORYBLOK_DELIVERY_API_TOKEN` is set. All other routes use bundled mocks. See [storyblok-pilot.md](storyblok-pilot.md).
 
 ## Monorepo structure
 

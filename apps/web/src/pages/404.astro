@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Button from '../components/ui/Button.astro';
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { pageUrl } from '../config/markets';
 import { DEFAULT_REGION } from '../config/regions';
 ---
 
@@ -11,7 +11,7 @@ import { DEFAULT_REGION } from '../config/regions';
     <p class="text-lg text-anzuk-content">Sorry, we couldn&apos;t find that page.</p>
     <div class="flex gap-4">
       <Button variant="primary" href="/">Choose region</Button>
-      <Button variant="bordered" href={getRelativeLocaleUrl(DEFAULT_REGION, '/')}>
+      <Button variant="bordered" href={pageUrl(DEFAULT_REGION, 'home')}>
         Go to Australia
       </Button>
     </div>

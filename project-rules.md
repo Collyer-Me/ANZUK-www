@@ -4,8 +4,7 @@ Coding standards for the marketing hub monorepo. Cursor rules in `.cursor/rules/
 
 ## Repository layout
 
-- `apps/web` — Astro frontend
-- `apps/cms` — Strapi CMS (local schema dev)
+- `apps/web` — Astro frontend (Storyblok CMS pilot)
 - `packages/brand` — Design tokens and static assets
 - `docs/decisions/` — Architecture Decision Records (check before architectural changes)
 
@@ -41,11 +40,12 @@ Coding standards for the marketing hub monorepo. Cursor rules in `.cursor/rules/
 
 ## Astro
 
-- `output: 'static'` — all Strapi fetches at build time
+- Production/CI: `output: 'static'` — Storyblok fetches at build time for pilot routes
+- Dev: `output: 'server'` for Storyblok Visual Editor live preview
 - React islands only where interactivity is required
-- Marketing content from Strapi; static brand from `packages/brand`
+- Marketing content from Storyblok (pilot) or `lib/cms` mocks; static brand from `packages/brand`
 
 ## CMS
 
-- Strapi locale is source of truth for regional content — no duplicate `Region` field
-- Always pass `locale` explicitly in API requests
+- Storyblok is the target CMS for visual editing; pilot on AU home + who-we-are
+- Mock data in `lib/cms/mock-data.ts` for non-pilot routes and builds without a token

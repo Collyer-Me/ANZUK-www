@@ -9,15 +9,16 @@ import JsonLd from '../components/seo/JsonLd.astro';
 import KetchConsent from '../components/seo/KetchConsent.astro';
 import RudderStackHead from '../components/seo/RudderStackHead.astro';
 import { getSiteUrl, siteConfig } from '../config/site';
-import { getRegionByCode } from '../lib/strapi/queries/regions';
-import type { CmsPage, GlobalSettings } from '../lib/strapi/types';
+import { getRegionByCode } from '../lib/cms/regions';
+import type { CmsPage, GlobalSettings, StrapiMedia } from '../lib/cms/types';
 
 interface Props {
   page: CmsPage;
   settings: GlobalSettings;
+  ogImageFallback?: StrapiMedia | null;
 }
 
-const { page, settings } = Astro.props;
+const { page, settings, ogImageFallback } = Astro.props;
 const international = await getRegionByCode('international');
 const siteUrl = getSiteUrl();
 ---
@@ -25,7 +26,7 @@ const siteUrl = getSiteUrl();
 <!doctype html>
 <html lang="en">
   <head>
-    <InternationalHead page={page} />
+    <InternationalHead page={page} {settings} {ogImageFallback} />
     <KetchConsent settings={settings} cookiePolicyUrl={international?.cookiePolicyUrl} />
     <RudderStackHead
       settings={settings}

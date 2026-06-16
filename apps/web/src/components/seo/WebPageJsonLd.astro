@@ -3,7 +3,7 @@ import JsonLd from './JsonLd.astro';
 import { getSiteUrl, siteConfig } from '../../config/site';
 import { getRegionByPath, type RegionPath } from '../../config/regions';
 import { buildCanonicalUrl } from '../../lib/seo/urls';
-import type { CmsPage } from '../../lib/strapi/types';
+import type { CmsPage } from '../../lib/cms/types';
 
 interface Props {
   region: RegionPath;

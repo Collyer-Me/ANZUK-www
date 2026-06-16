@@ -17,6 +17,7 @@
     "@anzuk/brand": "*",
     "@astrojs/sitemap": "^3.7.3",
     "@rudderstack/analytics-js": "^3.31.4",
+    "@storyblok/astro": "^9.0.12",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.6",
     "tailwindcss": "^4.3.0"
@@ -24,6 +25,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
     "playwright": "^1.60.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vite-plugin-mkcert": "^2.1.0"
   }
 }

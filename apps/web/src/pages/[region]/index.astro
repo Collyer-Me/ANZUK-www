@@ -1,9 +1,13 @@
 ---
+import StoryblokComponent from '@storyblok/astro/StoryblokComponent.astro';
+import type { SbBlokData } from '@storyblok/astro';
 import RegionalLayout from '../../layouts/RegionalLayout.astro';
 import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
-import { REGIONS, getRegionByPath, isValidRegion, type RegionPath } from '../../config/regions';
-import { getPageByMarketAndSlug } from '../../lib/strapi/queries/pages';
-import { getGlobalSettings } from '../../lib/strapi/queries/global-settings';
+import { REGIONS, isValidRegion, type RegionPath } from '../../config/regions';
+import { routeParam } from '../../lib/astro/route-params';
+import { getPageByMarketAndSlug } from '../../lib/cms/pages';
+import { getGlobalSettings } from '../../lib/cms/settings';
+import { cmsPageFromStory, fetchPilotStory } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
   return REGIONS.map((region) => ({
@@ -12,27 +16,31 @@ export async function getStaticPaths() {
   }));
 }
 
-interface Props {
-  region: RegionPath;
-}
+const region = routeParam(Astro.params, Astro.props, 'region');
 
-const { region } = Astro.props;
-
-if (!isValidRegion(region)) {
+if (!region || !isValidRegion(region)) {
   return Astro.redirect('/404');
 }
 
-const page = await getPageByMarketAndSlug(region, 'home');
+const story = region === 'au' ? await fetchPilotStory('au/home', Astro.locals) : null;
+const fallbackPage = await getPageByMarketAndSlug(region, 'home');
 
-if (!page) {
+if (!story && !fallbackPage) {
   return Astro.redirect('/404');
 }
 
+const page = story ? cmsPageFromStory(story, region) : fallbackPage!;
 const settings = await getGlobalSettings();
 ---
 
 <RegionalLayout {region} {page} {settings}>
   <article>
-    <BlockRenderer blocks={page.body} regionCode={region} />
+    {
+      story ? (
+        <StoryblokComponent blok={story.content as SbBlokData} />
+      ) : (
+        <BlockRenderer blocks={fallbackPage!.body} regionCode={region} />
+      )
+    }
   </article>
 </RegionalLayout>

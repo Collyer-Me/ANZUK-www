@@ -1,10 +1,14 @@
 ---
+import StoryblokComponent from '@storyblok/astro/StoryblokComponent.astro';
+import type { SbBlokData } from '@storyblok/astro';
 import RegionalLayout from '../../layouts/RegionalLayout.astro';
 import BlockRenderer from '../../components/blocks/BlockRenderer.astro';
 import JobListingPlaceholder from '../../components/jobs/JobListingPlaceholder.astro';
-import { getRegionByPath, isValidRegion, type RegionPath } from '../../config/regions';
-import { getAllRegionalPages, getPageByMarketAndSlug } from '../../lib/strapi/queries/pages';
-import { getGlobalSettings } from '../../lib/strapi/queries/global-settings';
+import { isValidRegion } from '../../config/regions';
+import { routeParam, routeSlug } from '../../lib/astro/route-params';
+import { getAllRegionalPages, getPageByMarketAndSlug } from '../../lib/cms/pages';
+import { getGlobalSettings } from '../../lib/cms/settings';
+import { cmsPageFromStory, fetchPilotStory } from '../../lib/storyblok';
 
 export async function getStaticPaths() {
   const allPages = await getAllRegionalPages();
@@ -17,31 +21,34 @@ export async function getStaticPaths() {
     }));
 }
 
-interface Props {
-  region: RegionPath;
-  slug: string;
-}
+const region = routeParam(Astro.params, Astro.props, 'region');
+const slug = routeSlug(Astro.params, Astro.props);
 
-const { region, slug: slugParam } = Astro.props;
-const slug = Array.isArray(slugParam) ? slugParam.join('/') : slugParam;
-
-if (!isValidRegion(region)) {
+if (!region || !isValidRegion(region)) {
   return Astro.redirect('/404');
 }
 
-const regionConfig = getRegionByPath(region)!;
-const page = await getPageByMarketAndSlug(region, slug);
+const pilotSlug = region === 'au' && slug === 'who-we-are' ? 'au/who-we-are' : null;
+const story = pilotSlug ? await fetchPilotStory(pilotSlug, Astro.locals) : null;
+const fallbackPage = await getPageByMarketAndSlug(region, slug);
 
-if (!page) {
+if (!story && !fallbackPage) {
   return Astro.redirect('/404');
 }
 
+const page = story ? cmsPageFromStory(story, region) : fallbackPage!;
 const settings = await getGlobalSettings();
 ---
 
 <RegionalLayout {region} {page} {settings}>
   <article>
-    <BlockRenderer blocks={page.body} regionCode={region} />
+    {
+      story ? (
+        <StoryblokComponent blok={story.content as SbBlokData} />
+      ) : (
+        <BlockRenderer blocks={fallbackPage!.body} regionCode={region} />
+      )
+    }
     {page.pageType === 'job-listing' && <JobListingPlaceholder config={page.jobBoardConfig} />}
   </article>
 </RegionalLayout>

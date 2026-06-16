@@ -6,9 +6,8 @@ import SectionHeading from '../ui/SectionHeading.astro';
 import ChoiceChipGroup from '../ui/forms/ChoiceChipGroup.astro';
 import FloatingField from '../ui/forms/FloatingField.astro';
 import SelectField from '../ui/forms/SelectField.astro';
-import type { LeadFormBlock } from '../../lib/strapi/types';
+import type { LeadFormBlock } from '../../lib/cms/types';
 import type { Market } from '../../config/markets';
-import { resolveStrapiPublicUrl } from '../../lib/strapi/public-url';
 
 interface Props {
   block: LeadFormBlock;
@@ -25,7 +24,7 @@ const destinations = ['Australia', 'United Kingdom', 'Canada', 'New Zealand', 'I
 const successMessage =
   block.successMessage ??
   'A consultant who knows your region will be in touch within one business day.';
-const strapiPublicUrl = resolveStrapiPublicUrl();
+const formEndpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
 ---
 
 <Section variant="white" aria-labelledby={`${formId}-heading`}>
@@ -49,7 +48,7 @@ const strapiPublicUrl = resolveStrapiPublicUrl();
         data-form-type={block.formType}
         data-region={regionCode}
         data-page-path={pagePath}
-        data-strapi-url={strapiPublicUrl || undefined}
+        data-form-endpoint={formEndpoint || undefined}
         id={formId}
       >
         <div
@@ -401,7 +400,7 @@ const strapiPublicUrl = resolveStrapiPublicUrl();
             context,
             formType as 'expression-of-interest',
           );
-          const result = await submitLeadForm(payload, form.dataset.strapiUrl);
+          const result = await submitLeadForm(payload, form.dataset.formEndpoint);
 
           trackLeadFormSubmitted({
             region,

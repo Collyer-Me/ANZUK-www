@@ -11,16 +11,17 @@ import KetchConsent from '../components/seo/KetchConsent.astro';
 import RudderStackHead from '../components/seo/RudderStackHead.astro';
 import { getRegionByPath, type RegionPath } from '../config/regions';
 import { getSiteUrl, siteConfig } from '../config/site';
-import { getRegionByCode } from '../lib/strapi/queries/regions';
-import type { CmsPage, GlobalSettings } from '../lib/strapi/types';
+import { getRegionByCode } from '../lib/cms/regions';
+import type { CmsPage, GlobalSettings, StrapiMedia } from '../lib/cms/types';
 
 interface Props {
   region: RegionPath;
   page: CmsPage;
   settings: GlobalSettings;
+  ogImageFallback?: StrapiMedia | null;
 }
 
-const { region, page, settings } = Astro.props;
+const { region, page, settings, ogImageFallback } = Astro.props;
 const regionConfig = getRegionByPath(region)!;
 const regionEntity = await getRegionByCode(region);
 const siteUrl = getSiteUrl();
@@ -29,7 +30,7 @@ const siteUrl = getSiteUrl();
 <!doctype html>
 <html lang={regionConfig.htmlLang}>
   <head>
-    <RegionalHead region={region} page={page} />
+    <RegionalHead region={region} page={page} {settings} {ogImageFallback} />
     <KetchConsent settings={settings} cookiePolicyUrl={regionEntity?.cookiePolicyUrl} />
     <RudderStackHead
       settings={settings}

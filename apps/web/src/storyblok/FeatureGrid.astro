@@ -1,0 +1,35 @@
+---
+import { storyblokEditable } from '@storyblok/astro';
+import FeatureGrid from '../components/marketing/FeatureGrid.astro';
+import { uidToId } from '../lib/storyblok';
+
+const { blok } = Astro.props;
+
+const block = {
+  __component: 'blocks.feature-grid' as const,
+  id: uidToId(blok._uid),
+  heading: blok.heading ? String(blok.heading) : null,
+  features: Array.isArray(blok.features)
+    ? blok.features.map(
+        (
+          feature: {
+            _uid?: string;
+            title?: string;
+            description?: string;
+            icon?: string;
+          },
+          index: number,
+        ) => ({
+          id: uidToId(feature._uid) || index + 1,
+          title: String(feature.title ?? ''),
+          description: feature.description ? String(feature.description) : null,
+          icon: (feature.icon ?? 'teaching') as 'teaching' | 'support' | 'global' | 'community',
+        }),
+      )
+    : [],
+};
+---
+
+<div {...storyblokEditable(blok)}>
+  <FeatureGrid {block} />
+</div>

@@ -1,0 +1,14 @@
+---
+import StoryblokComponent from '@storyblok/astro/StoryblokComponent.astro';
+import { storyblokEditable } from '@storyblok/astro';
+
+const { blok } = Astro.props;
+---
+
+<article {...storyblokEditable(blok)}>
+  {
+    blok.body?.map((nested: { _uid: string; component: string }) => (
+      <StoryblokComponent blok={nested} />
+    ))
+  }
+</article>

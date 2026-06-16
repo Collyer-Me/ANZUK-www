@@ -1,13 +1,12 @@
 # ANZUK Global Marketing Hub
 
-Monorepo for the ANZUK Education global marketing platform (Astro + Strapi).
+Monorepo for the ANZUK Education global marketing platform (Astro + Storyblok).
 
 ## Structure
 
 | Path | Package | Description |
 |------|---------|-------------|
-| `apps/web` | `@anzuk/web` | Astro static marketing site |
-| `apps/cms` | `@anzuk/cms` | Strapi headless CMS |
+| `apps/web` | `@anzuk/web` | Astro marketing site (Storyblok pilot) |
 | `packages/brand` | `@anzuk/brand` | Design tokens, fonts, logos, images |
 
 ## Prerequisites
@@ -21,19 +20,17 @@ Monorepo for the ANZUK Education global marketing platform (Astro + Strapi).
 # Install all workspace dependencies
 npm install
 
-# Run Astro + Strapi together
+# Run Astro dev server
 npm run dev
 
-# Astro only
+# Astro only (same as dev)
 npm run dev:web
-
-# Strapi only
-npm run dev:cms
 ```
 
-- **Marketing site:** http://localhost:4321
+- **Marketing site:** https://localhost:4321 (HTTPS in dev for Storyblok Visual Editor)
 - **Brand guide:** http://localhost:4321/brand (noindex — internal reference)
-- **Strapi admin:** http://localhost:1337/admin (create admin user on first run)
+
+See [docs/guides/storyblok-pilot.md](docs/guides/storyblok-pilot.md) for Storyblok space setup.
 
 ## Brand system
 
@@ -71,7 +68,7 @@ Outputs static site to `apps/web/dist/`.
 
 See [docs/ia/](docs/ia/README.md) for the as-is production page inventory.
 
-By default, mock CMS data is used (`USE_MOCK_DATA=true` in `apps/web/.env.example`). Set Strapi Cloud credentials to fetch live content.
+By default, bundled mock CMS data is used. Set `STORYBLOK_DELIVERY_API_TOKEN` in `apps/web/.env` to fetch pilot pages (`/au/`, `/au/who-we-are/`) from Storyblok.
 
 ## Documentation
 

@@ -1,0 +1,23 @@
+---
+import { storyblokEditable } from '@storyblok/astro';
+import StatsRow from '../components/marketing/StatsRow.astro';
+import { uidToId } from '../lib/storyblok';
+
+const { blok } = Astro.props;
+
+const block = {
+  __component: 'blocks.stats-row' as const,
+  id: uidToId(blok._uid),
+  stats: Array.isArray(blok.stats)
+    ? blok.stats.map((stat: { _uid?: string; value?: string; label?: string }, index: number) => ({
+        id: uidToId(stat._uid) || index + 1,
+        value: String(stat.value ?? ''),
+        label: String(stat.label ?? ''),
+      }))
+    : [],
+};
+---
+
+<div {...storyblokEditable(blok)}>
+  <StatsRow {block} />
+</div>

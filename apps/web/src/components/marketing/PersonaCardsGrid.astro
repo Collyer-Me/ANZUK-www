@@ -3,10 +3,10 @@ import Container from '../ui/Container.astro';
 import Section from '../ui/Section.astro';
 import SectionHeading from '../ui/SectionHeading.astro';
 import PersonaCard from './PersonaCard.astro';
-import type { PersonaCardsBlock } from '../../lib/strapi/types';
+import type { PersonaCardsBlock } from '../../lib/cms/types';
 import type { Market } from '../../config/markets';
 import { personaIconForKey } from '../../lib/persona-icons';
-import { resolveLinkUrl } from '../../lib/strapi/urls';
+import { resolveLinkUrl } from '../../lib/cms/urls';
 
 interface Props {
   block: PersonaCardsBlock;

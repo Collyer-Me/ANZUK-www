@@ -26,19 +26,19 @@ export interface LeadFormPayload {
   landingPage?: string;
 }
 
-function strapiPublicUrl(override?: string): string {
+function formEndpointUrl(override?: string): string {
   if (typeof override === 'string' && override.trim()) {
-    return override.replace(/\/$/, '');
+    return override.trim();
   }
-  const fromPublic = import.meta.env.PUBLIC_STRAPI_URL;
-  if (typeof fromPublic === 'string' && fromPublic.trim()) {
-    return fromPublic.replace(/\/$/, '');
+  const fromEnv = import.meta.env.PUBLIC_FORM_ENDPOINT;
+  if (typeof fromEnv === 'string' && fromEnv.trim()) {
+    return fromEnv.trim();
   }
   return '';
 }
 
-export function isLeadFormConfigured(baseUrl?: string): boolean {
-  return Boolean(strapiPublicUrl(baseUrl));
+export function isLeadFormConfigured(endpoint?: string): boolean {
+  return Boolean(formEndpointUrl(endpoint));
 }
 
 export function buildLeadPayload(
@@ -75,14 +75,14 @@ export function buildLeadPayload(
 
 export async function submitLeadForm(
   payload: LeadFormPayload,
-  baseUrlOverride?: string,
+  endpointOverride?: string,
 ): Promise<{ documentId?: string }> {
-  const baseUrl = strapiPublicUrl(baseUrlOverride);
-  if (!baseUrl) {
-    throw new Error('Lead form backend is not configured (PUBLIC_STRAPI_URL).');
+  const endpoint = formEndpointUrl(endpointOverride);
+  if (!endpoint) {
+    throw new Error('Lead form backend is not configured (PUBLIC_FORM_ENDPOINT).');
   }
 
-  const response = await fetch(`${baseUrl}/api/leads/submit`, {
+  const response = await fetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

@@ -14,8 +14,9 @@ Descriptive inventory of [anzuk.education](https://anzuk.education/) as it exist
 | [nz.md](nz.md) | New Zealand regional site |
 | [page-types.md](page-types.md) | Canonical page type enum |
 | [external-integrations.md](external-integrations.md) | Systems outside Strapi |
-| [strapi-mapping.md](strapi-mapping.md) | Content type → market matrix |
-| [../guides/strapi-editor-guide.md](../guides/strapi-editor-guide.md) | Marketing editor guide |
+| [strapi-mapping.md](strapi-mapping.md) | Content type → market matrix (legacy Strapi reference) |
+| [../guides/storyblok-pilot.md](../guides/storyblok-pilot.md) | **Storyblok pilot** — AU home + who-we-are setup |
+| [../guides/strapi-editor-guide.md](../guides/strapi-editor-guide.md) | Marketing editor guide (legacy Strapi) |
 | [../guides/strapi-prototype-spec.md](../guides/strapi-prototype-spec.md) | Prototype page shortlist and nav |
 
 ## Methodology

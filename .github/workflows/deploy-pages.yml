@@ -3,6 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  repository_dispatch:
+    types: [storyblok-publish]
   workflow_dispatch:
     inputs:
       reason:
@@ -38,10 +40,10 @@ jobs:
         env:
           SITE_URL: ${{ secrets.SITE_URL }}
           BASE_PATH: ${{ secrets.BASE_PATH }}
-          STRAPI_URL: ${{ secrets.STRAPI_URL }}
-          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
-          PUBLIC_STRAPI_URL: ${{ secrets.PUBLIC_STRAPI_URL || secrets.STRAPI_URL }}
-          USE_MOCK_DATA: ${{ secrets.USE_MOCK_DATA || 'false' }}
+          STORYBLOK_DELIVERY_API_TOKEN: ${{ secrets.STORYBLOK_DELIVERY_API_TOKEN }}
+          STORYBLOK_REGION: ${{ secrets.STORYBLOK_REGION || 'eu' }}
+          ASTRO_OUTPUT: static
+          CI: true
           PUBLIC_KETCH_ORG: ${{ secrets.PUBLIC_KETCH_ORG }}
           PUBLIC_KETCH_PROPERTY: ${{ secrets.PUBLIC_KETCH_PROPERTY }}
           PUBLIC_RUDDERSTACK_WRITE_KEY: ${{ secrets.PUBLIC_RUDDERSTACK_WRITE_KEY }}

@@ -38,9 +38,22 @@ The script is **idempotent** — re-running updates existing entries matched by 
 | Site Settings | 4 locales |
 | Localized Pages | 21 pages (international + regional prototype set, incl. nested slugs) |
 | Articles | 8 blog posts |
-| Market navigations | 5 entries (`market-navigation` collection) |
+| Media assets | Brand images uploaded to Strapi Media Library and linked to pages, articles, and global settings |
 
 Data source: [`apps/web/src/lib/strapi/mock-data.ts`](../../apps/web/src/lib/strapi/mock-data.ts)
+
+### Media seeding
+
+The seed script uploads prototype images from `packages/brand/assets/` into the Strapi Media Library and links them to CMS fields:
+
+| Asset source | Linked to |
+|--------------|-----------|
+| `images/hero-home.png` | Regional/international home SEO `ogImage`, blob-hero `image`, global `defaultOgImage` |
+| `ui/blog-overlay.png` | Article `featuredImage` and article SEO `ogImage` |
+| `logos/partners/*` | UK homepage logo-marquee block |
+| `logos/affiliates/*` | Global Settings affiliate brand logos |
+
+Re-running the seed is idempotent for uploads — existing files are matched by filename before re-uploading.
 
 ## After seeding
 

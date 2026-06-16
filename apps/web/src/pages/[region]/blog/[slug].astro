@@ -1,9 +1,13 @@
 ---
 import RegionalLayout from '../../../layouts/RegionalLayout.astro';
-import { getRegionByPath, isValidRegion, type RegionPath } from '../../../config/regions';
-import { getAllArticles, getArticleByMarketAndSlug } from '../../../lib/strapi/queries/articles';
-import { getGlobalSettings } from '../../../lib/strapi/queries/global-settings';
-import type { CmsPage } from '../../../lib/strapi/types';
+import { isValidRegion } from '../../../config/regions';
+import { routeParam } from '../../../lib/astro/route-params';
+import { getAllArticles, getArticleByMarketAndSlug } from '../../../lib/cms/articles';
+import { getGlobalSettings } from '../../../lib/cms/settings';
+import { strapiMediaUrl } from '../../../lib/cms/media-url';
+import type { CmsPage } from '../../../lib/cms/types';
+
+export const prerender = true;
 
 export async function getStaticPaths() {
   const articles = await getAllArticles();
@@ -14,14 +18,10 @@ export async function getStaticPaths() {
   }));
 }
 
-interface Props {
-  region: RegionPath;
-  slug: string;
-}
+const region = routeParam(Astro.params, Astro.props, 'region');
+const slug = routeParam(Astro.params, Astro.props, 'slug');
 
-const { region, slug } = Astro.props;
-
-if (!isValidRegion(region)) {
+if (!region || !isValidRegion(region) || !slug) {
   return Astro.redirect('/404');
 }
 
@@ -42,9 +42,11 @@ const pageShell: CmsPage = {
 };
 
 const settings = await getGlobalSettings();
+const featuredImageUrl = strapiMediaUrl(article.featuredImage);
+const featuredImageAlt = article.featuredImage?.alternativeText ?? article.title;
 ---
 
-<RegionalLayout {region} page={pageShell} {settings}>
+<RegionalLayout {region} page={pageShell} {settings} ogImageFallback={article.featuredImage}>
   <article class="mx-auto max-w-anzuk-container px-6 py-10 lg:px-[72px]">
     <p class="text-sm">
       <a href={`/${region}/blog/`} class="text-anzuk-blue no-underline hover:underline">
@@ -53,6 +55,18 @@ const settings = await getGlobalSettings();
     </p>
     <h1 class="!mt-4">{article.title}</h1>
     {article.excerpt && <p class="text-lg text-anzuk-content">{article.excerpt}</p>}
+    {
+      featuredImageUrl && (
+        <img
+          src={featuredImageUrl}
+          alt={featuredImageAlt}
+          width={article.featuredImage?.width ?? undefined}
+          height={article.featuredImage?.height ?? undefined}
+          class="mt-8 w-full rounded-anzuk-card object-cover"
+          loading="eager"
+        />
+      )
+    }
     {article.body && <div class="prose mt-8 max-w-none" set:html={article.body} />}
   </article>
 </RegionalLayout>
